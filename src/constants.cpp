@@ -11,6 +11,6 @@ extern const float accel = 1;
 extern const float vfriction = 0;   // min 0
 extern const float hFriction = 0;   // Doesnt work :(
 
-extern const float SCALE = 0.3f;
+extern const float SCALE = 0.2f;
 extern const float HITBOX_SCALE = 0.3f;
-extern const int PARTICLE_NUM = 2000;
+extern const int PARTICLE_NUM = 5000;

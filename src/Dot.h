@@ -21,9 +21,12 @@ class Dot
 
         //Moves the dot
         void move();
+        void moveVector( float deltaTime );
 
         //Checks collision with another dot or wall
         void check_collision( float deltaTime, SDL_Rect& wall, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index);
+
+        void check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
 
         //Shows the dot on the screen
         void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
@@ -40,6 +43,9 @@ class Dot
         //Computes the hash value of a dot's spacial coords
         int compute_spacial_hash(int spacialX, int spacialY);
 
+        void compute_spacial_area();
+        void compute_full_spacial_area();
+
     private:
         //The X and Y offsets of the dot
         int PosX, PosY;
@@ -48,6 +54,9 @@ class Dot
         //Spacial X and Y offsets of the dot
         int spacialX, spacialY;
         int spacial_hash;
+        std::vector<int> spacial_hashesX;
+        std::vector<int> spacial_hashesY;
+        std::vector<int> spacial_hashes_full;
 
         //The velocity of the dot
         int mVelX, mVelY;

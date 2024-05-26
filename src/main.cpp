@@ -23,7 +23,6 @@ bool init();
 //Loads media
 bool loadMedia();
 
-bool spacial_hasher();
 //Frees media and shuts down SDL
 void close();
 
@@ -150,6 +149,7 @@ int main( int argc, char* args[] )
     Uint8 r = 255;
     Uint8 g = 255;
     Uint8 b = 255;
+    Uint8 colour = 255;
 
     // Spacing variables
     float timeInterval = 1.0f; // Doesnt work
@@ -184,8 +184,8 @@ int main( int argc, char* args[] )
     SDL_Rect wall;
     wall.x = 500;
     wall.y = 400;
-    wall.w = 400;
-    wall.h = 100;
+    wall.w = 0;
+    wall.h = 0;
 
     //Timer
     Uint32 startTicks = 0;
@@ -236,25 +236,28 @@ int main( int argc, char* args[] )
         deltaTime += (endTicks - startTicks); // milliseconds
         if ((float)deltaTime >= timeInterval )
         {
+            // for (Dot &dot : dots)
+            // {
+            //     dot.moveVector();
+            // }
+
             updateSpacialLookup(particleHashEntries, spacialKeys, dots);
             //All dots
             for ( int i = 0; i < PARTICLE_NUM; i++)
             {
                 Dot &dot = dots[i];
-                dot.updateVelocity();
-
                 //Check collision with wall and other dots
                 dot.check_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i);
 
-                //Moving dot and rendering
-                dot.move();
-
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());
                 Uint8 colour = 255 - std::min(speed * 10, 255);
+                // r = std::rand() % 255;
+                // g = std::rand() % 255;
+                // b = std::rand() % 255;
                 r = colour;
-                g = colour;
-                // b = colour;
                 gDotTexture.setColor(r, g, b);
+
+                dot.move();
                 dot.render(gRenderer, gDotTexture);
             }
             //Update screen
