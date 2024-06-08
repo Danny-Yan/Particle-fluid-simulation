@@ -66,6 +66,25 @@ void LTimer::unpause()
     }
 }
 
+void LTimer::resetTicked()
+{
+    //If the timer is running and isn't paused
+    hasTicked = false;
+}
+
+
+void LTimer::setTicked()
+{
+    //If the timer is running and isn't paused
+    hasTicked = mStarted && !mPaused;
+}
+
+bool LTimer::getTicked()
+{
+    //If the timer is running and isn't paused
+    return hasTicked;
+}
+
 Uint32 LTimer::getTicks()
 {
     //The actual timer time

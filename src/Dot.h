@@ -44,7 +44,7 @@ class Dot
         int compute_spacial_hash(int spacialX, int spacialY);
 
         void compute_spacial_area();
-        void compute_full_spacial_area();
+        std::vector<int> compute_full_spacial_area();
 
     private:
         //The X and Y offsets of the dot

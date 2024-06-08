@@ -19,6 +19,8 @@ class LTimer
         void stop();
         void pause();
         void unpause();
+        void setTicked();
+        void resetTicked();
 
         //Gets the timer's time
         Uint32 getTicks();
@@ -26,6 +28,7 @@ class LTimer
         //Checks the status of the timer
         bool isStarted();
         bool isPaused();
+        bool getTicked();
 
     private:
         //The clock time when the timer started
@@ -37,4 +40,5 @@ class LTimer
         //The timer status
         bool mPaused;
         bool mStarted;
+        bool hasTicked;
 };

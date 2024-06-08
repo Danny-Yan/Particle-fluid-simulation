@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 #include "LTexture.h"
 #include "Dot.h"
@@ -188,8 +189,7 @@ int main( int argc, char* args[] )
     wall.h = 0;
 
     //Timer
-    Uint32 startTicks = 0;
-    Uint32 endTicks = 0;
+    Uint32 Ticks = 0;
     Uint32 deltaTime = 0;
     LTimer timer;
     timer.start();
@@ -197,7 +197,6 @@ int main( int argc, char* args[] )
     //While application is running
     while( !quit )
     {
-        startTicks = timer.getTicks();
         //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 )
         {
@@ -209,11 +208,24 @@ int main( int argc, char* args[] )
             //Reset start time on return keypress
             else if( e.type == SDL_KEYDOWN )
             {
+                //Start/stop
+                if( e.key.keysym.sym == SDLK_s )
+                {
+                    if( timer.isStarted() )
+                    {
+                        timer.stop();
+                    }
+                    else
+                    {
+                        timer.start();
+                    }
+                }
                 //Pause/Unpause
-                if( e.key.keysym.sym == SDLK_p )
+                else if( e.key.keysym.sym == SDLK_p )
                 {
                     if( timer.isPaused() )
                     {
+                        timer.resetTicked();
                         timer.unpause();
                     }
                     else
@@ -221,6 +233,14 @@ int main( int argc, char* args[] )
                         timer.pause();
                     }
                 }
+                else if( e.key.keysym.sym == SDLK_t )
+                {
+                    if( timer.isPaused() )
+                    {
+                        timer.unpause();
+                        timer.setTicked();
+                    }
+                } 
             }
         }
         //Clear screen
@@ -230,16 +250,13 @@ int main( int argc, char* args[] )
         //Render wall
         SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );        
         SDL_RenderDrawRect( gRenderer, &wall );
-    
 
-        endTicks = timer.getTicks(); // After pausing for an extended period of time then unpausing, the entire system freezes
-        deltaTime += (endTicks - startTicks); // milliseconds
-        if ((float)deltaTime >= timeInterval )
+        deltaTime += timer.getTicks(); // After pausing for an extended period of time then unpausing, the entire system freezes
+        if ( (float)deltaTime >= timeInterval && timer.isPaused() == 0 )
         {
-            // for (Dot &dot : dots)
-            // {
-            //     dot.moveVector();
-            // }
+            if (timer.getTicked() == 1){
+                timer.pause();
+            }
 
             updateSpacialLookup(particleHashEntries, spacialKeys, dots);
             //All dots
@@ -263,6 +280,23 @@ int main( int argc, char* args[] )
             //Update screen
             SDL_RenderPresent( gRenderer );
             deltaTime = 0;
+
+            // for (Dot &dot : dots)
+            // {
+            //     dot.moveVector( timeInterval );
+            // }
+
+            // updateSpacialLookup( particleHashEntries, spacialKeys, dots );
+
+            // for ( int i = 0; i < PARTICLE_NUM; i++)
+            // {
+            //     Dot &dot = dots[i];
+            //     dot.check_vector_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
+            //     dot.render( gRenderer, gDotTexture );
+            // }
+            // //Update screen
+            // SDL_RenderPresent( gRenderer );
+            // deltaTime = 0;
         }
     }
 
