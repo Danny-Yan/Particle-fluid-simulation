@@ -177,7 +177,7 @@ int main( int argc, char* args[] )
 
         x_cord = x + 700;
         y_cord = y + 450;
-        Dot dot( x_cord, y_cord, std::rand() % 10, std::rand() % 10, radius);
+        Dot dot( x_cord, y_cord, std::rand() % 2, std::rand() % 2, radius);
         dots.push_back( dot );
     }
 

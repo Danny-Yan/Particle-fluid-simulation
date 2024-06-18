@@ -74,6 +74,8 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
 
                 dot.setmVelX( cLVector.v[0] );
                 dot.setmVelY( cLVector.v[1] );
+
+                shiftColliders();
             }
         }
     }
@@ -83,6 +85,7 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
     {
         //Move back
         mPosX = mCollider.r;
+        mPosY -= (mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
         mVelX = -( mVelX / (hFriction + 1) );
@@ -92,6 +95,7 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
     {
         //Move back
         mPosX = SCREEN_WIDTH - mCollider.r;
+        mPosY -= (SCREEN_WIDTH - mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
         mVelX = -( mVelX / (hFriction + 1) );
@@ -102,6 +106,7 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
     {
         //Move back
         mPosY = mCollider.r;
+        mPosX -= (mPosY - mCollider.r) * mVelX / mVelY;
 
         // Reverse velocity
         mVelY = -(mVelY - vfriction);
@@ -111,10 +116,14 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
     {
         //Move back
         mPosY = SCREEN_HEIGHT - mCollider.r;
-
+        mPosX -= (SCREEN_HEIGHT - mPosY - mCollider.r) * mVelX / mVelY;
+        
         // Reverse velocity
         mVelY = -(mVelY - vfriction);
     }
+
+
+    shiftColliders();
 }
 
 //Dot/Dot collision detector
@@ -123,10 +132,10 @@ Collision Dot::checkDotCollision( Dot & dotB )
     Dot dotAp = *this;
     Collision collision;
 
-    // // Dont check collision if both dots are stationary
-    // if (dotAp.mVelX == 0 && dotB.mVelX == 0 && dotAp.mVelY == 0 && dotB.mVelY == 0){
-    //     return collision;    
-    // }
+    // Dont check collision if both dots are stationary
+    if (dotAp.mVelX == 0 && dotB.mVelX == 0 && dotAp.mVelY == 0 && dotB.mVelY == 0){
+        return collision;    
+    }
 
     Circle a = dotAp.getColliders();
     Circle b = dotB.getColliders();
@@ -138,7 +147,7 @@ Collision Dot::checkDotCollision( Dot & dotB )
     //If the distance between the centers of the circles is less than the sum of their radii
     if( distance_Squared <= ( totalRadiusSquared ) )
     {
-        //Calculate the normal
+        //Calculate the impulse vector
         float magnitude = sqrt(distance_Squared);
         float normalX = (a.x - b.x) / magnitude;
         float normalY = (a.y - b.y) / magnitude;

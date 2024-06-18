@@ -29,7 +29,6 @@ struct Collision
 {
     std::vector<float> v;
     std::vector<float> sa;
-    std::vector<float> sb;
     bool didCollide = false;
 };
 

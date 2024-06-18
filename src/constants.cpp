@@ -13,7 +13,7 @@ extern const float hFriction = 0;   // Doesnt work :(
 
 extern const float SCALE = 0.5f;
 extern const float HITBOX_SCALE = 0.5f;
-extern const int PARTICLE_NUM = 100;
+extern const int PARTICLE_NUM = 300;
 
 
 
