@@ -39,7 +39,7 @@ void Dot::moveVector( float deltaTime )
 void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
 {
     //Computing 3x3 spacial hash 
-    std::vector<int> spacial_hashes_full = this->compute_full_spacial_area();
+    std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)mPosX, (int)mPosY);
 
     //Iterating through spacial hashes
     for (int hash : spacial_hashes_full)
@@ -78,7 +78,7 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
         }
     }
 
-    //SCREEN CHECKS 
+    //Check for screen wall collision
     if( ( mPosX - mCollider.r < 0 ) )
     {
         //Move back
@@ -97,7 +97,7 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
         mVelX = -( mVelX / (hFriction + 1) );
     }
 
-    //Check for ceiling collision
+    //Check for ceiling/floor collision
     if( ( mPosY - mCollider.r < 0 ) )
     {
         //Move back
@@ -117,7 +117,7 @@ void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square
     }
 }
 
-//Dot/Dot collision detector (DONT NEED)
+//Dot/Dot collision detector
 Collision Dot::checkDotCollision( Dot & dotB )
 {
     Dot dotAp = *this;
@@ -167,45 +167,6 @@ Collision Dot::checkDotCollision( Dot & dotB )
     return collision;
 }
 
-//SPACIAL HASHING
-std::vector<int> Dot::compute_full_spacial_area(){
-    std::vector<int> spacial_hashes_full;
-    this->compute_spacial_coords();
-    spacial_hash = compute_spacial_hash(spacialX, spacialY);
-
-
-    // for (auto const& [index_x, index_y] : spacial_map){
-    //     spacial_hashes_full.push_back(compute_spacial_hash(spacialX + index_x, spacialY + index_y));
-    // }
-
-    spacial_hashes_full.push_back(spacial_hash);
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX + 1, spacialY));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX - 1, spacialY));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX, spacialY + 1));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX, spacialY - 1));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX + 1, spacialY + 1));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX + 1, spacialY - 1));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX - 1, spacialY + 1));
-    spacial_hashes_full.push_back(compute_spacial_hash(spacialX - 1, spacialY - 1));
-
-    return spacial_hashes_full;
-}
-
-void Dot::compute_spacial_coords()
-{
-    spacialX = (int)mPosX / GRID_WIDTH;
-    spacialY = (int)mPosY / GRID_HEIGHT;
-}
-
-int Dot::compute_spacial_hash(int spacialX, int spacialY)
-{
-    int p1 = 65537;
-    int p2 = 181081;
-    int cell_hash = (spacialX * p1 + spacialY * p2) % PARTICLE_NUM;
-    return cell_hash;
-}
-
-
 //SHIFT COLLIDERS
 void Dot::shiftColliders()
 {
@@ -241,16 +202,15 @@ void Dot::setmVelY( float velY )
     mVelY += velY;
 }
 
-int Dot::getSpacialX()
+float Dot::getmPosX()
 {
-    return spacialX;
+    return mPosX;
 }
 
-int Dot::getSpacialY()
+float Dot::getmPosY()
 {
-    return spacialY;
+    return mPosY;
 }
-
 
 //RENDER
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)

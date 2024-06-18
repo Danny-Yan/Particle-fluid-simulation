@@ -10,6 +10,7 @@
 #include "LTexture.h"
 #include "constants.h"
 #include "helper_structs.h"
+#include "spatial_hashers.h"
 
 //The dot that will move around on the screen
 class Dot
@@ -31,19 +32,12 @@ class Dot
         Circle& getColliders();
         float getVelX();
         float getVelY();
-        int getSpacialX();
-        int getSpacialY();
+        float getmPosX();
+        float getmPosY();
 
         //Setters
         void setmVelX( float velX );
         void setmVelY( float velY );
-
-        //Computes the spacial coords of a position
-        void compute_spacial_coords();
-
-        //Computes the hash values of a dot's spacial coords
-        int compute_spacial_hash(int spacialX, int spacialY);
-        std::vector<int> compute_full_spacial_area();
 
     private:
         //The X and Y offsets of the dot
@@ -54,11 +48,6 @@ class Dot
         float mVelX, mVelY;
         float Velx, Vely;
 
-        //Spacial X and Y offsets of the dot
-        int spacialX, spacialY;
-        int spacial_hash;
-        std::vector<int> spacial_hashes_full;
-        
         //Dot's collision circle
         Circle mCollider;
 

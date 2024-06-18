@@ -1,29 +1,30 @@
 #include "helper_main_functions.h"
 
 // Adapted from sebastain lague's tutorial
-void updateSpacialLookup(std::vector<Entry> &spacialLookup, std::vector<int> &spacialKeys, std::vector<Dot> &dots){
+void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &spatialKeys, std::vector<Dot> &dots){
 
     // Compute spatial hash for each dot
     for (int i = 0; i < dots.size(); i++)
     {
         Dot &dot = dots[i];
-        dot.compute_spacial_coords();
-        int spacial_hash = dot.compute_spacial_hash(dot.getSpacialX(), dot.getSpacialY());
-        Entry entry = Entry(spacial_hash, i);
-        spacialLookup[i] = entry;
-        spacialKeys[i] = INT_MAX;
+        int spatialX, spatialY;
+        std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getmPosX(), (int)dot.getmPosY() );
+        int spatial_hash = compute_spatial_hash( spatialX, spatialY );
+        Entry entry = Entry(spatial_hash, i);
+        spatialLookup[i] = entry;
+        spatialKeys[i] = INT_MAX;
     }
 
-    std::sort(spacialLookup.begin(), spacialLookup.end(), [](Entry &a, Entry &b){ return a.hash < b.hash; }); // Sort by hash
+    std::sort(spatialLookup.begin(), spatialLookup.end(), [](Entry &a, Entry &b){ return a.hash < b.hash; }); // Sort by hash
 
-    // Compute spacial lookup
+    // Compute spatial lookup
     for (int i = 0; i < dots.size(); i++)
     {
-        int Key = spacialLookup[i].hash;
+        int Key = spatialLookup[i].hash;
         int keyPrev;
-        if (i == 0){keyPrev = INT_MAX;} else {keyPrev = spacialLookup[i - 1].hash;}
+        if (i == 0){keyPrev = INT_MAX;} else {keyPrev = spatialLookup[i - 1].hash;}
         if (Key != keyPrev){
-            spacialKeys[Key] = i;
+            spatialKeys[Key] = i;
         }
     }
 }

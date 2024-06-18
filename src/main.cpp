@@ -281,7 +281,7 @@ int main( int argc, char* args[] )
             }
 
             // Update spacial lookup after moving 
-            updateSpacialLookup( particleHashEntries, spacialKeys, dots );
+            updateSpatialLookup( particleHashEntries, spacialKeys, dots );
 
             // Check collision for all dots
             for ( int i = 0; i < PARTICLE_NUM; i++)

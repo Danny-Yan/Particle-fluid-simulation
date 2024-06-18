@@ -8,7 +8,8 @@
 #include <algorithm>
 #include "Dot.h"
 #include "helper_structs.h"
+#include "spatial_hashers.h"
 
-void updateSpacialLookup(std::vector<Entry> &spacialLookup, std::vector<int> &spacialKeys, std::vector<Dot> &circles);
+void updateSpatialLookup(std::vector<Entry> &spacialLookup, std::vector<int> &spacialKeys, std::vector<Dot> &circles);
 
 #endif
