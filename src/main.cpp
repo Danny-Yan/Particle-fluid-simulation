@@ -177,7 +177,7 @@ int main( int argc, char* args[] )
 
         x_cord = x + 700;
         y_cord = y + 450;
-        Dot dot( x_cord, y_cord, std::rand() % 10 - 5, std::rand() % 10 - 5, radius);
+        Dot dot( x_cord, y_cord, std::rand() % 10, std::rand() % 10, radius);
         dots.push_back( dot );
     }
 
@@ -194,6 +194,11 @@ int main( int argc, char* args[] )
     LTimer timer;
     timer.start();
 
+    //Mouse
+    Mouse mouse;
+    int xPrevMouse = 0;
+    int yPrevMouse = 0;
+
     //While application is running
     while( !quit )
     {
@@ -205,6 +210,12 @@ int main( int argc, char* args[] )
             {
                 quit = true;
             }
+            
+            if (e.type == SDL_MOUSEMOTION)
+            {
+                SDL_GetMouseState( &mouse.x, &mouse.y );
+            }
+
             //Reset start time on return keypress
             else if( e.type == SDL_KEYDOWN )
             {
@@ -243,6 +254,7 @@ int main( int argc, char* args[] )
                 } 
             }
         }
+
         //Clear screen
         SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );
         SDL_RenderClear( gRenderer );
@@ -257,14 +269,49 @@ int main( int argc, char* args[] )
             if (timer.getTicked() == 1){
                 timer.pause();
             }
+            mouse.velX = (mouse.x - xPrevMouse) / timeInterval;
+            mouse.velY = (mouse.y - yPrevMouse) / timeInterval;
+            xPrevMouse = mouse.x;
+            yPrevMouse = mouse.y;
 
-            updateSpacialLookup(particleHashEntries, spacialKeys, dots);
-            //All dots
+            // //RECTANGLE METHOD
+            // updateSpacialLookup(particleHashEntries, spacialKeys, dots);
+
+            // //All dots
+            // for ( int i = 0; i < PARTICLE_NUM; i++)
+            // {
+            //     Dot &dot = dots[i];
+            //     //Check collision with wall and other dots
+            //     dot.check_collision( timeInterval, wall, dots, mouse, particleHashEntries, spacialKeys, i);
+
+            //     int speed = abs(dot.getVelX()) + abs(dot.getVelY());
+            //     Uint8 colour = 255 - std::min(speed * 10, 255);
+            //     // r = std::rand() % 255;
+            //     // g = std::rand() % 255;
+            //     // b = std::rand() % 255;
+            //     r = colour;
+            //     gDotTexture.setColor(r, g, b);
+
+            //     dot.move();
+            //     dot.render(gRenderer, gDotTexture);
+            // }
+
+            // VECTOR METHOD
+
+            //Move all dots
+            for (Dot &dot : dots)
+            {
+                dot.moveVector( timeInterval );
+            }
+
+            // Update spacial lookup after moving 
+            updateSpacialLookup( particleHashEntries, spacialKeys, dots );
+
+            // Check collision for all dots
             for ( int i = 0; i < PARTICLE_NUM; i++)
             {
                 Dot &dot = dots[i];
-                //Check collision with wall and other dots
-                dot.check_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i);
+                dot.check_vector_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
 
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());
                 Uint8 colour = 255 - std::min(speed * 10, 255);
@@ -273,30 +320,12 @@ int main( int argc, char* args[] )
                 // b = std::rand() % 255;
                 r = colour;
                 gDotTexture.setColor(r, g, b);
-
-                dot.move();
-                dot.render(gRenderer, gDotTexture);
+                dot.render( gRenderer, gDotTexture );
             }
+
             //Update screen
             SDL_RenderPresent( gRenderer );
             deltaTime = 0;
-
-            // for (Dot &dot : dots)
-            // {
-            //     dot.moveVector( timeInterval );
-            // }
-
-            // updateSpacialLookup( particleHashEntries, spacialKeys, dots );
-
-            // for ( int i = 0; i < PARTICLE_NUM; i++)
-            // {
-            //     Dot &dot = dots[i];
-            //     dot.check_vector_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
-            //     dot.render( gRenderer, gDotTexture );
-            // }
-            // //Update screen
-            // SDL_RenderPresent( gRenderer );
-            // deltaTime = 0;
         }
     }
 

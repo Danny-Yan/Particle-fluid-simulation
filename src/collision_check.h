@@ -14,6 +14,16 @@ struct Circle
     int r;
 };
 
+//Mouse structure
+struct Mouse
+{
+    int x = 0; 
+    int y = 0;
+    int r = 100;
+    int velX = 0; 
+    int velY = 0;
+};
+
 //A collision vector
 struct Collision
 {
@@ -23,18 +33,25 @@ struct Collision
     bool didCollide = false;
 };
 
+//Forward declaration of Dot class
+// class Dot;
+
 //Circle/Circle collision detector
 Collision checkCollision( Circle& a, Circle& b );
 
 //Circle/Box collision detector
 Collision checkCollision( Circle& a, SDL_Rect& b );
 
+Collision checkCollision( Circle& a, Mouse b );
+
+// Collision checkCollision( Dot& a, Dot& b );
+
 Collision checkXCollision( Circle& a, SDL_Rect& b );
 
 Collision checkYCollision( Circle& a, SDL_Rect& b );
 
 //Calculates distance squared between two points
-double distanceSquared( int x1, int y1, int x2, int y2 );
+float distanceSquared( int x1, int y1, int x2, int y2 );
 
 //Convert any vector into a unit vector
 std::vector<float> unitVector(float x, float y);

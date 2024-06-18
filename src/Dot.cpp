@@ -21,6 +21,8 @@ Dot::Dot( int x, int y, int velX, int velY, int radius)
     shiftColliders();
 }
 
+
+//MOVEMENT UPDATE
 void Dot::updateVelocity()
 {
     // mVelX = Velx;
@@ -36,7 +38,24 @@ void Dot::move()
     PosY = mPosY;
 }
 
-void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
+void Dot::moveVector( float deltaTime )
+{
+    mPosX += mVelX * deltaTime;
+
+    mVelY += accel * deltaTime;
+    mPosY += mVelY * deltaTime;
+
+    Velx = mVelX;
+    Vely = mVelY;
+    // Useless conversion
+    PosX = mPosX;
+    PosY = mPosY;
+    shiftColliders();
+}
+
+
+//CHECK COLLISION
+void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, Mouse mouse, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
 {
     //3x3 Grid of spacial hashes
     std::vector<int> spacial_hashesX;
@@ -67,17 +86,7 @@ void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& 
     //     // }
     // }
 
-    //If the dot collided or went too far to the left or right
-    if( ( mPosX - mCollider.r < 0 ) || ( mPosX + mCollider.r > SCREEN_WIDTH ) || checkCollision( mCollider, square ).didCollide )
-    {
-        //Move back FRAMES
-        mPosX -= mVelX * deltaTime;
 
-        //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
-        shiftColliders();
-    } 
-    
     for (int hash : spacial_hashesX)
     {
         int key = spacialKeys[hash];
@@ -111,6 +120,23 @@ void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& 
             }
         }
     }
+
+    //If the dot collided or went too far to the left or right
+    if( ( mPosX - mCollider.r < 0 ) || ( mPosX + mCollider.r > SCREEN_WIDTH ) || checkCollision( mCollider, square ).didCollide || checkCollision( mCollider, mouse).didCollide )
+    {
+        //Move back FRAMES
+        mPosX -= mVelX * deltaTime;
+
+        //Reverse velocity
+        mVelX = -( mVelX / (hFriction + 1) );
+        shiftColliders();
+    } 
+
+    // else if (checkCollision( mCollider, mouse).didCollide)
+    // {
+    //     mCollider.x
+    // }
+    
 
     mVelY += accel * deltaTime;
 
@@ -151,9 +177,8 @@ void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& 
             }
         }
     }
-
     //Check for ceiling collision
-    if( ( mPosY - mCollider.r < 0 ) || ( mPosY + mCollider.r > SCREEN_HEIGHT ) || checkCollision( mCollider, square ).didCollide )
+    if( ( mPosY - mCollider.r < 0 ) || ( mPosY + mCollider.r > SCREEN_HEIGHT ) || checkCollision( mCollider, square ).didCollide || checkCollision( mCollider, mouse).didCollide )
     {
         //FRAMES
         mPosY -= (mVelY) * deltaTime;
@@ -162,7 +187,6 @@ void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& 
         mVelY = -(mVelY - vfriction);
         shiftColliders();
     } 
-
 
     //Check for collision with circle (CHANGE TO CHECK COLLISION WITH ANOTHER DOT) checkCollision( DOTA, DOTB )
     //Use velocities to calculate the collision vector and carried over velocity
@@ -195,22 +219,25 @@ void Dot::check_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& 
     // }
 }
 
-void Dot::moveVector( float deltaTime )
-{
-    mPosX += mVelX * deltaTime;
-
-    mVelY += accel * deltaTime;
-    mPosY += mVelY * deltaTime;
-
-    PosX = mPosX;
-    PosY = mPosY;
-    shiftColliders();
-}
-
 void Dot::check_vector_collision(float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
 {
     std::vector<int> spacial_hashes_full = this->compute_full_spacial_area();
-        
+
+    //3x3 Grid of spacial hashes
+    // std::vector<int> spacial_hashes_full;
+    // this->compute_spacial_coords();
+    // spacial_hash = compute_spacial_hash(spacialX, spacialY);
+
+    // spacial_hashes_full.push_back(spacial_hash);
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX + 1, spacialY));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX - 1, spacialY));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX, spacialY + 1));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX, spacialY - 1));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX + 1, spacialY + 1));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX + 1, spacialY - 1));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX - 1, spacialY + 1));
+    // spacial_hashes_full.push_back(compute_spacial_hash(spacialX - 1, spacialY - 1));
+
     for (int hash : spacial_hashes_full)
     {
         int key = spacialKeys[hash];
@@ -232,14 +259,16 @@ void Dot::check_vector_collision(float deltaTime, SDL_Rect& square, std::vector<
             if (cLVector.didCollide)
             {
                 //Move back FRAMES
-                mPosX -= mVelX * deltaTime;
-                mPosY -= (mVelY) * deltaTime;
+                mPosX += cLVector.sa[0];
+                mPosY += cLVector.sa[1];
+                // mPosX -= Velx * deltaTime;
+                // mPosY -= Vely * deltaTime;
 
-                mVelX -= cLVector.v[0];
-                mVelY -= cLVector.v[1];
+                setmVelX( -cLVector.v[0] );
+                setmVelY( -cLVector.v[1] );
 
-                dot.mVelX += cLVector.v[0];
-                dot.mVelY += cLVector.v[1];
+                dot.setmVelX( cLVector.v[0] );
+                dot.setmVelY( cLVector.v[1] );
 
                 // //Reverse velocity
                 // mVelX = -( mVelX  / (hFriction + 1) );
@@ -251,32 +280,49 @@ void Dot::check_vector_collision(float deltaTime, SDL_Rect& square, std::vector<
                 // dot.mVelX = -( mVelX );
                 // mVelX = -(cLVector.sa[0]);
                 // dot.mVelX = -(cLVector.sb[0]);
-                shiftColliders();
+                // shiftColliders();
+                // dot.shiftColliders();
             }
         }
     }
 
     //If the dot collided or went too far to the left or right
-    if( ( mPosX - mCollider.r < 0 ) || ( mPosX + mCollider.r > SCREEN_WIDTH ) || checkXCollision( mCollider, square ).didCollide )
+    if( ( mPosX - mCollider.r < 0 ) )
     {
         //Move back FRAMES
-        mPosX -= mVelX * deltaTime;
+        // mPosX -= Velx * deltaTime;
+        mPosX = mCollider.r;
 
         //Reverse velocity
         mVelX = -( mVelX / (hFriction + 1) );
-        shiftColliders();
+        // shiftColliders();
     } 
 
+    if ( ( mPosX + mCollider.r > SCREEN_WIDTH ) )
+    {
+        mPosX = SCREEN_WIDTH - mCollider.r;
+        mVelX = -( mVelX / (hFriction + 1) );
+    }
+
     //Check for ceiling collision
-    if( ( mPosY - mCollider.r < 0 ) || ( mPosY + mCollider.r > SCREEN_HEIGHT ) || checkYCollision( mCollider, square ).didCollide )
+    if( ( mPosY - mCollider.r < 0 ) )
     {
         //FRAMES
-        mPosY -= (mVelY) * deltaTime;
+        // mPosY -= (Vely) * deltaTime;
+        mPosY = mCollider.r;
 
         // Reverse velocity
         mVelY = -(mVelY - vfriction);
-        shiftColliders();
+        // shiftColliders();
     } 
+
+    if( ( mPosY + mCollider.r > SCREEN_HEIGHT ) )
+    {
+        mPosY = SCREEN_HEIGHT - mCollider.r;
+
+        // Reverse velocity
+        mVelY = -(mVelY - vfriction);
+    }
 }
 
 //Dot/Dot collision detector (DONT NEED)
@@ -285,37 +331,44 @@ Collision Dot::checkDotCollision( Dot & dotB )
     Dot dotAp = *this;
     Collision collision;
 
-    // Dont check collision if both dots are stationary
-    if (dotAp.mVelX == 0 && dotB.mVelX == 0 && dotAp.mVelY == 0 && dotB.mVelY == 0){
-        return collision;    
-    }
+    // // Dont check collision if both dots are stationary
+    // if (dotAp.mVelX == 0 && dotB.mVelX == 0 && dotAp.mVelY == 0 && dotB.mVelY == 0){
+    //     return collision;    
+    // }
 
     Circle a = dotAp.getColliders();
     Circle b = dotB.getColliders();
     //Calculate total radius squared
     int totalRadius = a.r + b.r;
-    int totalRadiusSquared = totalRadius * totalRadius;
-    double distance_Squared = distanceSquared( a.x, a.y, b.x, b.y );
+    float totalRadiusSquared = totalRadius * totalRadius;
+    float distance_Squared = distanceSquared( a.x, a.y, b.x, b.y );
     // float averageVelX = (abs(dotAp.getVelX()) + abs(dotB.getVelX())) / 2;
     // float averageVelY = (abs(dotAp.getVelY()) + abs(dotB.getVelY())) / 2;
 
     //If the distance between the centers of the circles is less than the sum of their radii
-    if( distance_Squared < ( totalRadiusSquared ) )
+    if( distance_Squared <= ( totalRadiusSquared ) )
     {
-        double magnitude = sqrt(distance_Squared);
+        //Calculate the normal
+        float magnitude = sqrt(distance_Squared);
         float normalX = (a.x - b.x) / magnitude;
-        float normalY = (a.y - b.y) / magnitude; 
+        float normalY = (a.y - b.y) / magnitude;
 
         float relVecX = dotAp.getVelX() - dotB.getVelX();
         float relVecY = dotAp.getVelY() - dotB.getVelY();
 
         float dotProd = normalX * relVecX + normalY * relVecY;
 
-        float impulseX = normalX * dotProd;
-        float impulseY = normalY * dotProd;
+        float impulseX = normalX * dotProd / 2;
+        float impulseY = normalY * dotProd / 2;
+
+        float radius_ratio = (float)totalRadius / magnitude;
+
         //The circles have collided
         collision.v.push_back(impulseX);
         collision.v.push_back(impulseY);
+        collision.sa.push_back(radius_ratio * (a.x - b.x) - (a.x - b.x));
+        collision.sa.push_back(radius_ratio * (a.y - b.y) - (a.y - b.y));
+
         collision.didCollide = true;
 
         // collision.sa.push_back(dotB.getVelX());
@@ -337,6 +390,7 @@ Collision Dot::checkDotCollision( Dot & dotB )
 }
 
 
+//SPACIAL HASHING
 void Dot::compute_spacial_area(){
     //3x3 Grid of spacial hashes
     std::vector<int> spacial_hashesX;
@@ -376,13 +430,22 @@ std::vector<int> Dot::compute_full_spacial_area(){
     return spacial_hashes_full;
 }
 
-
-void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
+void Dot::compute_spacial_coords()
 {
-    //Show the dot
-    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE);
+    spacialX = (int)mPosX / GRID_WIDTH;
+    spacialY = (int)mPosY / GRID_HEIGHT;
 }
 
+int Dot::compute_spacial_hash(int spacialX, int spacialY)
+{
+    int p1 = 65537;
+    int p2 = 181081;
+    int cell_hash = (spacialX * p1 + spacialY * p2) % PARTICLE_NUM;
+    return cell_hash;
+}
+
+
+//SHIFT COLLIDERS
 void Dot::shiftColliders()
 {
     //Align collider to center of dot
@@ -395,36 +458,42 @@ Circle& Dot::getColliders()
     return mCollider;
 }
 
+
+//GETS/SETS
 float Dot::getVelX()
 {
-    return mVelX;
+    return Velx;
 }
 
 float Dot::getVelY()
 {
-    return mVelY;
+    return Vely;
 }
 
-void Dot::compute_spacial_coords()
+void Dot::setmVelX( float velX )
 {
-    spacialX = mPosX / GRID_WIDTH;
-    spacialY = mPosY / GRID_HEIGHT;
+    mVelX += velX;
 }
 
-int Dot::compute_spacial_hash(int spacialX, int spacialY)
+void Dot::setmVelY( float velY )
 {
-    int p1 = 65537;
-    int p2 = 181081;
-    int cell_hash = (spacialX * p1 + spacialY * p2) % PARTICLE_NUM;
-    return cell_hash;
+    mVelY += velY;
 }
 
-float Dot::getSpacialX()
+int Dot::getSpacialX()
 {
     return spacialX;
 }
 
-float Dot::getSpacialY()
+int Dot::getSpacialY()
 {
     return spacialY;
+}
+
+
+//RENDER
+void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
+{
+    //Show the dot
+    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE);
 }

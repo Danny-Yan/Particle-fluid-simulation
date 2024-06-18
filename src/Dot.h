@@ -4,6 +4,8 @@
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <cmath>
+#include <algorithm>
 #include "collision_check.h"
 #include "LTexture.h"
 #include "constants.h"
@@ -24,7 +26,7 @@ class Dot
         void moveVector( float deltaTime );
 
         //Checks collision with another dot or wall
-        void check_collision( float deltaTime, SDL_Rect& wall, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index);
+        void check_collision( float deltaTime, SDL_Rect& wall, std::vector<Dot>& circles, Mouse mouse, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index);
 
         void check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
 
@@ -35,8 +37,10 @@ class Dot
         Circle& getColliders();
         float getVelX();
         float getVelY();
-        float getSpacialX();
-        float getSpacialY();
+        int getSpacialX();
+        int getSpacialY();
+        void setmVelX( float velX );
+        void setmVelY( float velY );
 
         void compute_spacial_coords();
 
@@ -48,8 +52,8 @@ class Dot
 
     private:
         //The X and Y offsets of the dot
-        int PosX, PosY;
-        int mPosX, mPosY;
+        float PosX, PosY;
+        float mPosX, mPosY;
 
         //Spacial X and Y offsets of the dot
         int spacialX, spacialY;
@@ -59,8 +63,8 @@ class Dot
         std::vector<int> spacial_hashes_full;
 
         //The velocity of the dot
-        int mVelX, mVelY;
-        int Velx, Vely;
+        float mVelX, mVelY;
+        float Velx, Vely;
         
         //Dot's collision circle
         Circle mCollider;
@@ -72,6 +76,7 @@ class Dot
         void shiftColliders();
 
         Collision checkDotCollision( Dot& b );
+        Collision checkDotCollision( Mouse mouse );
 };
 
 

@@ -67,6 +67,25 @@ Collision checkCollision( Circle& a, SDL_Rect& b )
     return collision;
 }
 
+Collision checkCollision( Circle& a, Mouse b )
+{
+    Collision collision;
+    //Calculate total radius squared
+    int radius = a.r + b.r;
+    int totalRadiusSquared = radius * radius;
+
+    //If the distance between the centers of the circles is less than the sum of their radii
+    if( distanceSquared( a.x, a.y, b.x, b.y ) < ( totalRadiusSquared ) )
+    {
+        collision.didCollide = true;
+        return collision;
+    }
+
+    //If not
+    return collision;
+
+}
+
 Collision checkXCollision( Circle& a, SDL_Rect& b )
 {
     //Closest point on collision box
@@ -134,7 +153,7 @@ Collision checkYCollision( Circle& a, SDL_Rect& b )
 }
 
 //Calculate distance squared between two points
-double distanceSquared( int x1, int y1, int x2, int y2 )
+float distanceSquared( int x1, int y1, int x2, int y2 )
 {
     int deltaX = x2 - x1;
     int deltaY = y2 - y1;
