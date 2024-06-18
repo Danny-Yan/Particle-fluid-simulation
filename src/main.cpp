@@ -274,30 +274,6 @@ int main( int argc, char* args[] )
             xPrevMouse = mouse.x;
             yPrevMouse = mouse.y;
 
-            // //RECTANGLE METHOD
-            // updateSpacialLookup(particleHashEntries, spacialKeys, dots);
-
-            // //All dots
-            // for ( int i = 0; i < PARTICLE_NUM; i++)
-            // {
-            //     Dot &dot = dots[i];
-            //     //Check collision with wall and other dots
-            //     dot.check_collision( timeInterval, wall, dots, mouse, particleHashEntries, spacialKeys, i);
-
-            //     int speed = abs(dot.getVelX()) + abs(dot.getVelY());
-            //     Uint8 colour = 255 - std::min(speed * 10, 255);
-            //     // r = std::rand() % 255;
-            //     // g = std::rand() % 255;
-            //     // b = std::rand() % 255;
-            //     r = colour;
-            //     gDotTexture.setColor(r, g, b);
-
-            //     dot.move();
-            //     dot.render(gRenderer, gDotTexture);
-            // }
-
-            // VECTOR METHOD
-
             //Move all dots
             for (Dot &dot : dots)
             {
@@ -311,7 +287,7 @@ int main( int argc, char* args[] )
             for ( int i = 0; i < PARTICLE_NUM; i++)
             {
                 Dot &dot = dots[i];
-                dot.check_vector_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
+                dot.check_vector_collision( mouse, timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
 
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());
                 Uint8 colour = 255 - std::min(speed * 10, 255);
