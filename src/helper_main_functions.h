@@ -11,5 +11,6 @@
 #include "spatial_hashers.h"
 
 void updateSpatialLookup(std::vector<Entry> &spacialLookup, std::vector<int> &spacialKeys, std::vector<Dot> &circles);
-
+float calculateDensity( std::vector<Dot*> &circles, Dot &dot );
+void particleFilter( std::vector<Dot*> &Dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dot );
 #endif

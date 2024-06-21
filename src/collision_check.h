@@ -55,6 +55,9 @@ float distanceSquared( int x1, int y1, int x2, int y2 );
 //Convert any vector into a unit vector
 std::vector<float> unitVector(float x, float y);
 
+float sharedDensity( float density1, float density2 );
+
+
 //Calculates the sign of a number
 int sgn( int val ); // Turn into template
 

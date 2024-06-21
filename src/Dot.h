@@ -24,9 +24,8 @@ class Dot
 
         //Check collision with another dot
         void check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
-
-        //Shows the dot on the screen
-        void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
+        void check_vector_force( Mouse mouse, float deltaTime, SDL_Rect& square, Dot &dot );
+        void check_wall_collision();
 
         //Getters
         Circle& getColliders();
@@ -38,6 +37,11 @@ class Dot
         //Setters
         void setmVelX( float velX );
         void setmVelY( float velY );
+        void setDensity( float density );
+
+        
+        //Shows the dot on the screen
+        void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
 
     private:
         //The X and Y offsets of the dot
@@ -47,6 +51,11 @@ class Dot
         //The velocity of the dot
         float mVelX, mVelY;
         float Velx, Vely;
+
+        //Force radius
+        float fR;
+        
+        float density;
 
         //Dot's collision circle
         Circle mCollider;
@@ -58,6 +67,7 @@ class Dot
         void shiftColliders();
 
         Collision checkDotCollision( Dot& b );
+        Collision checkDotForce( Dot& b );
 };
 
 

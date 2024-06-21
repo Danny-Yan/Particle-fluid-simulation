@@ -169,6 +169,14 @@ std::vector<float> unitVector(float x, float y)
     return v;
 }
 
+float sharedDensity( float density1, float density2 )
+{
+    return (density1 + density2) / 2;
+
+}
+
+
+
 int sgn(int val) {
     return (0 < val) - (val < 0);
 }

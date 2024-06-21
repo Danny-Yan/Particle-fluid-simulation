@@ -154,11 +154,12 @@ int main( int argc, char* args[] )
 
     // Spacing variables
     float timeInterval = 1.0f; // Doesnt work
-    float spacing = 10;
+    float spacing = 0;
     int radius = 10;           // Doesnt work
 
     // Spacing equations
-    float spacing_scale = radius * HITBOX_SCALE + spacing;
+    // float spacing_scale = radius * HITBOX_SCALE + spacing;
+    float spacing_scale = 5.0f;
     int particlesPerRow = (int)sqrt(PARTICLE_NUM);
     int particlesPerCol = (PARTICLE_NUM - 1) / particlesPerRow + 1;
     float x_cord;
@@ -168,6 +169,8 @@ int main( int argc, char* args[] )
     std::vector<Entry> particleHashEntries(PARTICLE_NUM);
     std::vector<int> spacialKeys(PARTICLE_NUM);
     std::vector<Dot> dots;
+    std::vector<Dot*> filtered_dots;
+    std::vector<float> densities;
 
     for ( int i = 0; i < PARTICLE_NUM; i++ )
     {
@@ -177,8 +180,16 @@ int main( int argc, char* args[] )
 
         x_cord = x + 700;
         y_cord = y + 450;
-        Dot dot( x_cord, y_cord, std::rand() % 2, std::rand() % 2, radius);
+        Dot dot( x_cord, y_cord, 0, 0, radius);
         dots.push_back( dot );
+    }
+
+    for ( int i = 0; i < PARTICLE_NUM; i++ )
+    {
+        Dot &dot = dots[i];
+        particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
+        float particle_density = calculateDensity( filtered_dots, dot );
+        dots[i].setDensity( particle_density );
     }
 
     //Set the wall
@@ -283,11 +294,34 @@ int main( int argc, char* args[] )
             // Update spacial lookup after moving 
             updateSpatialLookup( particleHashEntries, spacialKeys, dots );
 
-            // Check collision for all dots
+            // // Check collision for all dots
+            // for ( int i = 0; i < PARTICLE_NUM; i++)
+            // {
+            //     Dot &dot = dots[i];
+            //     dot.check_vector_collision( mouse, timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
+
+            //     int speed = abs(dot.getVelX()) + abs(dot.getVelY());
+            //     Uint8 colour = 255 - std::min(speed * 10, 255);
+            //     // r = std::rand() % 255;
+            //     // g = std::rand() % 255;
+            //     // b = std::rand() % 255;
+            //     r = colour;
+            //     gDotTexture.setColor(r, g, b);
+            //     dot.render( gRenderer, gDotTexture );
+            // }
+
+            // Check force collision for all dots
             for ( int i = 0; i < PARTICLE_NUM; i++)
             {
                 Dot &dot = dots[i];
-                dot.check_vector_collision( mouse, timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
+                particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
+                float particle_density = calculateDensity( filtered_dots, dot );
+                dot.setDensity( particle_density );
+
+                for (Dot* dotB: filtered_dots ){
+                    dot.check_vector_force( mouse, timeInterval, wall, *dotB );
+                }
+                dot.check_wall_collision();
 
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());
                 Uint8 colour = 255 - std::min(speed * 10, 255);
