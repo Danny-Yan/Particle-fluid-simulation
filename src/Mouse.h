@@ -9,23 +9,18 @@ class Mouse : public Collider
 {
     public:
         //Initializes the variables
-        Mouse( int radius, int fR );
-
-        // //Getters
-        // int getVelX();
-        // int getVelY();
-        // int getPosX();
-        // int getPosY();
-
-        // //Setters
-        // void setVelX( int velX );
-        // void setVelY( int velY );
+        Mouse( int radius, int fR, float forceMultiplier);
 
         int x = 0; 
         int y = 0;
         int r;
         int velX = 0; 
         int velY = 0;
+        //Moves the mouse
+        void move();
+    
+    protected:
+        void shiftColliders() override;
 };
 
 

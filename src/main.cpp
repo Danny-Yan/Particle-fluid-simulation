@@ -189,7 +189,7 @@ int main( int argc, char* args[] )
         Dot &dot = dots[i];
         particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
         calculateDensity( particle_density, filtered_dots, dot );
-        dots[i].setDensity( particle_density );
+        dot.setDensity( particle_density );
     }
 
     //Set the wall
@@ -206,7 +206,7 @@ int main( int argc, char* args[] )
     timer.start();
 
     //Mouse
-    Mouse mouse( 10, 100);
+    Mouse mouse( 500, 500, -1);
     int xPrevMouse = 0;
     int yPrevMouse = 0;
 
@@ -273,7 +273,8 @@ int main( int argc, char* args[] )
         //Render wall
         SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );        
         SDL_RenderDrawRect( gRenderer, &wall );
-
+        mouse.move();
+        
         deltaTime += timer.getTicks(); // After pausing for an extended period of time then unpausing, the entire system freezes
         if ( (float)deltaTime >= timeInterval && timer.isPaused() == 0 )
         {
@@ -321,7 +322,7 @@ int main( int argc, char* args[] )
                 for (Dot* dotB: filtered_dots ){
                     dot.check_vector_force( *dotB );
                 }
-                // dot.check_mouse_force( mouse );
+                dot.check_mouse_force( mouse );
                 dot.check_wall_collision();
 
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());

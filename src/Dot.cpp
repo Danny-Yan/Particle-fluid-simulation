@@ -183,11 +183,11 @@ void Dot::check_vector_force( Dot &dot )
     if (cLVector.didCollide)
     {
         //Momentum transfer
-        setmVelX( -cLVector.v[0] );
-        setmVelY( -cLVector.v[1] );
+        setmVelX( -cLVector.v[0] * dot.forceMultiplier );
+        setmVelY( -cLVector.v[1] * dot.forceMultiplier );
 
-        dot.setmVelX( cLVector.v[0] );
-        dot.setmVelY( cLVector.v[1] );
+        dot.setmVelX( cLVector.v[0] * this->forceMultiplier );
+        dot.setmVelY( cLVector.v[1] * this->forceMultiplier );
     }
 }
 
@@ -246,13 +246,13 @@ void Dot::check_mouse_force( Mouse &mouse )
     if (cLVector.didCollide)
     {
         //Momentum transfer
-        setmVelX( -cLVector.v[0] );
-        setmVelY( -cLVector.v[1] );
+        setmVelX( -cLVector.v[0] * mouse.getForceMultiplier() );
+        setmVelY( -cLVector.v[1] * mouse.getForceMultiplier() );
     }
 }
 
 //Dot/Dot collision detector
-Collision Dot::checkCircleForce( Collider &dotB ) // USE OOP have children as inputs where each child has a different force radius but same getColliders() method
+Collision Dot::checkCircleForce( Collider &dotB )
 {
     Dot dotAp = *this;
     Collision collision;
@@ -287,8 +287,8 @@ Collision Dot::checkCircleForce( Collider &dotB ) // USE OOP have children as in
         // float dotProd = normalX * relVecX + normalY * relVecY;
         // float shared_density = sharedDensity( dotAp.density, dotB.density);
 
-        float impulseX = normalX * force_factor * force_factor * force_factor * FORCE;
-        float impulseY = normalY * force_factor * force_factor * force_factor * FORCE;
+        float impulseX = normalX * force_factor;
+        float impulseY = normalY * force_factor;
 
         float radius_ratio = (float)totalRadius / magnitude;
 

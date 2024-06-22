@@ -55,9 +55,7 @@ class Dot : public Collider
         //Dot's collision vector with another dot
         Collision cLVector;
 
-        //Moves the collision circle relative to the dot's offset
-        void shiftColliders();
-
+        void shiftColliders() override;
         Collision checkDotCollision( Dot& b );
         Collision checkCircleForce( Collider& b );
 };

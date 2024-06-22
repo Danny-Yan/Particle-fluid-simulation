@@ -26,3 +26,13 @@ float Collider::getfR()
 {
     return fR;
 }
+
+float Collider::getForceMultiplier()
+{
+    return forceMultiplier;
+}
+
+void Collider::setForceMultiplier( float forceMultiplier )
+{
+    this->forceMultiplier = forceMultiplier;
+}
