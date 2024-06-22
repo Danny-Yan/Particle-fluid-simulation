@@ -1,17 +1,12 @@
 #include "Dot.h"
 
-Dot::Dot( int x, int y, int velX, int velY, int radius)
+Dot::Dot( int x, int y , int velX, int velY, int radius) : Collider(radius)
 {
     //Initialize the offsets
     PosX = x;
     PosY = y;
     mPosX = x;
     mPosY = y;
-
-    fR = FORCE_RADIUS;
-
-    //Set collision circle size
-    mCollider.r = radius * HITBOX_SCALE;
 
     //Initialize the velocity
     Velx = velX;
@@ -23,7 +18,7 @@ Dot::Dot( int x, int y, int velX, int velY, int radius)
     shiftColliders();
 }
 
-void Dot::moveVector( float deltaTime )
+void Dot::moveVector(float deltaTime)
 {
     mPosX += mVelX * deltaTime;
 
@@ -38,7 +33,7 @@ void Dot::moveVector( float deltaTime )
     shiftColliders();
 }
 
-void Dot::check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
+void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
 {
     //Computing 3x3 spacial hash 
     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)mPosX, (int)mPosY);
@@ -180,11 +175,11 @@ Collision Dot::checkDotCollision( Dot & dotB )
     return collision;
 }
 
-
-void Dot::check_vector_force( Mouse mouse, float deltaTime, SDL_Rect& square, Dot &dot )
+//FORCE
+void Dot::check_vector_force( Dot &dot )
 {
     //COLLISION CHECK
-    cLVector = this->checkDotForce(dot);
+    cLVector = this->checkCircleForce( dot );
     if (cLVector.didCollide)
     {
         //Momentum transfer
@@ -244,8 +239,20 @@ void Dot::check_wall_collision(){
     }
 }
 
+void Dot::check_mouse_force( Mouse &mouse )
+{
+    //COLLISION CHECK
+    cLVector = this->checkCircleForce( mouse );
+    if (cLVector.didCollide)
+    {
+        //Momentum transfer
+        setmVelX( -cLVector.v[0] );
+        setmVelY( -cLVector.v[1] );
+    }
+}
+
 //Dot/Dot collision detector
-Collision Dot::checkDotForce( Dot & dotB )
+Collision Dot::checkCircleForce( Collider &dotB ) // USE OOP have children as inputs where each child has a different force radius but same getColliders() method
 {
     Dot dotAp = *this;
     Collision collision;
@@ -257,8 +264,9 @@ Collision Dot::checkDotForce( Dot & dotB )
 
     Circle a = dotAp.getColliders();
     Circle b = dotB.getColliders();
+    
     //Calculate total radius squared
-    int totalRadius = dotAp.fR + dotB.fR;
+    int totalRadius = dotAp.getfR() + dotB.getfR();
     float totalRadiusSquared = totalRadius * totalRadius;
     float distance_Squared = distanceSquared( a.x, a.y, b.x, b.y );
 
@@ -277,10 +285,10 @@ Collision Dot::checkDotForce( Dot & dotB )
         // float relVecY = dotAp.getVelY() - dotB.getVelY();
 
         // float dotProd = normalX * relVecX + normalY * relVecY;
-        float shared_density = sharedDensity( dotAp.density, dotB.density);
+        // float shared_density = sharedDensity( dotAp.density, dotB.density);
 
-        float impulseX = normalX * force_factor * force_factor * force_factor * (shared_density - DENSITY_DESIRED) * FORCE;
-        float impulseY = normalY * force_factor * force_factor * force_factor * (shared_density - DENSITY_DESIRED) * FORCE;
+        float impulseX = normalX * force_factor * force_factor * force_factor * FORCE;
+        float impulseY = normalY * force_factor * force_factor * force_factor * FORCE;
 
         float radius_ratio = (float)totalRadius / magnitude;
 
@@ -307,12 +315,6 @@ void Dot::shiftColliders()
     mCollider.y = mPosY;
 }
 
-Circle& Dot::getColliders()
-{
-    return mCollider;
-}
-
-
 //GETS/SETS
 float Dot::getVelX()
 {
@@ -334,10 +336,6 @@ void Dot::setmVelY( float velY )
     mVelY += velY;
 }
 
-void Dot::setDensity( float density )
-{
-    this->density = density;
-}
 
 float Dot::getmPosX()
 {

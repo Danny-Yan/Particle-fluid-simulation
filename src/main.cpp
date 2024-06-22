@@ -164,13 +164,13 @@ int main( int argc, char* args[] )
     int particlesPerCol = (PARTICLE_NUM - 1) / particlesPerRow + 1;
     float x_cord;
     float y_cord;
+    float particle_density;
 
     // Initialising vectors
     std::vector<Entry> particleHashEntries(PARTICLE_NUM);
     std::vector<int> spacialKeys(PARTICLE_NUM);
     std::vector<Dot> dots;
     std::vector<Dot*> filtered_dots;
-    std::vector<float> densities;
 
     for ( int i = 0; i < PARTICLE_NUM; i++ )
     {
@@ -188,7 +188,7 @@ int main( int argc, char* args[] )
     {
         Dot &dot = dots[i];
         particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
-        float particle_density = calculateDensity( filtered_dots, dot );
+        calculateDensity( particle_density, filtered_dots, dot );
         dots[i].setDensity( particle_density );
     }
 
@@ -206,7 +206,7 @@ int main( int argc, char* args[] )
     timer.start();
 
     //Mouse
-    Mouse mouse;
+    Mouse mouse( 10, 100);
     int xPrevMouse = 0;
     int yPrevMouse = 0;
 
@@ -280,10 +280,10 @@ int main( int argc, char* args[] )
             if (timer.getTicked() == 1){
                 timer.pause();
             }
-            mouse.velX = (mouse.x - xPrevMouse) / timeInterval;
-            mouse.velY = (mouse.y - yPrevMouse) / timeInterval;
-            xPrevMouse = mouse.x;
-            yPrevMouse = mouse.y;
+            // mouse.velX = (mouse.x - xPrevMouse) / timeInterval;
+            // mouse.velY = (mouse.y - yPrevMouse) / timeInterval;
+            // xPrevMouse = mouse.x;
+            // yPrevMouse = mouse.y;
 
             //Move all dots
             for (Dot &dot : dots)
@@ -315,12 +315,13 @@ int main( int argc, char* args[] )
             {
                 Dot &dot = dots[i];
                 particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
-                float particle_density = calculateDensity( filtered_dots, dot );
+                calculateDensity( particle_density, filtered_dots, dot );
                 dot.setDensity( particle_density );
 
                 for (Dot* dotB: filtered_dots ){
-                    dot.check_vector_force( mouse, timeInterval, wall, *dotB );
+                    dot.check_vector_force( *dotB );
                 }
+                // dot.check_mouse_force( mouse );
                 dot.check_wall_collision();
 
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());

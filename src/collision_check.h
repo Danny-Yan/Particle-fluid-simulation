@@ -14,16 +14,6 @@ struct Circle
     int r;
 };
 
-//Mouse structure
-struct Mouse
-{
-    int x = 0; 
-    int y = 0;
-    int r = 100;
-    int velX = 0; 
-    int velY = 0;
-};
-
 //A collision vector
 struct Collision
 {
@@ -41,7 +31,7 @@ Collision checkCollision( Circle& a, Circle& b );
 //Circle/Box collision detector
 Collision checkCollision( Circle& a, SDL_Rect& b );
 
-Collision checkCollision( Circle& a, Mouse b );
+// Collision checkCollision( Circle& a, Mouse mouse );
 
 // Collision checkCollision( Dot& a, Dot& b );
 

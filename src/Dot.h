@@ -11,24 +11,26 @@
 #include "constants.h"
 #include "helper_structs.h"
 #include "spatial_hashers.h"
+#include "collider.h"
+#include "Mouse.h"
 
 //The dot that will move around on the screen
-class Dot
+class Dot : public Collider
 {
     public:
         //Initializes the variables
-        Dot( int x, int y , int velX, int velY, int radius );
+        Dot( int x, int y , int velX, int velY, int radius);
 
         //Moves the dot
         void moveVector( float deltaTime );
 
         //Check collision with another dot
-        void check_vector_collision( Mouse mouse, float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
-        void check_vector_force( Mouse mouse, float deltaTime, SDL_Rect& square, Dot &dot );
+        void check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
+        void check_vector_force( Dot &dot );
         void check_wall_collision();
+        void check_mouse_force( Mouse &mouse );
 
         //Getters
-        Circle& getColliders();
         float getVelX();
         float getVelY();
         float getmPosX();
@@ -37,9 +39,7 @@ class Dot
         //Setters
         void setmVelX( float velX );
         void setmVelY( float velY );
-        void setDensity( float density );
 
-        
         //Shows the dot on the screen
         void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
 
@@ -52,14 +52,6 @@ class Dot
         float mVelX, mVelY;
         float Velx, Vely;
 
-        //Force radius
-        float fR;
-        
-        float density;
-
-        //Dot's collision circle
-        Circle mCollider;
-
         //Dot's collision vector with another dot
         Collision cLVector;
 
@@ -67,7 +59,7 @@ class Dot
         void shiftColliders();
 
         Collision checkDotCollision( Dot& b );
-        Collision checkDotForce( Dot& b );
+        Collision checkCircleForce( Collider& b );
 };
 
 

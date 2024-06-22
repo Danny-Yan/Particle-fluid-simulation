@@ -29,7 +29,7 @@ void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &sp
     }
 }
 
-float calculateDensity( std::vector<Dot*> &circles, Dot &dot )
+void calculateDensity( float &particle_density, std::vector<Dot*> &circles, Dot &dot )
 {
     int amount = 0;
     Circle a = dot.getColliders();
@@ -51,12 +51,12 @@ float calculateDensity( std::vector<Dot*> &circles, Dot &dot )
     float area = (a.r * a.r);
 
     float density = amount / area;
-    return density;
+    particle_density = density;
 }
 
-void particleFilter( std::vector<Dot*> &Dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA )
+void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA )
 {
-    Dots.clear();
+    filtered_dots.clear();
     //Computing 3x3 spacial hash 
     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getmPosX(), (int)dotA.getmPosY());
 
@@ -79,7 +79,7 @@ void particleFilter( std::vector<Dot*> &Dots, std::vector<Dot> &circles, std::ve
                 continue;
             }
 
-            Dots.push_back(&dot);
+            filtered_dots.push_back(&dot);
         }
     }
 }
