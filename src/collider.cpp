@@ -17,6 +17,11 @@ void Collider::setDensity( float density )
     this->density = density;
 }
 
+float Collider::getDensity()
+{
+    return density;
+}
+
 void Collider::setfR( float fR )
 {
     this->fR = fR;

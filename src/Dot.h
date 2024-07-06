@@ -35,10 +35,12 @@ class Dot : public Collider
         float getVelY();
         float getmPosX();
         float getmPosY();
+        float getPosX();
+        float getPosY();
 
         //Setters
-        void setmVelX( float velX );
-        void setmVelY( float velY );
+        void addmVelX( float velX );
+        void addmVelY( float velY );
 
         //Shows the dot on the screen
         void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);

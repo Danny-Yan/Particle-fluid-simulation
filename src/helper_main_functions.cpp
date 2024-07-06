@@ -29,36 +29,106 @@ void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &sp
     }
 }
 
-void calculateDensity( float &particle_density, std::vector<Dot*> &circles, Dot &dot )
+void updateDensities(std::vector<Dot> &dots, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys)
 {
-    int amount = 0;
-    Circle a = dot.getColliders();
+    float particle_density;
+    std::vector<Dot*> filtered_dots;
+    for(Dot &dot: dots){
+        particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot );
+        calculateDensity( particle_density, filtered_dots, dot.getmPosX(), dot.getmPosY() );
+        dot.setDensity( particle_density );
+    }
+}
+
+void calculateDensity( float &particle_density, std::vector<Dot*> &circles, float x, float y )
+{
+    float influence = 0;
     float radius_squared = FORCE_RADIUS * FORCE_RADIUS;
 
     for (Dot* dotB: circles)
     {
-        if (&dot == dotB)
-        {
-            continue;
-        }
         Circle b = dotB->getColliders();
+        float distance_squared = distanceSquared(x, y, b.x, b.y);
+        if (distance_squared <= radius_squared)
+        {
+            float distance = sqrt(distance_squared);
+            influence += smoothingKernel(distance, FORCE_RADIUS);
+        }
+    }
+    particle_density = influence;
+}
+
+std::vector<float> calculatePressureGradient( std::vector<Dot*> &circles, Dot *dotA )
+{
+    Circle a = dotA->getColliders();
+    std::vector<float> pressureGradient = { 0, 0 };
+    float radius_squared = FORCE_RADIUS * FORCE_RADIUS;
+
+    for( Dot *dotB: circles )
+    {
+        Circle b = dotB->getColliders();
+        float normalX;
+        float normalY;
+
         float distance_squared = distanceSquared(a.x, a.y, b.x, b.y);
         if (distance_squared < radius_squared)
         {
-            amount++;
+            float magnitude = sqrt(distance_squared);
+            if (magnitude == 0)
+            {
+                std::vector<float> randomNormal = getRandomDirection();
+                normalX = randomNormal[0];
+                normalY = randomNormal[1];
+            }
+            else
+            {
+                normalX = (a.x - b.x) / magnitude;
+                normalY = (a.y - b.y) / magnitude;
+            }
+            float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
+            float density = sharedDensity( dotB->getDensity(), dotA->getDensity() );
+            pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
+            pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
         }
     }
-    float area = (a.r * a.r);
 
-    float density = amount / area;
-    particle_density = density;
+    return pressureGradient;
 }
+
+float smoothingKernel( float distance, float radius)
+{   
+    float volume = M_PI * (pow(radius, 5) / 10);
+    float force_factor = std::max(0.0f, std::min( distance + radius, -distance + radius));
+    return (distance >= radius) ? 0 : force_factor * force_factor * force_factor / volume;
+}
+
+float smoothingKernelDerivative( float distance, float radius)
+{
+    float volume = M_PI * (pow(radius, 5) / 10);
+    float force_slope = 3 * (distance - radius) * (distance - radius) / volume;
+    return (distance >= radius) ? 0 : force_slope;
+}
+
+std::vector<float> getRandomDirection()
+{
+    int x = std::rand() % 50;
+    int y = std::rand() % 50;
+    float magnitude = sqrt(distanceSquared(0, 0, x, y));
+    return { x / magnitude, y / magnitude };
+}
+
+float densityToPressure( float density )
+{
+    float density_error = density - DENSITY_DESIRED;
+    return density_error * FORCE;
+}
+
 
 void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA )
 {
     filtered_dots.clear();
     //Computing 3x3 spacial hash 
-    std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getmPosX(), (int)dotA.getmPosY());
+    std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getPosX(), (int)dotA.getPosY());
 
     //Iterating through spacial hashes
     for (int hash : spacial_hashes_full)
@@ -74,7 +144,7 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
             }
 
             Dot &dot = circles[particleHashEntries[i].index];
-            if (&dot == &dotA)
+            if ( &dot == &dotA )
             {
                 continue;
             }

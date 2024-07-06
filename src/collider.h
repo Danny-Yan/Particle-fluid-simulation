@@ -14,6 +14,7 @@ class Collider
         Collider(int radius);
         Circle& getColliders();
         void setDensity( float density );
+        float getDensity();
         void setfR( float fR );
         float getfR();
         void setForceMultiplier( float forceMultiplier );

@@ -159,7 +159,7 @@ int main( int argc, char* args[] )
 
     // Spacing equations
     // float spacing_scale = radius * HITBOX_SCALE + spacing;
-    float spacing_scale = 5.0f;
+    float spacing_scale = 20.0f;
     int particlesPerRow = (int)sqrt(PARTICLE_NUM);
     int particlesPerCol = (PARTICLE_NUM - 1) / particlesPerRow + 1;
     float x_cord;
@@ -187,8 +187,11 @@ int main( int argc, char* args[] )
     for ( int i = 0; i < PARTICLE_NUM; i++ )
     {
         Dot &dot = dots[i];
-        particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
-        calculateDensity( particle_density, filtered_dots, dot );
+        // Filters dots only within the spatial vicinity
+        particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
+
+        // Calc density of a position (particle position)
+        calculateDensity( particle_density, filtered_dots, dot.getmPosX(), dot.getmPosY() );
         dot.setDensity( particle_density );
     }
 
@@ -295,11 +298,15 @@ int main( int argc, char* args[] )
             // Update spacial lookup after moving 
             updateSpatialLookup( particleHashEntries, spacialKeys, dots );
 
+            //Update densities after moving
+            updateDensities(dots, particleHashEntries, spacialKeys);
+
+            // CONTACT METHOD ------------------------------------------------------------------------------------------------------
             // // Check collision for all dots
             // for ( int i = 0; i < PARTICLE_NUM; i++)
             // {
             //     Dot &dot = dots[i];
-            //     dot.check_vector_collision( mouse, timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
+            //     dot.check_vector_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
 
             //     int speed = abs(dot.getVelX()) + abs(dot.getVelY());
             //     Uint8 colour = 255 - std::min(speed * 10, 255);
@@ -311,20 +318,60 @@ int main( int argc, char* args[] )
             //     dot.render( gRenderer, gDotTexture );
             // }
 
-            // Check force collision for all dots
+            // FORCE METHOD ---------------------------------------------------------------------------------------------------------
+            // // Check force collision for all dots
+            // for ( int i = 0; i < PARTICLE_NUM; i++)
+            // {
+            //     Dot &dot = dots[i];
+
+            //     // Finds all dots within a vicinity
+            //     particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys,  dot.getmPosX(), dot.getmPosY() ); // filtered_dots
+                
+            //     // COLLISION
+            //     for (Dot* dotB: filtered_dots ){
+            //         dot.check_vector_force( *dotB );
+            //     }
+            //     dot.check_mouse_force( mouse );
+            //     dot.check_wall_collision();
+
+            //     // COLORING
+            //     int speed = abs(dot.getVelX()) + abs(dot.getVelY());
+            //     Uint8 colour = 255 - std::min(speed * 10, 255);
+            //     // r = std::rand() % 255;
+            //     // g = std::rand() % 255;
+            //     // b = std::rand() % 255;
+            //     r = colour;
+            //     gDotTexture.setColor(r, g, b);
+
+            //     // RENDERING
+            //     dot.render( gRenderer, gDotTexture );
+            // }
+
+
+            //DENSITY METHOD -------------------------------------------------------------------------------------------------------
             for ( int i = 0; i < PARTICLE_NUM; i++)
             {
                 Dot &dot = dots[i];
-                particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot);
-                calculateDensity( particle_density, filtered_dots, dot );
-                dot.setDensity( particle_density );
 
-                for (Dot* dotB: filtered_dots ){
-                    dot.check_vector_force( *dotB );
+                // Finds all dots within a vicinity
+                particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
+
+                std::vector<float> pressures = calculatePressureGradient( filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
+                
+                if( abs(dot.getDensity()) > 0.0f )
+                {
+                    dot.addmVelX(pressures[0] / dot.getDensity());
+                    dot.addmVelY(pressures[1] / dot.getDensity());
                 }
-                dot.check_mouse_force( mouse );
+                
+                // // COLLISION
+                // for (Dot* dotB: filtered_dots ){
+                //     dot.check_vector_force( *dotB );
+                // }
+                // dot.check_mouse_force( mouse );
                 dot.check_wall_collision();
 
+                // COLORING
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());
                 Uint8 colour = 255 - std::min(speed * 10, 255);
                 // r = std::rand() % 255;
@@ -332,8 +379,11 @@ int main( int argc, char* args[] )
                 // b = std::rand() % 255;
                 r = colour;
                 gDotTexture.setColor(r, g, b);
+
+                // RENDERING
                 dot.render( gRenderer, gDotTexture );
             }
+
 
             //Update screen
             SDL_RenderPresent( gRenderer );

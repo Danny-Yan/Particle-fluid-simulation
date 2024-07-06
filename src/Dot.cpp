@@ -66,11 +66,11 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
                 mPosY += cLVector.sa[1];
 
                 //Momentum transfer
-                setmVelX( -cLVector.v[0] );
-                setmVelY( -cLVector.v[1] );
+                addmVelX( -cLVector.v[0] );
+                addmVelY( -cLVector.v[1] );
 
-                dot.setmVelX( cLVector.v[0] );
-                dot.setmVelY( cLVector.v[1] );
+                dot.addmVelX( cLVector.v[0] );
+                dot.addmVelY( cLVector.v[1] );
 
                 shiftColliders();
             }
@@ -183,11 +183,11 @@ void Dot::check_vector_force( Dot &dot )
     if (cLVector.didCollide)
     {
         //Momentum transfer
-        setmVelX( -cLVector.v[0] * dot.forceMultiplier );
-        setmVelY( -cLVector.v[1] * dot.forceMultiplier );
+        addmVelX( -cLVector.v[0] * dot.forceMultiplier );
+        addmVelY( -cLVector.v[1] * dot.forceMultiplier );
 
-        dot.setmVelX( cLVector.v[0] * this->forceMultiplier );
-        dot.setmVelY( cLVector.v[1] * this->forceMultiplier );
+        dot.addmVelX( cLVector.v[0] * this->forceMultiplier );
+        dot.addmVelY( cLVector.v[1] * this->forceMultiplier );
     }
 }
 
@@ -246,8 +246,8 @@ void Dot::check_mouse_force( Mouse &mouse )
     if (cLVector.didCollide)
     {
         //Momentum transfer
-        setmVelX( -cLVector.v[0] * mouse.getForceMultiplier() );
-        setmVelY( -cLVector.v[1] * mouse.getForceMultiplier() );
+        addmVelX( -cLVector.v[0] * mouse.getForceMultiplier() );
+        addmVelY( -cLVector.v[1] * mouse.getForceMultiplier() );
     }
 }
 
@@ -285,19 +285,14 @@ Collision Dot::checkCircleForce( Collider &dotB )
         // float relVecY = dotAp.getVelY() - dotB.getVelY();
 
         // float dotProd = normalX * relVecX + normalY * relVecY;
-        // float shared_density = sharedDensity( dotAp.density, dotB.density);
+        // float shared_density = sharedDensity( dotAp.getDensity(), dotB.getDensity());
 
-        float impulseX = normalX * force_factor;
-        float impulseY = normalY * force_factor;
-
-        float radius_ratio = (float)totalRadius / magnitude;
+        float impulseX = normalX * force_factor * force_factor * force_factor;
+        float impulseY = normalY * force_factor * force_factor * force_factor;
 
         //The circles have collided
         collision.v.push_back(-impulseX);
         collision.v.push_back(-impulseY);
-        collision.sa.push_back(radius_ratio * (a.x - b.x) - (a.x - b.x));
-        collision.sa.push_back(radius_ratio * (a.y - b.y) - (a.y - b.y));
-
         collision.didCollide = true;
         return collision;
     }
@@ -326,12 +321,12 @@ float Dot::getVelY()
     return Vely;
 }
 
-void Dot::setmVelX( float velX )
+void Dot::addmVelX( float velX )
 {
     mVelX += velX;
 }
 
-void Dot::setmVelY( float velY )
+void Dot::addmVelY( float velY )
 {
     mVelY += velY;
 }
@@ -347,6 +342,15 @@ float Dot::getmPosY()
     return mPosY;
 }
 
+float Dot::getPosX()
+{
+    return PosX;
+}
+
+float Dot::getPosY()
+{
+    return PosY;
+}
 //RENDER
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
 {
