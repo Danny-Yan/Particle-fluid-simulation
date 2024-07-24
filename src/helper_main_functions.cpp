@@ -1,14 +1,14 @@
 #include "helper_main_functions.h"
 
 // Adapted from sebastain lague's tutorial
-void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &spatialKeys, std::vector<Dot> &dots){
-
+void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &spatialKeys, std::vector<Dot> &dots)
+{
     // Compute spatial hash for each dot
     for (int i = 0; i < dots.size(); i++)
     {
         Dot &dot = dots[i];
         int spatialX, spatialY;
-        std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getmPosX(), (int)dot.getmPosY() );
+        std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getPosX(), (int)dot.getPosY() );
         int spatial_hash = compute_spatial_hash( spatialX, spatialY );
         Entry entry = Entry(spatial_hash, i);
         spatialLookup[i] = entry;
@@ -21,9 +21,9 @@ void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &sp
     for (int i = 0; i < dots.size(); i++)
     {
         int Key = spatialLookup[i].hash;
-        int keyPrev;
-        if (i == 0){keyPrev = INT_MAX;} else {keyPrev = spatialLookup[i - 1].hash;}
-        if (Key != keyPrev){
+        int keyPrev = (i == 0) ? INT_MAX : spatialLookup[i - 1].hash;
+        if (Key != keyPrev)
+        {
             spatialKeys[Key] = i;
         }
     }
@@ -35,7 +35,8 @@ void updateDensities(std::vector<Dot> &dots, std::vector<Entry> &particleHashEnt
     std::vector<Dot*> filtered_dots;
     for(Dot &dot: dots){
         particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot );
-        calculateDensity( particle_density, filtered_dots, dot.getmPosX(), dot.getmPosY() );
+        calculateDensity( particle_density, filtered_dots, dot.getPosX(), dot.getPosY() );
+        // printf("%f\n", particle_density);
         dot.setDensity( particle_density );
     }
 }
@@ -49,10 +50,10 @@ void calculateDensity( float &particle_density, std::vector<Dot*> &circles, floa
     {
         Circle b = dotB->getColliders();
         float distance_squared = distanceSquared(x, y, b.x, b.y);
-        if (distance_squared <= radius_squared)
+        if (distance_squared < radius_squared)
         {
             float distance = sqrt(distance_squared);
-            influence += smoothingKernel(distance, FORCE_RADIUS);
+            influence += smoothingKernel( distance, FORCE_RADIUS );
         }
     }
     particle_density = influence;
@@ -98,21 +99,21 @@ std::vector<float> calculatePressureGradient( std::vector<Dot*> &circles, Dot *d
 float smoothingKernel( float distance, float radius)
 {   
     float volume = M_PI * (pow(radius, 5) / 10);
-    float force_factor = std::max(0.0f, std::min( distance + radius, -distance + radius));
-    return (distance >= radius) ? 0 : force_factor * force_factor * force_factor / volume;
+    float force_factor = radius - distance;
+    return force_factor * force_factor * force_factor / volume;
 }
 
 float smoothingKernelDerivative( float distance, float radius)
 {
     float volume = M_PI * (pow(radius, 5) / 10);
-    float force_slope = 3 * (distance - radius) * (distance - radius) / volume;
-    return (distance >= radius) ? 0 : force_slope;
+    float force_slope = -3 * (distance - radius) * (distance - radius) / volume;
+    return force_slope;
 }
 
 std::vector<float> getRandomDirection()
 {
-    int x = std::rand() % 50;
-    int y = std::rand() % 50;
+    int x = std::rand() % 50 - 25;
+    int y = std::rand() % 50 - 25;
     float magnitude = sqrt(distanceSquared(0, 0, x, y));
     return { x / magnitude, y / magnitude };
 }

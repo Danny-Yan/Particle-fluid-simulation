@@ -159,7 +159,7 @@ int main( int argc, char* args[] )
 
     // Spacing equations
     // float spacing_scale = radius * HITBOX_SCALE + spacing;
-    float spacing_scale = 20.0f;
+    float spacing_scale = 10.0f;
     int particlesPerRow = (int)sqrt(PARTICLE_NUM);
     int particlesPerCol = (PARTICLE_NUM - 1) / particlesPerRow + 1;
     float x_cord;
@@ -191,7 +191,7 @@ int main( int argc, char* args[] )
         particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
 
         // Calc density of a position (particle position)
-        calculateDensity( particle_density, filtered_dots, dot.getmPosX(), dot.getmPosY() );
+        calculateDensity( particle_density, filtered_dots, dot.getPosX(), dot.getPosY() );
         dot.setDensity( particle_density );
     }
 
@@ -352,25 +352,19 @@ int main( int argc, char* args[] )
             for ( int i = 0; i < PARTICLE_NUM; i++)
             {
                 Dot &dot = dots[i];
+                dot.check_wall_no_shift();
 
                 // Finds all dots within a vicinity
                 particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
 
                 std::vector<float> pressures = calculatePressureGradient( filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
-                
-                if( abs(dot.getDensity()) > 0.0f )
+
+                if (abs(dot.getDensity()) > 0.0f)
                 {
                     dot.addmVelX(pressures[0] / dot.getDensity());
                     dot.addmVelY(pressures[1] / dot.getDensity());
                 }
                 
-                // // COLLISION
-                // for (Dot* dotB: filtered_dots ){
-                //     dot.check_vector_force( *dotB );
-                // }
-                // dot.check_mouse_force( mouse );
-                dot.check_wall_collision();
-
                 // COLORING
                 int speed = abs(dot.getVelX()) + abs(dot.getVelY());
                 Uint8 colour = 255 - std::min(speed * 10, 255);

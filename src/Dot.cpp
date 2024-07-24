@@ -239,6 +239,50 @@ void Dot::check_wall_collision(){
     }
 }
 
+void Dot::check_wall_no_shift(){
+    //Check for screen wall collision
+    if( ( mPosX - mCollider.r < 0 ) )
+    {
+        //Move back
+        mPosX = mCollider.r;
+        mPosY -= (mPosX - mCollider.r) * mVelY / mVelX;
+
+        //Reverse velocity
+        mVelX = -( mVelX / (hFriction + 1) );
+    } 
+
+    if ( ( mPosX + mCollider.r > SCREEN_WIDTH ) )
+    {
+        //Move back
+        mPosX = SCREEN_WIDTH - mCollider.r;
+        mPosY -= (SCREEN_WIDTH - mPosX - mCollider.r) * mVelY / mVelX;
+
+        //Reverse velocity
+        mVelX = -( mVelX / (hFriction + 1) );
+    }
+
+    //Check for ceiling/floor collision
+    if( ( mPosY - mCollider.r < 0 ) )
+    {
+        //Move back
+        mPosY = mCollider.r;
+        mPosX -= (mPosY - mCollider.r) * mVelX / mVelY;
+
+        // Reverse velocity
+        mVelY = -(mVelY - vfriction);
+    } 
+
+    if( ( mPosY + mCollider.r > SCREEN_HEIGHT ) )
+    {
+        //Move back
+        mPosY = SCREEN_HEIGHT - mCollider.r;
+        mPosX -= (SCREEN_HEIGHT - mPosY - mCollider.r) * mVelX / mVelY;
+        
+        // Reverse velocity
+        mVelY = -(mVelY - vfriction);
+    }
+}
+
 void Dot::check_mouse_force( Mouse &mouse )
 {
     //COLLISION CHECK
@@ -323,12 +367,12 @@ float Dot::getVelY()
 
 void Dot::addmVelX( float velX )
 {
-    mVelX += velX;
+    mVelX = velX;
 }
 
 void Dot::addmVelY( float velY )
 {
-    mVelY += velY;
+    mVelY = velY;
 }
 
 

@@ -28,6 +28,7 @@ class Dot : public Collider
         void check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
         void check_vector_force( Dot &dot );
         void check_wall_collision();
+        void check_wall_no_shift();
         void check_mouse_force( Mouse &mouse );
 
         //Getters
