@@ -125,6 +125,8 @@ float densityToPressure( float density )
 }
 
 
+
+// Convert to iterator
 void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA )
 {
     filtered_dots.clear();
@@ -154,3 +156,33 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
         }
     }
 }
+
+
+// // Particle filter iterator using boost
+// void particleFilterIterator(coro_t::push_type& yield, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA){
+    
+//     //Computing 3x3 spacial hash 
+//     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getPosX(), (int)dotA.getPosY());
+
+//     //Iterating through spacial hashes
+//     for (int hash : spacial_hashes_full)
+//     {
+//         int key = spacialKeys[hash];
+//         if ( key == INT_MAX){
+//             continue;
+//         }
+//         for (int i = key; i < circles.size(); i++)
+//         {
+//             if (particleHashEntries[i].hash != hash){
+//                 break;
+//             }
+
+//             Dot &dot = circles[particleHashEntries[i].index];
+//             if ( &dot == &dotA )
+//             {
+//                 continue;
+//             }
+//             yield(&dot);
+//         }
+//     }
+// }

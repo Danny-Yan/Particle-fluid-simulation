@@ -153,7 +153,6 @@ int main( int argc, char* args[] )
     Uint8 colour = 255;
 
     // Spacing variables
-    float timeInterval = 1.0f; // Doesnt work
     float spacing = 0;
     int radius = 10;           // Doesnt work
 
@@ -203,8 +202,9 @@ int main( int argc, char* args[] )
     wall.h = 0;
 
     //Timer
-    Uint32 Ticks = 0;
-    Uint32 deltaTime = 0;
+    Uint64 Ticks = 0;
+    Uint64 deltaTime = 0;
+    Uint64 interval = 0;
     LTimer timer;
     timer.start();
 
@@ -276,37 +276,29 @@ int main( int argc, char* args[] )
         //Render wall
         SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0xFF );        
         SDL_RenderDrawRect( gRenderer, &wall );
-        mouse.move();
-        
-        deltaTime += timer.getTicks(); // After pausing for an extended period of time then unpausing, the entire system freezes
-        if ( (float)deltaTime >= timeInterval && timer.isPaused() == 0 )
-        {
-            if (timer.getTicked() == 1){
-                timer.pause();
-            }
-            // mouse.velX = (mouse.x - xPrevMouse) / timeInterval;
-            // mouse.velY = (mouse.y - yPrevMouse) / timeInterval;
-            // xPrevMouse = mouse.x;
-            // yPrevMouse = mouse.y;
 
+        float deltaTime = (timer.getTicks() - interval) * 100000 / (float) SDL_GetPerformanceFrequency(); // Get the time passed in ms since the start of the frame.        
+        // printf("%f\n", deltaTime);
+        if ( deltaTime >= TIMEINTERVAL && timer.isPaused() == 0 )
+        {
             //Move all dots
             for (Dot &dot : dots)
             {
-                dot.moveVector( timeInterval );
+                dot.movePrediction( 1.0f );
             }
 
-            // Update spacial lookup after moving 
+            // Update spacial lookup after moving
             updateSpatialLookup( particleHashEntries, spacialKeys, dots );
 
             //Update densities after moving
-            updateDensities(dots, particleHashEntries, spacialKeys);
+            updateDensities( dots, particleHashEntries, spacialKeys );
 
-            // CONTACT METHOD ------------------------------------------------------------------------------------------------------
+            // // CONTACT METHOD ------------------------------------------------------------------------------------------------------
             // // Check collision for all dots
             // for ( int i = 0; i < PARTICLE_NUM; i++)
             // {
             //     Dot &dot = dots[i];
-            //     dot.check_vector_collision( timeInterval, wall, dots, particleHashEntries, spacialKeys, i );
+            //     dot.check_vector_collision( TIMEINTERVAL, wall, dots, particleHashEntries, spacialKeys, i );
 
             //     int speed = abs(dot.getVelX()) + abs(dot.getVelY());
             //     Uint8 colour = 255 - std::min(speed * 10, 255);
@@ -318,7 +310,7 @@ int main( int argc, char* args[] )
             //     dot.render( gRenderer, gDotTexture );
             // }
 
-            // FORCE METHOD ---------------------------------------------------------------------------------------------------------
+            // FORCE METHOD (Doesn't work) ---------------------------------------------------------------------------------------------------------
             // // Check force collision for all dots
             // for ( int i = 0; i < PARTICLE_NUM; i++)
             // {
@@ -348,8 +340,39 @@ int main( int argc, char* args[] )
             // }
 
 
-            //DENSITY METHOD -------------------------------------------------------------------------------------------------------
-            for ( int i = 0; i < PARTICLE_NUM; i++)
+            // //DENSITY METHOD -------------------------------------------------------------------------------------------------------
+            // for ( int i = 0; i < PARTICLE_NUM; i++ )
+            // {
+            //     Dot &dot = dots[i];
+            //     dot.check_wall_no_shift();
+
+            //     // Finds all dots within a vicinity
+            //     particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
+
+            //     std::vector<float> pressures = calculatePressureGradient( filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
+
+            //     if (abs(dot.getDensity()) > 0.0f)
+            //     {
+            //         dot.addmVelX(pressures[0] / dot.getDensity());
+            //         dot.addmVelY(pressures[1] / dot.getDensity());
+            //     }
+
+            //     // COLORING
+            //     int speed = abs( dot.getVelX() ) + abs( dot.getVelY() );
+            //     Uint8 colour = 255 - std::min(speed * 10, 255);
+            //     // r = std::rand() % 255;
+            //     // g = std::rand() % 255;
+            //     // b = std::rand() % 255;
+            //     r = colour;
+            //     gDotTexture.setColor(r, g, b);
+
+            //     // RENDERING
+            //     dot.render( gRenderer, gDotTexture );
+            // }
+
+
+            //DENSITY METHOD 2 -------------------------------------------------------------------------------------------------------
+            for ( int i = 0; i < PARTICLE_NUM; i++ )
             {
                 Dot &dot = dots[i];
                 dot.check_wall_no_shift();
@@ -358,15 +381,22 @@ int main( int argc, char* args[] )
                 particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
 
                 std::vector<float> pressures = calculatePressureGradient( filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
-
-                if (abs(dot.getDensity()) > 0.0f)
+                
+                if (abs(dot.getDensity()) > 0.001f)
                 {
                     dot.addmVelX(pressures[0] / dot.getDensity());
                     dot.addmVelY(pressures[1] / dot.getDensity());
                 }
-                
+
+            }
+
+            //Move all dots
+            for (Dot &dot : dots)
+            {
+                dot.move( TIMEINTERVAL );
+
                 // COLORING
-                int speed = abs(dot.getVelX()) + abs(dot.getVelY());
+                int speed = abs( dot.getVelX() ) + abs( dot.getVelY() );
                 Uint8 colour = 255 - std::min(speed * 10, 255);
                 // r = std::rand() % 255;
                 // g = std::rand() % 255;
@@ -378,10 +408,9 @@ int main( int argc, char* args[] )
                 dot.render( gRenderer, gDotTexture );
             }
 
-
             //Update screen
             SDL_RenderPresent( gRenderer );
-            deltaTime = 0;
+            interval = timer.getTicks();
         }
     }
 

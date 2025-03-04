@@ -7,6 +7,8 @@ Dot::Dot( int x, int y , int velX, int velY, int radius) : Collider(radius)
     PosY = y;
     mPosX = x;
     mPosY = y;
+    sPosX = x;
+    sPosY = y;
 
     //Initialize the velocity
     Velx = velX;
@@ -31,6 +33,28 @@ void Dot::moveVector(float deltaTime)
     PosX = mPosX;
     PosY = mPosY;
     shiftColliders();
+}
+
+void Dot::movePrediction(float deltaTime)
+{
+
+    mPosX += mVelX * deltaTime;
+    mVelY += accel * deltaTime;
+    mPosY += mVelY * deltaTime;
+
+    Velx = mVelX;
+    Vely = mVelY;
+
+    PosX = mPosX;
+    PosY = mPosY;
+    shiftColliders();
+}
+
+
+void Dot::move(float deltaTime)
+{
+    mPosX += mVelX * deltaTime;
+    mPosY += mVelY * deltaTime;
 }
 
 void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
@@ -354,6 +378,13 @@ void Dot::shiftColliders()
     mCollider.y = mPosY;
 }
 
+void Dot::shiftCollidersPos()
+{
+    //Align collider to center of dot
+    mCollider.x = PosX;
+    mCollider.y = PosY;
+}
+
 //GETS/SETS
 float Dot::getVelX()
 {
@@ -365,14 +396,15 @@ float Dot::getVelY()
     return Vely;
 }
 
+// CHANGE TO ADD ACCELERATION
 void Dot::addmVelX( float velX )
 {
-    mVelX = velX;
+    mVelX += velX;
 }
 
 void Dot::addmVelY( float velY )
 {
-    mVelY = velY;
+    mVelY += velY;
 }
 
 
@@ -395,9 +427,19 @@ float Dot::getPosY()
 {
     return PosY;
 }
+
+float Dot::getsPosX()
+{
+    return sPosX;
+}
+float Dot::getsPosY()
+{
+    return sPosY;
+}
+
 //RENDER
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
 {
     //Show the dot
-    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE);
+    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE); // Change to sPosX and sPosY for predictive step
 }

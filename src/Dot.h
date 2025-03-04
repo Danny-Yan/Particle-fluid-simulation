@@ -22,6 +22,10 @@ class Dot : public Collider
         Dot( int x, int y , int velX, int velY, int radius);
 
         //Moves the dot
+        void movePrediction( float deltaTime );
+        void move( float deltaTime );
+
+        // Previous design
         void moveVector( float deltaTime );
 
         //Check collision with another dot
@@ -29,6 +33,7 @@ class Dot : public Collider
         void check_vector_force( Dot &dot );
         void check_wall_collision();
         void check_wall_no_shift();
+        void check_wall_sPos();
         void check_mouse_force( Mouse &mouse );
 
         //Getters
@@ -38,6 +43,8 @@ class Dot : public Collider
         float getmPosY();
         float getPosX();
         float getPosY();
+        float getsPosX();
+        float getsPosY();
 
         //Setters
         void addmVelX( float velX );
@@ -50,6 +57,7 @@ class Dot : public Collider
         //The X and Y offsets of the dot
         float mPosX, mPosY;
         float PosX, PosY;
+        float sPosX, sPosY;
 
         //The velocity of the dot
         float mVelX, mVelY;
@@ -59,6 +67,7 @@ class Dot : public Collider
         Collision cLVector;
 
         void shiftColliders() override;
+        void shiftCollidersPos();
         Collision checkDotCollision( Dot& b );
         Collision checkCircleForce( Collider& b );
 };
