@@ -109,7 +109,7 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
         mPosY -= (mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
+        mVelX = -( mVelX );
 
         // Friction
         mVelX *= RESISTANCE;
@@ -125,7 +125,7 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
         mPosY -= (SCREEN_WIDTH - mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
+        mVelX = -( mVelX );
 
         // Friction
         mVelX *= RESISTANCE;
@@ -142,7 +142,7 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
         mPosX -= (mPosY - mCollider.r) * mVelX / mVelY;
 
         // Reverse velocity
-        mVelY = -(mVelY - vfriction);
+        mVelY = -(mVelY);
 
         // Friction
         mVelX *= RESISTANCE;
@@ -158,7 +158,7 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
         mPosX -= (SCREEN_HEIGHT - mPosY - mCollider.r) * mVelX / mVelY;
         
         // Reverse velocity
-        mVelY = -(mVelY - vfriction);
+        mVelY = -(mVelY);
 
         // Friction
         mVelX *= RESISTANCE;
@@ -244,7 +244,12 @@ void Dot::check_wall_collision(){
         mPosY -= (mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
+        mVelX = -( mVelX );
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     } 
 
@@ -255,7 +260,12 @@ void Dot::check_wall_collision(){
         mPosY -= (SCREEN_WIDTH - mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
+        mVelX = -( mVelX );
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     }
 
@@ -267,7 +277,12 @@ void Dot::check_wall_collision(){
         mPosX -= (mPosY - mCollider.r) * mVelX / mVelY;
 
         // Reverse velocity
-        mVelY = -(mVelY - vfriction);
+        mVelY = -(mVelY);
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     } 
 
@@ -278,7 +293,12 @@ void Dot::check_wall_collision(){
         mPosX -= (SCREEN_HEIGHT - mPosY - mCollider.r) * mVelX / mVelY;
         
         // Reverse velocity
-        mVelY = -(mVelY - vfriction);
+        mVelY = -(mVelY);
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     }
 }
@@ -292,7 +312,11 @@ void Dot::check_wall_no_shift(){
         mPosY -= (mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
+        mVelX = -( mVelX );
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
     } 
 
     if ( ( mPosX + mCollider.r > SCREEN_WIDTH ) )
@@ -302,7 +326,11 @@ void Dot::check_wall_no_shift(){
         mPosY -= (SCREEN_WIDTH - mPosX - mCollider.r) * mVelY / mVelX;
 
         //Reverse velocity
-        mVelX = -( mVelX / (hFriction + 1) );
+        mVelX = -( mVelX );
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
     }
 
     //Check for ceiling/floor collision
@@ -313,7 +341,11 @@ void Dot::check_wall_no_shift(){
         mPosX -= (mPosY - mCollider.r) * mVelX / mVelY;
 
         // Reverse velocity
-        mVelY = -(mVelY - vfriction);
+        mVelY = -(mVelY);
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
     } 
 
     if( ( mPosY + mCollider.r > SCREEN_HEIGHT ) )
@@ -323,7 +355,11 @@ void Dot::check_wall_no_shift(){
         mPosX -= (SCREEN_HEIGHT - mPosY - mCollider.r) * mVelX / mVelY;
         
         // Reverse velocity
-        mVelY = -(mVelY - vfriction);
+        mVelY = -(mVelY);
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
     }
 }
 

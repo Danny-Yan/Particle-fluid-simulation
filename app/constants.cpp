@@ -11,32 +11,21 @@ int GRID_WIDTH = (int)FORCE_RADIUS;
 int GRID_HEIGHT = (int)FORCE_RADIUS;
 float TIMEINTERVAL = 1.0f; // Min 1
 
-
 //Dot constants
 const float RADIUS = 10.0f;               // ***
 const float SPACING = 3.0f;               // ***
 const float accel = 0;               // Hella buggy
-const float vfriction = 0;           // min 0
-const float hFriction = 0;           // Doesnt work :(
+const float RESISTANCE = 0.9f;
 
 const float SCALE = 0.3f;
 const int PARTICLE_NUM = 500;
 
-//Density Constants
-float BARRIER_WIDTH = FORCE_RADIUS;
-const float BARRIER_HEIGHT = 0.5f;  // Energy added/lost to the system
-
-const float DENSITY_DESIRED = 0.00005f;      // Reallllllllly weird 0.0001f
-//Starting density: 0.007 - 0.009
 
 //Check:
 // Inside of check_vector_collision
 // checkXCollision
 // checkYCollision
 // Forces are not working (dot dont touch screen width nor screen height)
-
-
-
 
 // Get chrono to work
 // convert particleFilter to an iterator class

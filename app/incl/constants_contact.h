@@ -3,5 +3,4 @@
 
 // Define constants regarding the contact method ONLY
 
-extern const float RESISTANCE;
 #endif
