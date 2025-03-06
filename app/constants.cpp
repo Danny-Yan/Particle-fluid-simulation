@@ -1,8 +1,8 @@
-#include "constants.h"
+#include "incl/constants.h"
 
 //Force constants
-const float FORCE_RADIUS = 100.0f;           // ***
-const float FORCE = 100;                    // ***
+const float FORCE_RADIUS = 10.0f;           // ***
+const float FORCE = 1;                    // ***
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1500;
@@ -13,17 +13,18 @@ float TIMEINTERVAL = 1.0f; // Min 1
 
 
 //Dot constants
+const float RADIUS = 10.0f;               // ***
+const float SPACING = 3.0f;               // ***
 const float accel = 0;               // Hella buggy
 const float vfriction = 0;           // min 0
 const float hFriction = 0;           // Doesnt work :(
 
 const float SCALE = 0.3f;
-const float HITBOX_SCALE = 1.0f;
-const int PARTICLE_NUM = 2000;
+const int PARTICLE_NUM = 500;
 
 //Density Constants
 float BARRIER_WIDTH = FORCE_RADIUS;
-const float BARRIER_HEIGHT = 1.0f;  // Energy added/lost to the system
+const float BARRIER_HEIGHT = 0.5f;  // Energy added/lost to the system
 
 const float DENSITY_DESIRED = 0.00005f;      // Reallllllllly weird 0.0001f
 //Starting density: 0.007 - 0.009

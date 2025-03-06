@@ -11,11 +11,14 @@ extern float TIMEINTERVAL;
 extern const float accel;
 extern const float vfriction;
 extern const float hFriction;
-extern const float SCALE;
-extern const float HITBOX_SCALE;
-extern const int PARTICLE_NUM;
-extern const float FORCE_RADIUS;
 
+extern const float SCALE;
+extern const int PARTICLE_NUM;
+
+extern const float RADIUS;
+extern const float SPACING;
+
+extern const float FORCE_RADIUS;
 extern const float FORCE;
 extern float BARRIER_WIDTH;
 extern const float BARRIER_HEIGHT;

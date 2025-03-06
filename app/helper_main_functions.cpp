@@ -1,4 +1,4 @@
-#include "helper_main_functions.h"
+#include "incl/helper_main_functions.h"
 
 // Adapted from sebastain lague's tutorial
 void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &spatialKeys, std::vector<Dot> &dots)

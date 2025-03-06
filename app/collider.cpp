@@ -1,9 +1,9 @@
-#include "collider.h"
+#include "incl/collider.h"
 
 
 Collider::Collider(int radius)
 {
-    mCollider.r = radius * HITBOX_SCALE;
+    mCollider.r = radius * SCALE;
     fR = FORCE_RADIUS;
 }
 

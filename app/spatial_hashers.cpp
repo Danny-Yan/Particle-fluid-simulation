@@ -1,4 +1,4 @@
-#include "spatial_hashers.h"
+#include "incl/spatial_hashers.h"
 
 //SPAtIAL HASHING
 std::vector<int> compute_full_spatial_area(int mPosX, int mPosY){

@@ -1,4 +1,4 @@
-#include "collision_check.h"
+#include "incl/collision_check.h"
 
 //Check collision between two circles
 Collision checkCollision( Circle& a, Circle& b )

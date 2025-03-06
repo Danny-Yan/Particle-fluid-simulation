@@ -1,4 +1,4 @@
-#include "Dot.h"
+#include "incl/Dot.h"
 
 Dot::Dot( int x, int y , int velX, int velY, int radius) : Collider(radius)
 {
@@ -90,11 +90,11 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
                 mPosY += cLVector.sa[1];
 
                 //Momentum transfer
-                addmVelX( -cLVector.v[0] );
-                addmVelY( -cLVector.v[1] );
+                addmVelX( -cLVector.v[0] * RESISTANCE);
+                addmVelY( -cLVector.v[1] * RESISTANCE );
 
-                dot.addmVelX( cLVector.v[0] );
-                dot.addmVelY( cLVector.v[1] );
+                dot.addmVelX( cLVector.v[0] * RESISTANCE);
+                dot.addmVelY( cLVector.v[1] * RESISTANCE);
 
                 shiftColliders();
             }
@@ -110,6 +110,11 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
 
         //Reverse velocity
         mVelX = -( mVelX / (hFriction + 1) );
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     } 
 
@@ -121,6 +126,11 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
 
         //Reverse velocity
         mVelX = -( mVelX / (hFriction + 1) );
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     }
 
@@ -133,6 +143,11 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
 
         // Reverse velocity
         mVelY = -(mVelY - vfriction);
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     } 
 
@@ -144,6 +159,11 @@ void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector
         
         // Reverse velocity
         mVelY = -(mVelY - vfriction);
+
+        // Friction
+        mVelX *= RESISTANCE;
+        mVelY *= RESISTANCE;
+
         shiftColliders();
     }
 }

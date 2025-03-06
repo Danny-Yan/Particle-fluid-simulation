@@ -9,6 +9,7 @@
 #include "collision_check.h"
 #include "LTexture.h"
 #include "constants.h"
+#include "constants_contact.h"
 #include "helper_structs.h"
 #include "spatial_hashers.h"
 #include "collider.h"

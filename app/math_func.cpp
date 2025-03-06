@@ -1,4 +1,4 @@
-#include "math_func.h"
+#include "incl/math_func.h"
 
 template <typename T> int sgn( T val )
 {
