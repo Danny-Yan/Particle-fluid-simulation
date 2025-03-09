@@ -8,7 +8,7 @@ void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &sp
     {
         Dot &dot = dots[i];
         int spatialX, spatialY;
-        std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getPosX(), (int)dot.getPosY() );
+        std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getsPosX(), (int)dot.getsPosY() );
         int spatial_hash = compute_spatial_hash( spatialX, spatialY );
         Entry entry = Entry(spatial_hash, i);
         spatialLookup[i] = entry;
@@ -35,7 +35,7 @@ void updateDensities(std::vector<Dot> &dots, std::vector<Entry> &particleHashEnt
     std::vector<Dot*> filtered_dots;
     for(Dot &dot: dots){
         particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot );
-        calculateDensity( particle_density, filtered_dots, dot.getPosX(), dot.getPosY() );
+        calculateDensity( particle_density, filtered_dots, dot.getsPosX(), dot.getsPosY() );
         // printf("%f\n", particle_density);
         dot.setDensity( particle_density );
     }
@@ -131,7 +131,7 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
 {
     filtered_dots.clear();
     //Computing 3x3 spacial hash 
-    std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getPosX(), (int)dotA.getPosY());
+    std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getsPosX(), (int)dotA.getsPosY());
 
     //Iterating through spacial hashes
     for (int hash : spacial_hashes_full)

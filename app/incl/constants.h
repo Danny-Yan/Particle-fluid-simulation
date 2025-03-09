@@ -3,6 +3,7 @@
 
 #include "constants_contact.h"
 #include "constants_density.h"
+#include "constants_force.h"
 
 //Defined global constants
 extern const int SCREEN_WIDTH;

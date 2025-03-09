@@ -22,7 +22,7 @@ class Dot : public Collider
         Dot( int x, int y , int velX, int velY, int radius);
 
         //Moves the dot
-        void movePrediction( float deltaTime );
+        void movePrediction( float deltaTime, float constantDelta );
         void move( float deltaTime );
 
         // Previous design
@@ -33,7 +33,8 @@ class Dot : public Collider
         void check_vector_force( Dot &dot );
         void check_wall_collision();
         void check_wall_no_shift();
-        void check_wall_sPos();
+        void applyDotCollisons(std::vector<Dot>& dots);
+        void applyDotCollisons(std::vector<Dot*>& dots);
         void check_mouse_force( Mouse &mouse );
 
         //Getters

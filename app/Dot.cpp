@@ -35,9 +35,8 @@ void Dot::moveVector(float deltaTime)
     shiftColliders();
 }
 
-void Dot::movePrediction(float deltaTime)
+void Dot::movePrediction(float deltaTime, float constantDelta = 0)
 {
-
     mPosX += mVelX * deltaTime;
     mVelY += accel * deltaTime;
     mPosY += mVelY * deltaTime;
@@ -45,16 +44,16 @@ void Dot::movePrediction(float deltaTime)
     Velx = mVelX;
     Vely = mVelY;
 
-    PosX = mPosX;
-    PosY = mPosY;
+    sPosX = PosX + constantDelta;
+    sPosY = PosY + constantDelta;
     shiftColliders();
 }
 
 
 void Dot::move(float deltaTime)
 {
-    mPosX += mVelX * deltaTime;
-    mPosY += mVelY * deltaTime;
+    PosX = mPosX;
+    PosY = mPosY;
 }
 
 void Dot::check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index)
@@ -217,6 +216,42 @@ Collision Dot::checkDotCollision( Dot & dotB )
 
     //If not
     return collision;
+}
+
+// //Dot/Dot collision detector
+void Dot::applyDotCollisons(std::vector<Dot> &dots){
+    for (Dot dotB: dots){
+        cLVector = this->checkDotCollision( dotB );
+        if (cLVector.didCollide)
+        {
+            //Momentum transfer
+            addmVelX( -cLVector.v[0] );
+            addmVelY( -cLVector.v[1] );
+
+            dotB.addmVelX( cLVector.v[0] );
+            dotB.addmVelY( cLVector.v[1] );
+
+            shiftColliders();
+        }
+    }
+}
+
+void Dot::applyDotCollisons(std::vector<Dot*> &dots){
+    for (Dot *dotB: dots){
+        Dot &dotBp = *dotB;
+        cLVector = this->checkDotCollision( dotBp );
+        if (cLVector.didCollide)
+        {
+            //Momentum transfer
+            addmVelX( -cLVector.v[0] );
+            addmVelY( -cLVector.v[1] );
+
+            dotBp.addmVelX( cLVector.v[0] );
+            dotBp.addmVelY( cLVector.v[1] );
+
+            shiftColliders();
+        }
+    }
 }
 
 //FORCE
