@@ -15,13 +15,13 @@ float TIMEINTERVAL = 1.0f; // Min 1
 const float RADIUS = 10.0f;               // ***
 const float SPACING = 5.0f;               // ***
 const float accel = 0;               // Hella buggy
-const float RESISTANCE = 0.9f;
+const float RESISTANCE = 1.0f;
 
 const float SCALE = 0.5f;
 const int PARTICLE_NUM = 2000; // does not work for < 200
 
 // MOUSE
-const int MOUSE_FORCE_RADIUS = FORCE_RADIUS ;
+const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS;
 const float MOUSE_FORCE = -0.1f;
 
 
@@ -37,10 +37,12 @@ const float MOUSE_FORCE = -0.1f;
 // const float BARRIER_HEIGHT = 0.5f;  // Energy added/lost to the system
 
 //Density Constants
+const float DENSITY_LOWER = 0.0000000001f;
 const float DENSITY_DESIRED = 0.00000005f;
 const float DENSITY_UPPER = 0.0001f;
 
-// Get chrono to work
-// convert particleFilter to an iterator class
 
-
+// Colour constants
+const float COLOR_MAX_SPEED = 1000; // speed * 100
+const float COLOR_MIN[3] = {0, 249, 241};
+const float COLOR_MAX[3] = {238, 86, 86};

@@ -27,8 +27,13 @@ float smoothingKernelDerivative( float distance, float radius);
 std::vector<float> getRandomDirection();
 float densityToPressure( float density );
 void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dot );
-void mousePress( SDL_MouseButtonEvent &b, Mouse *mouse);
+void mouseLeftPress( SDL_MouseButtonEvent &b, Mouse *mouse);
+void mouseRightPress( SDL_MouseButtonEvent &b, Mouse *mouse);
 void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mouse);
+
+// Color processing
+std::vector<Uint8> colourProcessor(int speed);
+Uint8 colourLinearisation(int speed, int color_max_speed, int color_min, int color_max);
 
 // // Particle filter iterator using boost
 // void particleFilterIterator(coro_t::push_type& yield, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA);

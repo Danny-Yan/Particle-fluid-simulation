@@ -1,6 +1,6 @@
 #include "incl/Dot.h"
 
-Dot::Dot( int x, int y , int velX, int velY, int radius) : Collider(x, y, radius, FORCE_RADIUS)
+Dot::Dot( int x, int y , float velX, float velY, int radius) : Collider(x, y, radius, FORCE_RADIUS)
 {
     //Initialize the offsets
     PosX = x; // NOT USED
@@ -45,6 +45,9 @@ void Dot::movePrediction(float deltaTime, float constantDelta = 0)
     mPosX += mVelX * deltaTime;
     mVelY += accel * deltaTime;
     mPosY += mVelY * deltaTime;
+
+    Velx = mVelX;
+    Vely = mVelY;
     shiftColliders();
 }
 
@@ -218,6 +221,19 @@ Collision Dot::checkDotCollision( Dot & dotB )
 }
 
 // //Dot/Dot collision detector
+void Dot::applyDotCollison( Dot &dotB )
+{
+    cLVector = this->checkDotCollision( dotB );
+    if (cLVector.didCollide)
+    {
+        //Momentum transfer
+        addmVelX( -cLVector.v[0] );
+        addmVelY( -cLVector.v[1] );
+
+        dotB.addmVelX( cLVector.v[0] );
+        dotB.addmVelY( cLVector.v[1] );
+    }
+}
 void Dot::applyDotCollisons(std::vector<Dot> &dots){
     for (Dot dotB: dots){
         cLVector = this->checkDotCollision( dotB );
@@ -400,6 +416,10 @@ void Dot::check_wall_no_shift(){
 void Dot::check_mouse_force( Mouse *mP )
 {
     Mouse &mouse = *mP;
+
+    // Dont check collision if mouse is not clicked
+    if (mouse.getForceMultiplier() == 0.0f){return;}
+
     //COLLISION CHECK
     cLVector = this->checkCircleForce( mouse );
     if (cLVector.didCollide && this->density > DENSITY_UPPER)
@@ -492,6 +512,15 @@ float Dot::getVelX()
 float Dot::getVelY()
 {
     return Vely;
+}
+
+float Dot::getmVelX()
+{
+    return mVelX;
+}
+float Dot::getmVelY()
+{
+    return mVelY;
 }
 
 // CHANGE TO ADD ACCELERATION

@@ -19,7 +19,7 @@ class Dot : public Collider
 {
     public:
         //Initializes the variables
-        Dot( int x, int y , int velX, int velY, int radius);
+        Dot( int x, int y , float velX, float velY, int radius);
 
         //Moves the dot
         void movePrediction( float deltaTime, float constantDelta );
@@ -33,12 +33,15 @@ class Dot : public Collider
         void check_vector_force( Dot &dot );
         void check_wall_collision();
         void check_wall_no_shift();
+        void applyDotCollison(Dot &dot);
         void applyDotCollisons(std::vector<Dot>& dots);
         void applyDotCollisons(std::vector<Dot*>& dots);
         void check_mouse_force( Mouse *mouse );
         Collision checkCircleForce( Collider& b );
 
         //Getters
+        float getmVelX();
+        float getmVelY();
         float getVelX();
         float getVelY();
         float getmPosX();

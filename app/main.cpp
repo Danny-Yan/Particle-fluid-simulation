@@ -146,12 +146,6 @@ int main( int argc, char* args[] )
     //Event handler
     SDL_Event e;
 
-    //Modulation components
-    Uint8 r = 0;
-    Uint8 g = 0;
-    Uint8 b = 0;
-    Uint8 colour = 0;
-
     // Spacing equations
     float spacing_scale = RADIUS * SCALE + SPACING;
     int particlesPerRow = (int)sqrt(PARTICLE_NUM);
@@ -182,6 +176,9 @@ int main( int argc, char* args[] )
     {
         Dot &dot = dots[i];
         // Filters dots only within the spatial vicinity
+
+        std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dot.getsPosX(), (int)dot.getsPosY());
+
         particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
 
         // Calc density of a position (particle position)
@@ -226,7 +223,15 @@ int main( int argc, char* args[] )
                 
                 // MOUSE CLICK
                 case SDL_MOUSEBUTTONDOWN:
-                    mousePress( e.button, &mouse);
+                    switch (e.button.button){
+                        case SDL_BUTTON_LEFT:
+                            mouseLeftPress( e.button , &mouse);
+                            break;
+                        case SDL_BUTTON_RIGHT:
+                            mouseRightPress(e.button , &mouse);
+                            break;
+        
+                    }
                     break;
 
                 case SDL_MOUSEBUTTONUP:
@@ -406,12 +411,8 @@ int main( int argc, char* args[] )
             {
                 Dot &dot = dots[i];
                 dot.check_wall_no_shift();
-                // dot.applyDotCollisons( filtered_dots );
                 
-                // particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
-
                 std::vector<float> pressureGradient = { 0, 0 };
-
 
                 // Finds all dots within a vicinity
                 //Computing 3x3 spacial hash 
@@ -435,20 +436,15 @@ int main( int argc, char* args[] )
                         {
                             continue;
                         }
+                        // dot.applyDotCollisons( filtered_dots );
+
+                        // Calc mouse force
+                        dot.check_mouse_force( &mouse );
 
                         // Calc pressure gradient
                         pressureGradient = calculatePressureGradient( pressureGradient, &dotB, &dot ); 
-
-                        // Calc mouse force
-                        if (mouse.getForceMultiplier() != 0.0f){
-                            dot.check_mouse_force( &mouse );
-                        }
                     }
                 }
-
-                
-
-                // std::vector<float> pressures = calculatePressureGradient( pressureGradient, filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
                 
                 if (abs(dot.getDensity()) > DENSITY_UPPER)
                 {
@@ -460,17 +456,10 @@ int main( int argc, char* args[] )
             //Move all dots
             for (Dot &dot : dots)
             {
-
                 // COLORING
-                int speed = abs( dot.getVelX() ) + abs( dot.getVelY() );
-                Uint8 colour = std::min(speed * 5, 255);
-                // r = std::rand() % 255;
-                // g = std::rand() % 255;
-                // b = std::rand() % 255;
-                r = colour;
-                g = 255;
-                b = 255;
-                gDotTexture.setColor(r, g, b);
+                int speed = (abs( dot.getVelX() ) + abs( dot.getVelY() )) * 100;
+                std::vector<Uint8> colors = colourProcessor(speed);
+                gDotTexture.setColor(colors[0], colors[1], colors[2]);
 
                 // RENDERING
                 dot.render( gRenderer, gDotTexture );

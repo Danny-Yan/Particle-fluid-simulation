@@ -25,7 +25,12 @@ extern const float FORCE;
 extern const float BARRIER_HEIGHT;
 extern float BARRIER_WIDTH;
 
+extern const float DENSITY_LOWER;
 extern const float DENSITY_DESIRED;
 extern const float DENSITY_UPPER;
+
+extern const float COLOR_MAX_SPEED;
+extern const float COLOR_MIN[3];
+extern const float COLOR_MAX[3];
 
 #endif

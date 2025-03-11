@@ -62,14 +62,21 @@ void calculateDensity( float &particle_density, std::vector<Dot*> &circles, floa
 std::vector<float> calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB, Dot *dotA )
 {
     Circle a = dotA->getColliders();
-    float radius_squared = FORCE_RADIUS * FORCE_RADIUS;
-
     Circle b = dotB->getColliders();
+    float radius_squared =  a.r * b.r;
+    float force_radius_squared = FORCE_RADIUS * FORCE_RADIUS;
     float normalX;
     float normalY;
 
     float distance_squared = distanceSquared(a.x, a.y, b.x, b.y);
-    if (distance_squared < radius_squared)
+
+    // // CHECK FOR COLLISON
+    // if(distance_squared < radius_squared){
+    //     dotA->applyDotCollison(*dotB);
+    // }
+
+    // CHECK FOR PRESSURE GRADIENT
+    if (distance_squared < force_radius_squared)
     {
         float magnitude = sqrt(distance_squared);
         if (magnitude == 0)
@@ -88,6 +95,7 @@ std::vector<float> calculatePressureGradient( std::vector<float> &pressureGradie
         pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
         pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
     }
+
 
     return pressureGradient;
 }
@@ -155,9 +163,8 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
 
 // MOUSE HANDLES
 
-void mousePress( SDL_MouseButtonEvent &b, Mouse *mP){
+void mouseLeftPress( SDL_MouseButtonEvent &b, Mouse *mP){
     Mouse &mouse = *mP;    
-    if (b.button == SDL_BUTTON_LEFT){
         // for (Dot* dot: dots){
         //     Dot &dotA = *dot;
         //     //COLLISION CHECK
@@ -169,13 +176,30 @@ void mousePress( SDL_MouseButtonEvent &b, Mouse *mP){
         //         dotA.addmVelY( cLVector.v[1] * mouse.getForceMultiplier() );
         //     }
         // }
-        mouse.setForceMultiplier(MOUSE_FORCE);
-    }
+    mouse.setForceMultiplier(MOUSE_FORCE);
+}
+
+void mouseRightPress( SDL_MouseButtonEvent &b, Mouse *mP){
+    Mouse &mouse = *mP; 
+    mouse.setForceMultiplier(-1 * MOUSE_FORCE);
 }
 
 void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mP){
     Mouse &mouse = *mP;    
     mouse.setForceMultiplier(0);
+}
+
+std::vector<Uint8> colourProcessor(int speed){
+    std::vector<Uint8> rgbArr(3);
+    rgbArr[0] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[0], COLOR_MAX[0]); // red
+    rgbArr[1] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[1], COLOR_MAX[1]); // green
+    rgbArr[2] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[2], COLOR_MAX[2]); // blue
+    // printf("Speed: %d, R: %d, G: %d, B: %d\n", speed, rgbArr[0], rgbArr[1], rgbArr[2]);
+    return rgbArr;
+}   
+
+Uint8 colourLinearisation(int speed, int color_max_speed, int color_min, int color_max){
+    return (color_max - color_min) * (speed / color_max_speed) + color_min;
 }
 
 // // Particle filter iterator using boost
