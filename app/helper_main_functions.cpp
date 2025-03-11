@@ -59,38 +59,34 @@ void calculateDensity( float &particle_density, std::vector<Dot*> &circles, floa
     particle_density = influence;
 }
 
-std::vector<float> calculatePressureGradient( std::vector<Dot*> &circles, Dot *dotA )
+std::vector<float> calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB, Dot *dotA )
 {
     Circle a = dotA->getColliders();
-    std::vector<float> pressureGradient = { 0, 0 };
     float radius_squared = FORCE_RADIUS * FORCE_RADIUS;
 
-    for( Dot *dotB: circles )
-    {
-        Circle b = dotB->getColliders();
-        float normalX;
-        float normalY;
+    Circle b = dotB->getColliders();
+    float normalX;
+    float normalY;
 
-        float distance_squared = distanceSquared(a.x, a.y, b.x, b.y);
-        if (distance_squared < radius_squared)
+    float distance_squared = distanceSquared(a.x, a.y, b.x, b.y);
+    if (distance_squared < radius_squared)
+    {
+        float magnitude = sqrt(distance_squared);
+        if (magnitude == 0)
         {
-            float magnitude = sqrt(distance_squared);
-            if (magnitude == 0)
-            {
-                std::vector<float> randomNormal = getRandomDirection();
-                normalX = randomNormal[0];
-                normalY = randomNormal[1];
-            }
-            else
-            {
-                normalX = (a.x - b.x) / magnitude;
-                normalY = (a.y - b.y) / magnitude;
-            }
-            float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
-            float density = sharedDensity( dotB->getDensity(), dotA->getDensity() );
-            pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
-            pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
+            std::vector<float> randomNormal = getRandomDirection();
+            normalX = randomNormal[0];
+            normalY = randomNormal[1];
         }
+        else
+        {
+            normalX = (a.x - b.x) / magnitude;
+            normalY = (a.y - b.y) / magnitude;
+        }
+        float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
+        float density = sharedDensity( dotB->getDensity(), dotA->getDensity() );
+        pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
+        pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
     }
 
     return pressureGradient;
@@ -157,6 +153,30 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
     }
 }
 
+// MOUSE HANDLES
+
+void mousePress( SDL_MouseButtonEvent &b, Mouse *mP){
+    Mouse &mouse = *mP;    
+    if (b.button == SDL_BUTTON_LEFT){
+        // for (Dot* dot: dots){
+        //     Dot &dotA = *dot;
+        //     //COLLISION CHECK
+        //     Collision cLVector = dotA.checkCircleForce( mouse );
+        //     if (cLVector.didCollide)
+        //     {
+        //         //Momentum transfer
+        //         dotA.addmVelX( cLVector.v[0] * mouse.getForceMultiplier() );
+        //         dotA.addmVelY( cLVector.v[1] * mouse.getForceMultiplier() );
+        //     }
+        // }
+        mouse.setForceMultiplier(MOUSE_FORCE);
+    }
+}
+
+void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mP){
+    Mouse &mouse = *mP;    
+    mouse.setForceMultiplier(0);
+}
 
 // // Particle filter iterator using boost
 // void particleFilterIterator(coro_t::push_type& yield, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA){

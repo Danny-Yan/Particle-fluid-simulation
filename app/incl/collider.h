@@ -11,7 +11,7 @@
 class Collider
 {
     public:
-        Collider(int radius);
+        Collider(int x, int y, int radius, int fr = FORCE_RADIUS);
         Circle& getColliders();
         void setDensity( float density );
         float getDensity();

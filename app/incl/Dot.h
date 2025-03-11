@@ -35,7 +35,8 @@ class Dot : public Collider
         void check_wall_no_shift();
         void applyDotCollisons(std::vector<Dot>& dots);
         void applyDotCollisons(std::vector<Dot*>& dots);
-        void check_mouse_force( Mouse &mouse );
+        void check_mouse_force( Mouse *mouse );
+        Collision checkCircleForce( Collider& b );
 
         //Getters
         float getVelX();
@@ -70,7 +71,6 @@ class Dot : public Collider
         void shiftColliders() override;
         void shiftCollidersPos();
         Collision checkDotCollision( Dot& b );
-        Collision checkCircleForce( Collider& b );
 };
 
 

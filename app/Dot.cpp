@@ -1,18 +1,18 @@
 #include "incl/Dot.h"
 
-Dot::Dot( int x, int y , int velX, int velY, int radius) : Collider(radius)
+Dot::Dot( int x, int y , int velX, int velY, int radius) : Collider(x, y, radius, FORCE_RADIUS)
 {
     //Initialize the offsets
-    PosX = x;
-    PosY = y;
+    PosX = x; // NOT USED
+    PosY = y; // NOT USED
     mPosX = x;
     mPosY = y;
     sPosX = x;
     sPosY = y;
 
     //Initialize the velocity
-    Velx = velX;
-    Vely = velY;
+    Velx = velX; // NOT USED
+    Vely = velY; // NOT USED
     mVelX = velX;
     mVelY = velY;
 
@@ -37,15 +37,14 @@ void Dot::moveVector(float deltaTime)
 
 void Dot::movePrediction(float deltaTime, float constantDelta = 0)
 {
+    //  Predicted position
+    sPosX = mPosX + constantDelta;
+    sPosY = mPosY + constantDelta;
+
+    // Initial position after velocity applied
     mPosX += mVelX * deltaTime;
     mVelY += accel * deltaTime;
     mPosY += mVelY * deltaTime;
-
-    Velx = mVelX;
-    Vely = mVelY;
-
-    sPosX = PosX + constantDelta;
-    sPosY = PosY + constantDelta;
     shiftColliders();
 }
 
@@ -398,11 +397,12 @@ void Dot::check_wall_no_shift(){
     }
 }
 
-void Dot::check_mouse_force( Mouse &mouse )
+void Dot::check_mouse_force( Mouse *mP )
 {
+    Mouse &mouse = *mP;
     //COLLISION CHECK
     cLVector = this->checkCircleForce( mouse );
-    if (cLVector.didCollide)
+    if (cLVector.didCollide && this->density > DENSITY_UPPER)
     {
         //Momentum transfer
         addmVelX( -cLVector.v[0] * mouse.getForceMultiplier() );
@@ -425,20 +425,28 @@ Collision Dot::checkCircleForce( Collider &dotB )
     Circle b = dotB.getColliders();
     
     //Calculate total radius squared
-    int totalRadius = dotAp.getfR() + dotB.getfR();
+    float totalRadius = dotAp.getfR() + dotB.getfR();
     float totalRadiusSquared = totalRadius * totalRadius;
     float distance_Squared = distanceSquared( a.x, a.y, b.x, b.y );
 
     //If the distance between the centers of the circles is less than the sum of their radii
     if( distance_Squared <= ( totalRadiusSquared ) )
     {
+        // printf("AX %d\n", a.x);
+        // printf("AY %d\n", a.y);
+        // printf("BX %d\n", b.x);
+        // printf("BY %d\n", b.y);
+
+        // printf("TOTAL RADIUS SQUARED %f\n", totalRadiusSquared);
+        // printf("DISTANCE SQUARED %f\n", distance_Squared);
         //Calculate the impulse vector
         float magnitude = sqrt(distance_Squared);
         float normalX = (a.x - b.x) / magnitude;
         float normalY = (a.y - b.y) / magnitude;
-        float force_factor = std::max(0.0f, std::min( BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT, -BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT));
 
-        // float force_factor = std::max(0, totalRadius - magnitude) / totalRadius;
+        // float force_factor = std::max(0.0f, std::min( BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT, -BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT));
+
+        float force_factor = std::max(0.0f, totalRadius - magnitude) / totalRadius;
 
         // float relVecX = dotAp.getVelX() - dotB.getVelX();
         // float relVecY = dotAp.getVelY() - dotB.getVelY();
@@ -446,14 +454,13 @@ Collision Dot::checkCircleForce( Collider &dotB )
         // float dotProd = normalX * relVecX + normalY * relVecY;
         // float shared_density = sharedDensity( dotAp.getDensity(), dotB.getDensity());
 
-        float impulseX = normalX * force_factor * force_factor * force_factor;
-        float impulseY = normalY * force_factor * force_factor * force_factor;
+        float impulseX = normalX * force_factor;
+        float impulseY = normalY * force_factor;
 
         //The circles have collided
         collision.v.push_back(-impulseX);
         collision.v.push_back(-impulseY);
         collision.didCollide = true;
-        return collision;
     }
 
     //If not
@@ -532,5 +539,5 @@ float Dot::getsPosY()
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
 {
     //Show the dot
-    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE); // Change to sPosX and sPosY for predictive step
+    gDotTexture.render( gRenderer, mPosX - mCollider.r, mPosY - mCollider.r, SCALE); // Change to sPosX and sPosY for predictive step
 }

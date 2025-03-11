@@ -21,12 +21,14 @@
 void updateSpatialLookup(std::vector<Entry> &spacialLookup, std::vector<int> &spacialKeys, std::vector<Dot> &circles);
 void updateDensities(std::vector<Dot> &dots, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys);
 void calculateDensity( float &particle_density, std::vector<Dot*> &circles, float x, float y );
-std::vector<float> calculatePressureGradient( std::vector<Dot*> &circles, Dot *dotA );
+std::vector<float> calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB, Dot *dotA );
 float smoothingKernel( float distance, float radius);
 float smoothingKernelDerivative( float distance, float radius);
 std::vector<float> getRandomDirection();
 float densityToPressure( float density );
 void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dot );
+void mousePress( SDL_MouseButtonEvent &b, Mouse *mouse);
+void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mouse);
 
 // // Particle filter iterator using boost
 // void particleFilterIterator(coro_t::push_type& yield, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA);

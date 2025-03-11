@@ -1,10 +1,15 @@
 #include "incl/collider.h"
 
 
-Collider::Collider(int radius)
+Collider::Collider(int x, int y, int radius, int fr)
 {
+    this->fR = fr;
+
+    //Initialize the offsets
+    mCollider.x = x;
+    mCollider.y = y;
+    
     mCollider.r = radius * SCALE;
-    fR = FORCE_RADIUS;
 }
 
 Circle& Collider::getColliders()

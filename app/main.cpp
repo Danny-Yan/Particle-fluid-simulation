@@ -204,9 +204,7 @@ int main( int argc, char* args[] )
     timer.start();
 
     //Mouse
-    Mouse mouse( 500, 500, -1);
-    int xPrevMouse = 0;
-    int yPrevMouse = 0;
+    Mouse mouse( FORCE_RADIUS, MOUSE_FORCE_RADIUS );
 
     //While application is running
     while( !quit )
@@ -214,53 +212,65 @@ int main( int argc, char* args[] )
         //Handle events on queue
         while( SDL_PollEvent( &e ) != 0 )
         {
-            //User requests quit
-            if( e.type == SDL_QUIT )
-            {
-                quit = true;
-            }
-            
-            if (e.type == SDL_MOUSEMOTION)
-            {
-                SDL_GetMouseState( &mouse.x, &mouse.y );
-            }
+            switch(e.type){
+                // QUIT
+                case SDL_QUIT:
+                    quit = true;
+                    break;
 
-            //Reset start time on return keypress
-            else if( e.type == SDL_KEYDOWN )
-            {
-                //Start/stop
-                if( e.key.keysym.sym == SDLK_s )
-                {
-                    if( timer.isStarted() )
-                    {
-                        timer.stop();
+                // MOUSE MOVE
+                case SDL_MOUSEMOTION:
+                    SDL_GetMouseState( &mouse.x, &mouse.y );
+                    mouse.move();
+                    break;
+                
+                // MOUSE CLICK
+                case SDL_MOUSEBUTTONDOWN:
+                    mousePress( e.button, &mouse);
+                    break;
+
+                case SDL_MOUSEBUTTONUP:
+                    mouseUnPress( e.button , &mouse);
+                    break;
+        
+                // KEYBOARD
+                case SDL_KEYDOWN:
+                    switch ( e.key.keysym.sym){
+
+                        // Start/stop
+                        case SDLK_s:
+                            if( timer.isStarted() )
+                            {
+                                timer.stop();
+                            }
+                            else
+                            {
+                                timer.start();
+                            }
+                            break;
+                        
+                        // Pause/Unpause
+                        case SDLK_p:
+                            if( timer.isPaused() )
+                            {
+                                timer.resetTicked();
+                                timer.unpause();
+                            }
+                            else
+                            {
+                                timer.pause();
+                            }
+                            break;
+
+                        // Ticked
+                        case SDLK_t:
+                            if( timer.isPaused() )
+                            {
+                                timer.unpause();
+                                timer.setTicked();
+                            }
+                            break;
                     }
-                    else
-                    {
-                        timer.start();
-                    }
-                }
-                //Pause/Unpause
-                else if( e.key.keysym.sym == SDLK_p )
-                {
-                    if( timer.isPaused() )
-                    {
-                        timer.resetTicked();
-                        timer.unpause();
-                    }
-                    else
-                    {
-                        timer.pause();
-                    }
-                }
-                else if( e.key.keysym.sym == SDLK_t )
-                {
-                    if( timer.isPaused() )
-                    {
-                        timer.unpause();
-                        timer.setTicked();
-                    }
-                } 
             }
         }
 
@@ -397,31 +407,69 @@ int main( int argc, char* args[] )
                 Dot &dot = dots[i];
                 dot.check_wall_no_shift();
                 // dot.applyDotCollisons( filtered_dots );
+                
+                // particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
+
+                std::vector<float> pressureGradient = { 0, 0 };
+
 
                 // Finds all dots within a vicinity
-                particleFilter( filtered_dots, dots, particleHashEntries, spacialKeys, dot ); // filtered_dots
+                //Computing 3x3 spacial hash 
+                std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dot.getsPosX(), (int)dot.getsPosY());
 
-                std::vector<float> pressures = calculatePressureGradient( filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
-                
-                if (abs(dot.getDensity()) > 0.0001f)
+                //Iterating through spacial hashes
+                for (int hash : spacial_hashes_full)
                 {
-                    dot.addmVelX(pressures[0] / dot.getDensity());
-                    dot.addmVelY(pressures[1] / dot.getDensity());
+                    int key = spacialKeys[hash];
+                    if ( key == INT_MAX){
+                        continue;
+                    }
+                    for (int i = key; i < dots.size(); i++)
+                    {
+                        if (particleHashEntries[i].hash != hash){
+                            break;
+                        }
+
+                        Dot &dotB = dots[particleHashEntries[i].index];
+                        if ( &dotB == &dot )
+                        {
+                            continue;
+                        }
+
+                        // Calc pressure gradient
+                        pressureGradient = calculatePressureGradient( pressureGradient, &dotB, &dot ); 
+
+                        // Calc mouse force
+                        if (mouse.getForceMultiplier() != 0.0f){
+                            dot.check_mouse_force( &mouse );
+                        }
+                    }
+                }
+
+                
+
+                // std::vector<float> pressures = calculatePressureGradient( pressureGradient, filtered_dots, &dot ); // Adding up the gradients for all dots within the vicinity
+                
+                if (abs(dot.getDensity()) > DENSITY_UPPER)
+                {
+                    dot.addmVelX(pressureGradient[0] / dot.getDensity());
+                    dot.addmVelY(pressureGradient[1] / dot.getDensity());
                 }
             }
 
             //Move all dots
             for (Dot &dot : dots)
             {
-                dot.move(TIMEINTERVAL);
 
                 // COLORING
                 int speed = abs( dot.getVelX() ) + abs( dot.getVelY() );
-                Uint8 colour = std::min(speed * 30, 255);
+                Uint8 colour = std::min(speed * 5, 255);
                 // r = std::rand() % 255;
                 // g = std::rand() % 255;
                 // b = std::rand() % 255;
-                b = colour;
+                r = colour;
+                g = 255;
+                b = 255;
                 gDotTexture.setColor(r, g, b);
 
                 // RENDERING

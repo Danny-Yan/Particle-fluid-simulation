@@ -9,13 +9,13 @@ class Mouse : public Collider
 {
     public:
         //Initializes the variables
-        Mouse( int radius, int fR, float forceMultiplier);
+        Mouse( int radius, int fR, float forceMultiplier = 0);
 
-        int x = 0; 
-        int y = 0;
+        int x; 
+        int y;
         int r;
-        int velX = 0; 
-        int velY = 0;
+        int velX; 
+        int velY;
         //Moves the mouse
         void move();
     

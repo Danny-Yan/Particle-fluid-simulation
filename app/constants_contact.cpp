@@ -1,1 +1,0 @@
-#include "incl/constants_contact.h"

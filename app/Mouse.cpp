@@ -1,8 +1,7 @@
 #include "incl/Mouse.h"
 
-Mouse::Mouse( int radius, int fR, float forceMultiplier ) : Collider(radius)
+Mouse::Mouse( int radius, int fR, float forceMultiplier ) : Collider(x, y, radius, fR)
 {
-    setfR(fR);
     setForceMultiplier(forceMultiplier);
 }
 
@@ -11,7 +10,6 @@ void Mouse::move()
 {
     this->shiftColliders();
 }
-
 
 void Mouse::shiftColliders()
 {
