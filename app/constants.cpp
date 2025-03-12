@@ -37,8 +37,8 @@ const float MOUSE_FORCE = -0.1f;
 // const float BARRIER_HEIGHT = 0.5f;  // Energy added/lost to the system
 
 //Density Constants
-const float DENSITY_LOWER = 0.0000000001f;
-const float DENSITY_DESIRED = 0.00000005f;
+const float DENSITY_LOWER = 0.000001f;
+const float DENSITY_DESIRED = 0.00005f;
 const float DENSITY_UPPER = 0.0001f;
 
 

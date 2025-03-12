@@ -179,16 +179,19 @@ void mouseLeftPress( SDL_MouseButtonEvent &b, Mouse *mP){
     mouse.setForceMultiplier(MOUSE_FORCE);
 }
 
+// Right click
 void mouseRightPress( SDL_MouseButtonEvent &b, Mouse *mP){
     Mouse &mouse = *mP; 
     mouse.setForceMultiplier(-1 * MOUSE_FORCE);
 }
 
+// Left click
 void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mP){
     Mouse &mouse = *mP;    
     mouse.setForceMultiplier(0);
 }
 
+// Process speed against rgb values
 std::vector<Uint8> colourProcessor(int speed){
     std::vector<Uint8> rgbArr(3);
     rgbArr[0] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[0], COLOR_MAX[0]); // red
@@ -198,6 +201,7 @@ std::vector<Uint8> colourProcessor(int speed){
     return rgbArr;
 }   
 
+// Linear interpolation of colour against speed
 Uint8 colourLinearisation(int speed, int color_max_speed, int color_min, int color_max){
     return (color_max - color_min) * (speed / color_max_speed) + color_min;
 }
