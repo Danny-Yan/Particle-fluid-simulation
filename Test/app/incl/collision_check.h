@@ -2,7 +2,7 @@
 #define COLLISION_CHECK_H
 
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdio.h>
 #include <vector>
 #include <map>

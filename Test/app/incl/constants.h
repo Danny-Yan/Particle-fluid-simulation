@@ -6,6 +6,9 @@ extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern int GRID_WIDTH;
 extern int GRID_HEIGHT;
+extern int SPATIAL_WIDTH;
+extern int SPATIAL_HEIGHT;
+
 extern float TIMEINTERVAL;
 
 extern const float accel;

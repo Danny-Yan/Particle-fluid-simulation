@@ -2,7 +2,7 @@
 #define DOT_H
 
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <stdio.h>
 #include <cmath>
 #include <algorithm>
@@ -18,7 +18,7 @@
 class Dot : public Collider
 {
     public:
-        //Initializes the variables
+        //Initializes the variables -- make x, y virtual variables
         Dot( int x, int y , float velX, float velY, int radius);
 
         //Moves the dot

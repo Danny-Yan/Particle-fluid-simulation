@@ -1,24 +1,26 @@
 #include "incl/constants.h"
 
 //Force constants
-const float FORCE_RADIUS = 50.0f;           // ***
-const float FORCE = 25;                    // ***
+const float FORCE_RADIUS = 40.0f;           // ***
+const float FORCE = 40;                    // ***
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1500;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 2000;
+const int SCREEN_HEIGHT = 1200;
 int GRID_WIDTH = (int)FORCE_RADIUS;
 int GRID_HEIGHT = (int)FORCE_RADIUS;
+int SPATIAL_WIDTH = SCREEN_WIDTH / GRID_WIDTH;
+int SPATIAL_HEIGHT = SCREEN_HEIGHT / GRID_HEIGHT;
 float TIMEINTERVAL = 1.0f; // Min 1
 
 //Dot constants
 const float RADIUS = 10.0f;               // ***
-const float SPACING = 5.0f;               // ***
+const float SPACING = 10.0f;               // ***
 const float accel = 0;               // Hella buggy
-const float RESISTANCE = 1.0f;
+const float RESISTANCE = 0.8f;
 
-const float SCALE = 0.5f;
-const int PARTICLE_NUM = 2000; // does not work for < 200
+const float SCALE = 0.4f;
+const int PARTICLE_NUM = 4000; // does not work for < 200
 
 // MOUSE
 const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS;

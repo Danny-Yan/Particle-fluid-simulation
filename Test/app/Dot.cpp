@@ -354,6 +354,10 @@ void Dot::check_wall_collision(){
 }
 
 void Dot::check_wall_no_shift(){
+
+    //Check if velocities are close to zero
+    if (mVelX == 0 || mVelY == 0) { return; }
+    
     //Check for screen wall collision
     if( ( mPosX - mCollider.r < 0 ) )
     {
@@ -568,5 +572,5 @@ float Dot::getsPosY()
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
 {
     //Show the dot
-    gDotTexture.render( gRenderer, mPosX - mCollider.r, mPosY - mCollider.r, SCALE); // Change to sPosX and sPosY for predictive step
+    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE); // Change to sPosX and sPosY for predictive step
 }

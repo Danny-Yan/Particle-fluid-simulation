@@ -1,9 +1,7 @@
 //Using SDL and standard IO
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
+#include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -167,7 +165,7 @@ int main( int argc, char* args[] )
         float y = (i / particlesPerRow - particlesPerCol / 2.0f + 0.5f) * (spacing_scale);
 
         x_cord = x + 700;
-        y_cord = y + 450;
+        y_cord = y + 600;
         Dot dot( x_cord, y_cord, 0, 0, RADIUS);
         dots.push_back( dot );
     }
@@ -396,9 +394,10 @@ int main( int argc, char* args[] )
             //DENSITY METHOD w/ PREDICTIVE STEPS -------------------------------------------------------------------------------------------------------
 
             //Move all dots
-            for (Dot &dot : dots)
+            for (int i = 0; i < PARTICLE_NUM; i++)
             {
-                dot.movePrediction( 1.0f, 0.5f );
+                Dot& dot = dots[i];
+                dot.movePrediction( TIMEINTERVAL, 0.5f );
             }
 
             // Update spacial lookup after moving
@@ -417,14 +416,13 @@ int main( int argc, char* args[] )
                 // Finds all dots within a vicinity
                 //Computing 3x3 spacial hash 
                 std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dot.getsPosX(), (int)dot.getsPosY());
+                float force_radius_squared = FORCE_RADIUS * FORCE_RADIUS;
 
                 //Iterating through spacial hashes
                 for (int hash : spacial_hashes_full)
                 {
                     int key = spacialKeys[hash];
-                    if ( key == INT_MAX){
-                        continue;
-                    }
+
                     for (int i = key; i < dots.size(); i++)
                     {
                         if (particleHashEntries[i].hash != hash){
@@ -432,14 +430,13 @@ int main( int argc, char* args[] )
                         }
 
                         Dot &dotB = dots[particleHashEntries[i].index];
-                        if ( &dotB == &dot )
-                        {
-                            continue;
-                        }
+                        float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
+
+                        if (&dotB == &dot  || distance_squared >= force_radius_squared) { continue; }
                         // dot.applyDotCollison( dotB );
 
                         // Calc mouse force
-                        dot.check_mouse_force( &mouse );
+                        //dot.check_mouse_force( &mouse );
 
                         // Calc pressure gradient (Loop and keep track of pressure gradient)
                         pressureGradient = calculatePressureGradient( pressureGradient, &dotB, &dot ); 
@@ -451,11 +448,20 @@ int main( int argc, char* args[] )
                     dot.addmVelX(pressureGradient[0] / dot.getDensity());
                     dot.addmVelY(pressureGradient[1] / dot.getDensity());
                 }
+
+                //// COLORING
+                //int speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
+                //std::vector<Uint8> colors = colourProcessor(speed);
+                //gDotTexture.setColor(colors[0], colors[1], colors[2]);
+
+                //// RENDERING
+                //dot.render(gRenderer, gDotTexture);
             }
 
-            //Move all dots
+            ////Move all dots
             for (Dot &dot : dots)
             {
+                dot.move(TIMEINTERVAL);
                 // COLORING
                 int speed = (abs( dot.getVelX() ) + abs( dot.getVelY() )) * 100;
                 std::vector<Uint8> colors = colourProcessor(speed);
