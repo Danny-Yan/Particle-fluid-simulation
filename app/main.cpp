@@ -438,8 +438,8 @@ int main( int argc, char* args[] )
                         }
                         // dot.applyDotCollison( dotB );
 
-                        // Calc mouse force
-                        dot.check_mouse_force( &mouse );
+                        // // Calc mouse force
+                        // dot.check_mouse_force( &mouse );
 
                         // Calc pressure gradient (Loop and keep track of pressure gradient)
                         pressureGradient = calculatePressureGradient( pressureGradient, &dotB, &dot ); 
