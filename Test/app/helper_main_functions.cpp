@@ -10,12 +10,46 @@ void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &sp
         int spatialX, spatialY;
         std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getsPosX(), (int)dot.getsPosY() );
         int spatial_hash = compute_spatial_hash( spatialX, spatialY );
-        Entry entry = Entry(spatial_hash, i);
-        spatialLookup[i] = entry;
+        spatialLookup[i].hash = spatial_hash;
+		spatialLookup[i].index = i;
         spatialKeys[i] = INT_MAX;
     }
 
     std::sort(spatialLookup.begin(), spatialLookup.end(), [](Entry &a, Entry &b){ return a.hash < b.hash; }); // Sort by hash
+
+    // Compute spatial lookup
+    for (int i = 0; i < dots.size(); i++)
+    {
+        int Key = spatialLookup[i].hash;
+        int keyPrev = (i == 0) ? INT_MAX : spatialLookup[i - 1].hash;
+        if (Key != keyPrev)
+        {
+            spatialKeys[Key] = i;
+        }
+    }
+}
+
+// Adapted from sebastain lague's tutorial
+void updateSpatialLookup(ParticleEntries& particleEntries)
+{
+    // Unpack particle entries struct
+	std::vector<Entry>& spatialLookup = particleEntries.particleHashEntries; 
+    std::vector<Dot>& dots = particleEntries.circles;
+	std::vector<int>& spatialKeys = particleEntries.spacialKeys;
+
+    // Compute spatial hash for each dot
+    for (int i = 0; i < dots.size(); i++)
+    {
+        Dot& dot = dots[i];
+        int spatialX, spatialY;
+        std::tie(spatialX, spatialY) = compute_spatial_coords((int)dot.getsPosX(), (int)dot.getsPosY());
+        int spatial_hash = compute_spatial_hash(spatialX, spatialY);
+        spatialLookup[i].hash = spatial_hash;
+        spatialLookup[i].index = i;
+        spatialKeys[i] = INT_MAX;
+    }
+
+    std::sort(spatialLookup.begin(), spatialLookup.end(), [](Entry& a, Entry& b) { return a.hash < b.hash; }); // Sort by hash
 
     // Compute spatial lookup
     for (int i = 0; i < dots.size(); i++)
@@ -43,6 +77,24 @@ void updateDensities(std::vector<Dot> &dots, std::vector<Entry> &particleHashEnt
     }
 }
 
+// UPDATE TO MAKE IT WORK BETTER
+void updateDensities(ParticleEntries& particleEntries)
+{
+	// Unpack particle entries struct
+	std::vector<Dot>& dots = particleEntries.circles;
+
+    float particle_density = 0;
+    for (Dot& dot : dots) {
+
+        forParticles(dot, particleEntries, [&](Dot *dotB) {
+            calculateDensity(particle_density, *dotB, dot.getsPosX(), dot.getsPosY());
+            }
+         );
+        // printf("%f\n", particle_density);
+        dot.setDensity(particle_density);
+    }
+}
+
 void calculateDensity( float &particle_density, std::vector<Dot*> &circles, float x, float y )
 {
     float influence = 0;
@@ -58,6 +110,22 @@ void calculateDensity( float &particle_density, std::vector<Dot*> &circles, floa
             influence += smoothingKernel( distance, FORCE_RADIUS );
         }
     }
+    particle_density = influence;
+}
+
+void calculateDensity(float& particle_density, Dot& dotB, float x, float y)
+{
+    float influence = 0;
+    float radius_squared = FORCE_RADIUS * FORCE_RADIUS;
+
+    Circle b = dotB.getColliders();
+    float distance_squared = distanceSquared(x, y, b.x, b.y);
+    if (distance_squared < radius_squared)
+    {
+        float distance = sqrt(distance_squared);
+        influence += smoothingKernel(distance, FORCE_RADIUS);
+    }
+
     particle_density = influence;
 }
 
@@ -157,7 +225,7 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
 
 // For each loop around particles
 // MAKE (circles, particleHashEntries, spacialKeys) STRUCT
-void forParticles(const std::function<void(Dot)>& func, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int>& spacialKeys, Dot& dotA)
+void forParticles(Dot& dotA, ParticleEntries& ParticleEntries, const std::function<void(Dot*)>& func)
 {
     //Computing 3x3 spacial hash 
     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getsPosX(), (int)dotA.getsPosY());
@@ -165,24 +233,23 @@ void forParticles(const std::function<void(Dot)>& func, std::vector<Dot>& circle
     //Iterating through spacial hashes
     for (int hash : spacial_hashes_full)
     {
-        int key = spacialKeys[hash];
-        for (int i = key; i < circles.size(); i++)
+        int key = ParticleEntries.spacialKeys[hash];
+        for (int i = key; i < ParticleEntries.circles.size(); i++)
         {
-            if (particleHashEntries[i].hash != hash) {
+            if (ParticleEntries.particleHashEntries[i].hash != hash) {
                 break;
             }
 
-            Dot& dot = circles[particleHashEntries[i].index];
+            Dot& dot = ParticleEntries.circles[ParticleEntries.particleHashEntries[i].index];
             if (&dot == &dotA)
             {
                 continue;
             }
 
-            func(dot);
+            func(&dot);
         }
     }
 }
-
 
 // MOUSE HANDLES
 void mouseLeftPress( SDL_MouseButtonEvent &b, Mouse *mP){

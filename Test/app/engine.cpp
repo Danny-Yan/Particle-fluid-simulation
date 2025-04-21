@@ -103,10 +103,10 @@ void engine::run()
 
     timer.start();
     // Setup simulation
-    generalSimulationSetUp();
+    generalSimSetUp();
 
     // Run simulation
-	whileRunning([&](){ runFluidSimulationFrame();});
+	whileRunning([&](){ runFluidSimFrame();});
 
 	// Close simulation when done
     close();
@@ -137,17 +137,35 @@ void engine::generalSimulationSetUp()
     {
         Dot& dot = dots[i];
         // Filters dots only within the spatial vicinity
-
-        std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dot.getsPosX(), (int)dot.getsPosY());
-
         particleFilter(filtered_dots, dots, particleHashEntries, spacialKeys, dot); // filtered_dots
 
         // Calc density of a position (particle position)
         calculateDensity(particle_density, filtered_dots, dot.getPosX(), dot.getPosY());
         dot.setDensity(particle_density);
     }
+}
 
+void engine::generalSimSetUp() {
+    float spacing_scale = RADIUS * SCALE + SPACING;
+    int particlesPerRow = (int)sqrt(PARTICLE_NUM);
+    int particlesPerCol = (PARTICLE_NUM - 1) / particlesPerRow + 1;
+    float x_cord;
+    float y_cord;
+    float particle_density;
 
+    for (int i = 0; i < PARTICLE_NUM; i++)
+    {
+        // radius = std::rand() % 10 + 5;
+        float x = (i % particlesPerRow - particlesPerRow / 2.0f + 0.5f) * (spacing_scale);
+        float y = (i / particlesPerRow - particlesPerCol / 2.0f + 0.5f) * (spacing_scale);
+
+        x_cord = x + 700;
+        y_cord = y + 600;
+        Dot dot(x_cord, y_cord, 0, 0, RADIUS);
+        particleEntries.circles.push_back(dot);
+    }
+
+    updateDensities(particleEntries);
 }
 void engine::fluidSimulationSetUp(){}
 void engine::collisionSimulationSetUp(){}
@@ -305,6 +323,76 @@ void engine::runFluidSimulationFrame()
                 pressureGradient = calculatePressureGradient(pressureGradient, &dotB, &dot);
             }
         }
+
+        if (abs(dot.getDensity()) > DENSITY_UPPER)
+        {
+            dot.addmVelX(pressureGradient[0] / dot.getDensity());
+            dot.addmVelY(pressureGradient[1] / dot.getDensity());
+        }
+
+        //// COLORING
+        //int speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
+        //std::vector<Uint8> colors = colourProcessor(speed);
+        //gDotTexture.setColor(colors[0], colors[1], colors[2]);
+
+        //// RENDERING
+        //dot.render(gRenderer, gDotTexture);
+    }
+
+    ////Move all dots
+    for (Dot& dot : dots)
+    {
+        dot.move(TIMEINTERVAL);
+        // COLORING
+        int speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
+        std::vector<Uint8> colors = colourProcessor(speed);
+        gDotTexture.setColor(colors[0], colors[1], colors[2]);
+
+        // RENDERING
+        dot.render(gRenderer, gDotTexture);
+    }
+
+    // ========================================================================================================================
+
+    //Update screen
+    SDL_RenderPresent(gRenderer);
+    interval = timer.getTicks();
+}
+
+
+void engine::runFluidSimFrame()
+{
+    //DENSITY METHOD w/ PREDICTIVE STEPS -------------------------------------------------------------------------------------------------------
+
+	std::vector<Dot> dots = particleEntries.circles;
+	std::vector<Entry> particleHashEntries = particleEntries.particleHashEntries;
+	std::vector<int> spacialKeys = particleEntries.spacialKeys;
+
+    //Move all dots
+    for (int i = 0; i < PARTICLE_NUM; i++)
+    {
+        Dot& dot = dots[i];
+        dot.movePrediction(TIMEINTERVAL, 0.5f);
+    }
+
+    // Update spacial lookup after moving
+    updateSpatialLookup(particleEntries);
+
+    //Update densities after moving
+    updateDensities(particleEntries);
+
+    for (int i = 0; i < PARTICLE_NUM; i++)
+    {
+        Dot& dot = dots[i];
+        dot.check_wall_no_shift();
+
+        // Update pressure gradient
+        // ENDED SESSION HEREHD FUIDFHOIFHGOUDBIUGFBUOGFUOHGUFG
+        std::vector<float> pressureGradient = { 0, 0 };
+		forParticles(dot, particleEntries, [&](Dot* dotB) {
+            // Calc pressure gradient (Loop and keep track of pressure gradient)
+            pressureGradient = calculatePressureGradient(pressureGradient, dotB, &dot);
+		});
 
         if (abs(dot.getDensity()) > DENSITY_UPPER)
         {

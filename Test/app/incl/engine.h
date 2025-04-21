@@ -42,6 +42,8 @@ private:
 	SDL_Event e;
 
 	// Initialising vectors
+
+	ParticleEntries particleEntries = ParticleEntries();
 	std::vector<Entry> particleHashEntries = std::vector<Entry>(PARTICLE_NUM);
 	std::vector<int> spacialKeys = std::vector<int>(PARTICLE_NUM);
 	std::vector<Dot> dots;
@@ -80,6 +82,8 @@ private:
 
 	// Set up particle simulation
 	void generalSimulationSetUp();
+	void generalSimSetUp();
+
 	void fluidSimulationSetUp();
 	void collisionSimulationSetUp();
 
@@ -88,6 +92,7 @@ private:
 
 	// Simulation frames
 	void runFluidSimulationFrame();
+	void runFluidSimFrame();
 	void runBallCollisionFrame();
 };
 

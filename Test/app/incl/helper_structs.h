@@ -1,5 +1,8 @@
 #ifndef HELPER_STRUCTS_H
 #define HELPER_STRUCTS_H
+#include <vector>
+
+class Dot;
 
 struct Entry{
     int hash;
@@ -9,6 +12,19 @@ struct Entry{
         this->hash = hash;
         this->index = index;
     }
+};
+
+struct ParticleEntries{
+    std::vector<Dot> circles;
+    std::vector<Entry> particleHashEntries = std::vector<Entry>(PARTICLE_NUM);
+    std::vector<int> spacialKeys = std::vector<int>(PARTICLE_NUM);
+
+	ParticleEntries() {}
+	//ParticleEntries(std::vector<Dot> *circles, std::vector<Entry> *particleHashEntries, std::vector<int> *spacialKeys) {
+	//	this->circles = circles;
+	//	this->particleHashEntries = particleHashEntries;
+	//	this->spacialKeys = spacialKeys;
+	//}
 };
 
 #endif
