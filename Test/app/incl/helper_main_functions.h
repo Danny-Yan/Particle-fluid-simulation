@@ -13,6 +13,7 @@
 #include "helper_structs.h"
 #include "spatial_hashers.h"
 #include <memory>
+#include <functional>
 
 // #include <boost/coroutine2/all.hpp>
 
@@ -27,6 +28,8 @@ float smoothingKernelDerivative( float distance, float radius);
 std::vector<float> getRandomDirection();
 float densityToPressure( float density );
 void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dot );
+
+void forParticles(const std::function<void(Dot)>& func, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int>& spacialKeys, Dot& dotA);
 void mouseLeftPress( SDL_MouseButtonEvent &b, Mouse *mouse);
 void mouseRightPress( SDL_MouseButtonEvent &b, Mouse *mouse);
 void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mouse);

@@ -155,8 +155,36 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
     }
 }
 
-// MOUSE HANDLES
+// For each loop around particles
+// MAKE (circles, particleHashEntries, spacialKeys) STRUCT
+void forParticles(const std::function<void(Dot)>& func, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int>& spacialKeys, Dot& dotA)
+{
+    //Computing 3x3 spacial hash 
+    std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getsPosX(), (int)dotA.getsPosY());
 
+    //Iterating through spacial hashes
+    for (int hash : spacial_hashes_full)
+    {
+        int key = spacialKeys[hash];
+        for (int i = key; i < circles.size(); i++)
+        {
+            if (particleHashEntries[i].hash != hash) {
+                break;
+            }
+
+            Dot& dot = circles[particleHashEntries[i].index];
+            if (&dot == &dotA)
+            {
+                continue;
+            }
+
+            func(dot);
+        }
+    }
+}
+
+
+// MOUSE HANDLES
 void mouseLeftPress( SDL_MouseButtonEvent &b, Mouse *mP){
     Mouse &mouse = *mP;    
     mouse.setForceMultiplier(MOUSE_FORCE);

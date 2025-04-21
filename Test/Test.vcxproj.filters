@@ -48,6 +48,9 @@
     <ClCompile Include="app\time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app\engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\collider.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\incl\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

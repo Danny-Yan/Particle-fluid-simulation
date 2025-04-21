@@ -139,6 +139,7 @@
     <ClCompile Include="app\collision_check.cpp" />
     <ClCompile Include="app\constants.cpp" />
     <ClCompile Include="app\Dot.cpp" />
+    <ClCompile Include="app\engine.cpp" />
     <ClCompile Include="app\helper_main_functions.cpp" />
     <ClCompile Include="app\LTexture.cpp" />
     <ClCompile Include="app\main.cpp">
@@ -154,6 +155,7 @@
     <ClInclude Include="app\incl\collision_check.h" />
     <ClInclude Include="app\incl\constants.h" />
     <ClInclude Include="app\incl\Dot.h" />
+    <ClInclude Include="app\incl\engine.h" />
     <ClInclude Include="app\incl\helper_main_functions.h" />
     <ClInclude Include="app\incl\helper_structs.h" />
     <ClInclude Include="app\incl\LTexture.h" />
