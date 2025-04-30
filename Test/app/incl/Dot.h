@@ -51,6 +51,8 @@ class Dot : public Collider
         float getsPosX();
         float getsPosY();
 
+        int getID();
+
         //Setters
         void addmVelX( float velX );
         void addmVelY( float velY );
@@ -58,7 +60,12 @@ class Dot : public Collider
         //Shows the dot on the screen
         void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
 
+        static int ID;
+
     private:
+        // Dot ID:
+        int id;
+
         //The X and Y offsets of the dot
         float mPosX, mPosY;
         float PosX, PosY;

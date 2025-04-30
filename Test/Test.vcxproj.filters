@@ -36,9 +36,6 @@
     <ClCompile Include="app\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\math_func.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="app\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\incl\LTexture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\incl\math_func.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\incl\Mouse.h">

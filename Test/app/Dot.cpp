@@ -1,7 +1,10 @@
 #include "incl/Dot.h"
 
+int Dot::ID = 0;
+
 Dot::Dot( int x, int y , float velX, float velY, int radius) : Collider(x, y, radius, FORCE_RADIUS)
 {
+    id = ID++;
     //Initialize the offsets
     PosX = x; // NOT USED
     PosY = y; // NOT USED
@@ -566,6 +569,11 @@ float Dot::getsPosX()
 float Dot::getsPosY()
 {
     return sPosY;
+}
+
+int Dot::getID()
+{
+    return id;
 }
 
 //RENDER

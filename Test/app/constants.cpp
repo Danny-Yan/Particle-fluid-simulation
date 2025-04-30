@@ -4,9 +4,13 @@
 const float FORCE_RADIUS = 40.0f;           // ***
 const float FORCE = 40;                    // ***
 
+const float FORCE_RADIUS_SQUARED = FORCE_RADIUS * FORCE_RADIUS;
+
 //Screen dimension constants
-const int SCREEN_WIDTH = 2000;
-const int SCREEN_HEIGHT = 1200;
+const int SCREEN_WIDTH = 1600;
+const int SCREEN_HEIGHT = 900;
+const int PARTICLE_START_X = 700;
+const int PARTICLE_START_Y = 600;
 int GRID_WIDTH = (int)FORCE_RADIUS;
 int GRID_HEIGHT = (int)FORCE_RADIUS;
 int SPATIAL_WIDTH = SCREEN_WIDTH / GRID_WIDTH;
@@ -20,7 +24,7 @@ const float accel = 0;               // Hella buggy
 const float RESISTANCE = 0.8f;
 
 const float SCALE = 0.4f;
-const int PARTICLE_NUM = 4000; // does not work for < 200
+const int PARTICLE_NUM = 3000; // does not work for < 200
 
 // MOUSE
 const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS;
@@ -38,7 +42,7 @@ const float MOUSE_FORCE = -0.1f;
 // float BARRIER_WIDTH = FORCE_RADIUS;
 // const float BARRIER_HEIGHT = 0.5f;  // Energy added/lost to the system
 
-//Density Constants
+//Density Constants -- DONT TOUCH
 const float DENSITY_LOWER = 0.000001f;
 const float DENSITY_DESIRED = 0.00005f;
 const float DENSITY_UPPER = 0.0001f;

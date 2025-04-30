@@ -14,7 +14,11 @@ struct Entry{
     }
 };
 
+
+
 struct ParticleEntries{
+
+    // CIRCLES NOT INITIALISED TO THE SAME LENGTH
     std::vector<Dot> circles;
     std::vector<Entry> particleHashEntries = std::vector<Entry>(PARTICLE_NUM);
     std::vector<int> spacialKeys = std::vector<int>(PARTICLE_NUM);

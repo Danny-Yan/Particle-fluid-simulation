@@ -65,6 +65,8 @@ private:
 	Uint8 g = 0;
 	Uint8 b = 0;
 
+	std::vector<float> pressureGradient = { 0, 0 };
+
 	//Starts up SDL and creates window
 	bool initSDL();
 

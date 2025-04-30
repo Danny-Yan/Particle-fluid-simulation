@@ -127,8 +127,8 @@ void engine::generalSimulationSetUp()
         float x = (i % particlesPerRow - particlesPerRow / 2.0f + 0.5f) * (spacing_scale);
         float y = (i / particlesPerRow - particlesPerCol / 2.0f + 0.5f) * (spacing_scale);
 
-        x_cord = x + 700;
-        y_cord = y + 600;
+        x_cord = x + PARTICLE_START_X;
+        y_cord = y + PARTICLE_START_Y;
         Dot dot(x_cord, y_cord, 0, 0, RADIUS);
         dots.push_back(dot);
     }
@@ -159,8 +159,8 @@ void engine::generalSimSetUp() {
         float x = (i % particlesPerRow - particlesPerRow / 2.0f + 0.5f) * (spacing_scale);
         float y = (i / particlesPerRow - particlesPerCol / 2.0f + 0.5f) * (spacing_scale);
 
-        x_cord = x + 700;
-        y_cord = y + 600;
+        x_cord = x + PARTICLE_START_X;
+        y_cord = y + PARTICLE_START_Y;
         Dot dot(x_cord, y_cord, 0, 0, RADIUS);
         particleEntries.circles.push_back(dot);
     }
@@ -297,8 +297,6 @@ void engine::runFluidSimulationFrame()
         // Finds all dots within a vicinity
         //Computing 3x3 spacial hash 
         std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dot.getsPosX(), (int)dot.getsPosY());
-        float force_radius_squared = FORCE_RADIUS * FORCE_RADIUS;
-
         //Iterating through spacial hashes
         for (int hash : spacial_hashes_full)
         {
@@ -313,14 +311,14 @@ void engine::runFluidSimulationFrame()
                 Dot& dotB = dots[particleHashEntries[i].index];
                 float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
-                if (&dotB == &dot || distance_squared >= force_radius_squared) { continue; }
+                if (&dotB == &dot || distance_squared >= FORCE_RADIUS_SQUARED) { continue; }
                 // dot.applyDotCollison( dotB );
 
                 // Calc mouse force
                 //dot.check_mouse_force( &mouse );
 
                 // Calc pressure gradient (Loop and keep track of pressure gradient)
-                pressureGradient = calculatePressureGradient(pressureGradient, &dotB, &dot);
+                calculatePressureGradient(pressureGradient, &dotB, &dot);
             }
         }
 
@@ -364,9 +362,7 @@ void engine::runFluidSimFrame()
 {
     //DENSITY METHOD w/ PREDICTIVE STEPS -------------------------------------------------------------------------------------------------------
 
-	std::vector<Dot> dots = particleEntries.circles;
-	std::vector<Entry> particleHashEntries = particleEntries.particleHashEntries;
-	std::vector<int> spacialKeys = particleEntries.spacialKeys;
+	std::vector<Dot>& dots = particleEntries.circles;
 
     //Move all dots
     for (int i = 0; i < PARTICLE_NUM; i++)
@@ -387,26 +383,19 @@ void engine::runFluidSimFrame()
         dot.check_wall_no_shift();
 
         // Update pressure gradient
-        // ENDED SESSION HEREHD FUIDFHOIFHGOUDBIUGFBUOGFUOHGUFG
-        std::vector<float> pressureGradient = { 0, 0 };
-		forParticles(dot, particleEntries, [&](Dot* dotB) {
-            // Calc pressure gradient (Loop and keep track of pressure gradient)
-            pressureGradient = calculatePressureGradient(pressureGradient, dotB, &dot);
-		});
+        pressureGradient = { 0, 0 };
 
+		forParticles(dot, particleEntries, [&](Dot dotB, float magnitude) {
+            // Calc pressure gradient (Loop and keep track of pressure gradient)
+            
+            calculatePressureGradient(pressureGradient, &dotB, &dot);
+		});
+        
         if (abs(dot.getDensity()) > DENSITY_UPPER)
         {
             dot.addmVelX(pressureGradient[0] / dot.getDensity());
-            dot.addmVelY(pressureGradient[1] / dot.getDensity());
+            dot.addmVelY(pressureGradient[1] / dot.getDensity()); 
         }
-
-        //// COLORING
-        //int speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
-        //std::vector<Uint8> colors = colourProcessor(speed);
-        //gDotTexture.setColor(colors[0], colors[1], colors[2]);
-
-        //// RENDERING
-        //dot.render(gRenderer, gDotTexture);
     }
 
     ////Move all dots

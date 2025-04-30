@@ -145,7 +145,6 @@
     <ClCompile Include="app\main.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ShowIncludes>
     </ClCompile>
-    <ClCompile Include="app\math_func.cpp" />
     <ClCompile Include="app\Mouse.cpp" />
     <ClCompile Include="app\spatial_hashers.cpp" />
     <ClCompile Include="app\time.cpp" />
@@ -159,7 +158,6 @@
     <ClInclude Include="app\incl\helper_main_functions.h" />
     <ClInclude Include="app\incl\helper_structs.h" />
     <ClInclude Include="app\incl\LTexture.h" />
-    <ClInclude Include="app\incl\math_func.h" />
     <ClInclude Include="app\incl\Mouse.h" />
     <ClInclude Include="app\incl\spatial_hashers.h" />
     <ClInclude Include="app\incl\time.h" />

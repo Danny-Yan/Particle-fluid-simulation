@@ -2,6 +2,8 @@
 #define CONSTANTS_H
 
 //Defined global constants
+extern const int PARTICLE_START_X;
+extern const int PARTICLE_START_Y;
 extern const int SCREEN_WIDTH;
 extern const int SCREEN_HEIGHT;
 extern int GRID_WIDTH;
@@ -23,6 +25,7 @@ extern const float MOUSE_FORCE;
 extern const int MOUSE_FORCE_RADIUS;
 
 extern const float FORCE_RADIUS;
+extern const float FORCE_RADIUS_SQUARED;
 extern const float FORCE;
 
 extern const float BARRIER_HEIGHT;

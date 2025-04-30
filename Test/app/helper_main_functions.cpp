@@ -10,8 +10,12 @@ void updateSpatialLookup(std::vector<Entry> &spatialLookup, std::vector<int> &sp
         int spatialX, spatialY;
         std::tie(spatialX, spatialY) = compute_spatial_coords( (int)dot.getsPosX(), (int)dot.getsPosY() );
         int spatial_hash = compute_spatial_hash( spatialX, spatialY );
+        if (spatial_hash < 0) {
+            printf("NEGATIVE SPATIAL HASH: %d \n", spatial_hash);
+            spatial_hash = abs(spatial_hash);
+        }
         spatialLookup[i].hash = spatial_hash;
-		spatialLookup[i].index = i;
+        spatialLookup[i].index = i;
         spatialKeys[i] = INT_MAX;
     }
 
@@ -44,6 +48,10 @@ void updateSpatialLookup(ParticleEntries& particleEntries)
         int spatialX, spatialY;
         std::tie(spatialX, spatialY) = compute_spatial_coords((int)dot.getsPosX(), (int)dot.getsPosY());
         int spatial_hash = compute_spatial_hash(spatialX, spatialY);
+        if (spatial_hash < 0) {
+            printf("NEGATIVE SPATIAL HASH: %d \n", spatial_hash);
+            spatial_hash = abs(spatial_hash);
+        }
         spatialLookup[i].hash = spatial_hash;
         spatialLookup[i].index = i;
         spatialKeys[i] = INT_MAX;
@@ -77,7 +85,6 @@ void updateDensities(std::vector<Dot> &dots, std::vector<Entry> &particleHashEnt
     }
 }
 
-// UPDATE TO MAKE IT WORK BETTER
 void updateDensities(ParticleEntries& particleEntries)
 {
 	// Unpack particle entries struct
@@ -86,12 +93,13 @@ void updateDensities(ParticleEntries& particleEntries)
     float particle_density = 0;
     for (Dot& dot : dots) {
 
-        forParticles(dot, particleEntries, [&](Dot *dotB) {
-            calculateDensity(particle_density, *dotB, dot.getsPosX(), dot.getsPosY());
-            }
-         );
-        // printf("%f\n", particle_density);
+        forParticles(dot, particleEntries, [&](Dot dotB, float mag) {
+            particle_density += calcDensity(mag);
+        });
+
         dot.setDensity(particle_density);
+
+        particle_density = 0;
     }
 }
 
@@ -113,23 +121,31 @@ void calculateDensity( float &particle_density, std::vector<Dot*> &circles, floa
     particle_density = influence;
 }
 
-void calculateDensity(float& particle_density, Dot& dotB, float x, float y)
+
+float calcDensity(Dot& dotB, float x, float y)
 {
+    Circle b = dotB.getColliders();
     float influence = 0;
+    float distance_squared = distanceSquared(x, y, b.x, b.y);
     float radius_squared = FORCE_RADIUS * FORCE_RADIUS;
 
-    Circle b = dotB.getColliders();
-    float distance_squared = distanceSquared(x, y, b.x, b.y);
     if (distance_squared < radius_squared)
     {
         float distance = sqrt(distance_squared);
-        influence += smoothingKernel(distance, FORCE_RADIUS);
+        influence = smoothingKernel(distance, FORCE_RADIUS);
     }
 
-    particle_density = influence;
+    return influence;
 }
 
-std::vector<float> calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB, Dot *dotA )
+float calcDensity(float magnitude)
+{
+    float influence = 0;
+    influence = smoothingKernel(magnitude, FORCE_RADIUS);
+    return influence;
+}
+
+void calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB, Dot *dotA )
 {
     Circle a = dotA->getColliders();
     Circle b = dotB->getColliders();
@@ -143,26 +159,54 @@ std::vector<float> calculatePressureGradient( std::vector<float> &pressureGradie
     //     dotA->applyDotCollison(*dotB);
     // }
 
-        if (magnitude == 0)
-        {
-            std::vector<float> randomNormal = getRandomDirection();
-            normalX = randomNormal[0];
-            normalY = randomNormal[1];
-        }
-        else
-        {
-            normalX = (a.x - b.x) / magnitude;
-            normalY = (a.y - b.y) / magnitude;
-        }
-        float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
-        float density = sharedDensity(dotB->getDensity(), dotA->getDensity());
-        density = (density != 0.0f) ? density : DENSITY_LOWER;
+    if (magnitude == 0)
+    {
+        std::vector<float> randomNormal = getRandomDirection();
+        normalX = randomNormal[0];
+        normalY = randomNormal[1];
+    }
+    else
+    {
+        normalX = (a.x - b.x) / magnitude;
+        normalY = (a.y - b.y) / magnitude;
+    }
+    float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
+    float density = sharedDensity(dotB->getDensity(), dotA->getDensity());
+    density = (density != 0.0f) ? density : DENSITY_LOWER;
 
-        pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
-        pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
+    pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
+    pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
+}
 
+void calculatePressureGradient(std::vector<float>& pressureGradient, float magnitude, Dot* dotB, Dot* dotA)
+{
+    Circle a = dotA->getColliders();
+    Circle b = dotB->getColliders();
+    float normalX;
+    float normalY;
 
-    return pressureGradient;
+    // // CHECK FOR COLLISON
+    // if(distance_squared < radius_squared){
+    //     dotA->applyDotCollison(*dotB);
+    // }
+
+    if (magnitude == 0)
+    {
+        std::vector<float> randomNormal = getRandomDirection();
+        normalX = randomNormal[0];
+        normalY = randomNormal[1];
+    }
+    else
+    {
+        normalX = (a.x - b.x) / magnitude;
+        normalY = (a.y - b.y) / magnitude;
+    }
+    float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
+    float density = sharedDensity(dotB->getDensity(), dotA->getDensity());
+    density = (density != 0.0f) ? density : DENSITY_LOWER;
+
+    pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
+    pressureGradient[1] += -densityToPressure(density) * normalY * slope / density;
 }
 
 float smoothingKernel( float distance, float radius)
@@ -192,8 +236,6 @@ float densityToPressure( float density )
     float density_error = density - DENSITY_DESIRED;
     return density_error * FORCE;
 }
-
-
 
 // Convert to return enumerator
 void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA )
@@ -225,28 +267,35 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
 
 // For each loop around particles
 // MAKE (circles, particleHashEntries, spacialKeys) STRUCT
-void forParticles(Dot& dotA, ParticleEntries& ParticleEntries, const std::function<void(Dot*)>& func)
+void forParticles(Dot& dotA, ParticleEntries& ParticleEntries, const std::function<void(Dot, float)>& func)
 {
+    std::vector<Dot>& dots = ParticleEntries.circles;
+    std::vector<Entry>& particleHashEntries = ParticleEntries.particleHashEntries;
+    std::vector<int>& spacialKeys = ParticleEntries.spacialKeys;
+
     //Computing 3x3 spacial hash 
     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getsPosX(), (int)dotA.getsPosY());
 
     //Iterating through spacial hashes
     for (int hash : spacial_hashes_full)
     {
-        int key = ParticleEntries.spacialKeys[hash];
-        for (int i = key; i < ParticleEntries.circles.size(); i++)
+        int key = spacialKeys[hash];
+        for (int i = key; i < dots.size(); i++)
         {
-            if (ParticleEntries.particleHashEntries[i].hash != hash) {
+            if (particleHashEntries[i].hash != hash) {
                 break;
             }
 
-            Dot& dot = ParticleEntries.circles[ParticleEntries.particleHashEntries[i].index];
-            if (&dot == &dotA)
-            {
-                continue;
-            }
+            Dot& dot = dots[particleHashEntries[i].index];
 
-            func(&dot);
+            // Check if distance is less than radius
+            float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotA.getmPosX(), dotA.getmPosY());
+            if (&dot == &dotA || distance_squared >= FORCE_RADIUS_SQUARED) {continue;}
+
+            float magnitude = sqrt(distance_squared);
+
+            // Do something
+            func(dot, magnitude);
         }
     }
 }
