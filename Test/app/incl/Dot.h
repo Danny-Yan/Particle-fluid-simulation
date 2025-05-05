@@ -40,18 +40,18 @@ class Dot : public Collider
         Collision checkCircleForce( Collider& b );
 
         //Getters
-        float getmVelX();
-        float getmVelY();
-        float getVelX();
-        float getVelY();
-        float getmPosX();
-        float getmPosY();
-        float getPosX();
-        float getPosY();
-        float getsPosX();
-        float getsPosY();
+        float getmVelX() const;
+        float getmVelY() const;
+        float getVelX() const;
+        float getVelY() const;
+        float getmPosX() const;
+        float getmPosY() const;
+        float getPosX() const;
+        float getPosY() const;
+        float getsPosX() const;
+        float getsPosY() const;
 
-        int getID();
+        int getID() const;
 
         //Setters
         void addmVelX( float velX );

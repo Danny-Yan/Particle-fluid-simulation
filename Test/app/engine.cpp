@@ -72,7 +72,7 @@ bool engine::loadMedia()
 void engine::close()
 {
     //Free loaded images
-    gDotTexture.free();
+    gDotTexture.free();    
 
     //Destroy window    
     SDL_DestroyRenderer(gRenderer);
@@ -161,8 +161,7 @@ void engine::generalSimSetUp() {
 
         x_cord = x + PARTICLE_START_X;
         y_cord = y + PARTICLE_START_Y;
-        Dot dot(x_cord, y_cord, 0, 0, RADIUS);
-        particleEntries.circles.push_back(dot);
+        particleEntries.circles.emplace_back(x_cord, y_cord, 0, 0, RADIUS);
     }
 
     updateDensities(particleEntries);
@@ -187,6 +186,9 @@ void engine::whileRunning(const std::function<void()>& func)
            func();
         }
     }
+
+	// Free resources and close SDL
+    close();
 }
 
 void engine::pollEvent()
@@ -343,8 +345,7 @@ void engine::runFluidSimulationFrame()
         dot.move(TIMEINTERVAL);
         // COLORING
         int speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
-        std::vector<Uint8> colors = colourProcessor(speed);
-        gDotTexture.setColor(colors[0], colors[1], colors[2]);
+		gDotTexture.setColorForSpeed(speed);
 
         // RENDERING
         dot.render(gRenderer, gDotTexture);
@@ -356,8 +357,6 @@ void engine::runFluidSimulationFrame()
     SDL_RenderPresent(gRenderer);
     interval = timer.getTicks();
 }
-
-
 void engine::runFluidSimFrame()
 {
     //DENSITY METHOD w/ PREDICTIVE STEPS -------------------------------------------------------------------------------------------------------
@@ -385,10 +384,15 @@ void engine::runFluidSimFrame()
         // Update pressure gradient
         pressureGradient = { 0, 0 };
 
-		forParticles(dot, particleEntries, [&](Dot dotB, float magnitude) {
+		forParticles(dot, particleEntries, [&](Dot& dotB) {
             // Calc pressure gradient (Loop and keep track of pressure gradient)
-            
-            calculatePressureGradient(pressureGradient, &dotB, &dot);
+
+            // Check if distance is less than radius
+            float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
+
+            if (distance_squared < FORCE_RADIUS_SQUARED) {
+                calculatePressureGradient(pressureGradient, &dotB, &dot);
+            }
 		});
         
         if (abs(dot.getDensity()) > DENSITY_UPPER)
@@ -403,9 +407,8 @@ void engine::runFluidSimFrame()
     {
         dot.move(TIMEINTERVAL);
         // COLORING
-        int speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
-        std::vector<Uint8> colors = colourProcessor(speed);
-        gDotTexture.setColor(colors[0], colors[1], colors[2]);
+        float speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
+        gDotTexture.setColorForSpeedHSL(speed);
 
         // RENDERING
         dot.render(gRenderer, gDotTexture);

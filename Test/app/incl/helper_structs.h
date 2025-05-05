@@ -29,6 +29,12 @@ struct ParticleEntries{
 	//	this->particleHashEntries = particleHashEntries;
 	//	this->spacialKeys = spacialKeys;
 	//}
+
+	~ParticleEntries() {
+		circles.clear();
+		particleHashEntries.clear();
+		spacialKeys.clear();
+	}
 };
 
 #endif

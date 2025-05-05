@@ -2,9 +2,8 @@
 
 
 Collider::Collider(int x, int y, int radius, int fr)
+    : fR(fr)
 {
-    this->fR = fr;
-
     //Initialize the offsets
     mCollider.x = x;
     mCollider.y = y;
@@ -12,7 +11,7 @@ Collider::Collider(int x, int y, int radius, int fr)
     mCollider.r = radius * SCALE;
 }
 
-Circle& Collider::getColliders()
+const Circle& Collider::getColliders() const
 {
     return mCollider;
 }
@@ -22,7 +21,7 @@ void Collider::setDensity( float density )
     this->density = density;
 }
 
-float Collider::getDensity()
+float Collider::getDensity() const
 {
     return density;
 }
@@ -32,12 +31,12 @@ void Collider::setfR( float fR )
     this->fR = fR;
 }
 
-float Collider::getfR()
+float Collider::getfR() const
 {
     return fR;
 }
 
-float Collider::getForceMultiplier()
+float Collider::getForceMultiplier() const
 {
     return forceMultiplier;
 }

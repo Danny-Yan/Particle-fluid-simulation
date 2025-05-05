@@ -38,13 +38,13 @@ void updateSpatialLookup(ParticleEntries& particleEntries)
 {
     // Unpack particle entries struct
 	std::vector<Entry>& spatialLookup = particleEntries.particleHashEntries; 
-    std::vector<Dot>& dots = particleEntries.circles;
+    const std::vector<Dot>& dots = particleEntries.circles;
 	std::vector<int>& spatialKeys = particleEntries.spacialKeys;
 
     // Compute spatial hash for each dot
     for (int i = 0; i < dots.size(); i++)
     {
-        Dot& dot = dots[i];
+        const Dot& dot = dots[i];
         int spatialX, spatialY;
         std::tie(spatialX, spatialY) = compute_spatial_coords((int)dot.getsPosX(), (int)dot.getsPosY());
         int spatial_hash = compute_spatial_hash(spatialX, spatialY);
@@ -93,8 +93,8 @@ void updateDensities(ParticleEntries& particleEntries)
     float particle_density = 0;
     for (Dot& dot : dots) {
 
-        forParticles(dot, particleEntries, [&](Dot dotB, float mag) {
-            particle_density += calcDensity(mag);
+        forParticles(dot, particleEntries, [&](Dot& dotB) {
+            particle_density += calcDensity(dotB, dot.getsPosX(), dot.getsPosY());
         });
 
         dot.setDensity(particle_density);
@@ -149,8 +149,8 @@ void calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB,
 {
     Circle a = dotA->getColliders();
     Circle b = dotB->getColliders();
-    float normalX;
-    float normalY;
+    float normalX = 0;
+    float normalY = 0;
 
     float magnitude = sqrt(distanceSquared(a.x, a.y, b.x, b.y));
 
@@ -165,7 +165,7 @@ void calculatePressureGradient( std::vector<float> &pressureGradient, Dot *dotB,
         normalX = randomNormal[0];
         normalY = randomNormal[1];
     }
-    else
+    else 
     {
         normalX = (a.x - b.x) / magnitude;
         normalY = (a.y - b.y) / magnitude;
@@ -267,11 +267,11 @@ void particleFilter( std::vector<Dot*> &filtered_dots, std::vector<Dot> &circles
 
 // For each loop around particles
 // MAKE (circles, particleHashEntries, spacialKeys) STRUCT
-void forParticles(Dot& dotA, ParticleEntries& ParticleEntries, const std::function<void(Dot, float)>& func)
+void forParticles(Dot& dotA, ParticleEntries& ParticleEntries, const std::function<void(Dot&)>& func)
 {
     std::vector<Dot>& dots = ParticleEntries.circles;
-    std::vector<Entry>& particleHashEntries = ParticleEntries.particleHashEntries;
-    std::vector<int>& spacialKeys = ParticleEntries.spacialKeys;
+    const std::vector<Entry>& particleHashEntries = ParticleEntries.particleHashEntries;
+    const std::vector<int>& spacialKeys = ParticleEntries.spacialKeys;
 
     //Computing 3x3 spacial hash 
     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getsPosX(), (int)dotA.getsPosY());
@@ -288,14 +288,13 @@ void forParticles(Dot& dotA, ParticleEntries& ParticleEntries, const std::functi
 
             Dot& dot = dots[particleHashEntries[i].index];
 
-            // Check if distance is less than radius
-            float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotA.getmPosX(), dotA.getmPosY());
-            if (&dot == &dotA || distance_squared >= FORCE_RADIUS_SQUARED) {continue;}
-
-            float magnitude = sqrt(distance_squared);
+			if (&dot == &dotA)
+			{
+				continue;
+			}
 
             // Do something
-            func(dot, magnitude);
+            func(dot);
         }
     }
 }
@@ -317,47 +316,3 @@ void mouseUnPress( SDL_MouseButtonEvent &b, Mouse *mP){
     Mouse &mouse = *mP;    
     mouse.setForceMultiplier(0);
 }
-
-// Process speed against rgb values
-std::vector<Uint8> colourProcessor(int speed){
-    std::vector<Uint8> rgbArr(3);
-    rgbArr[0] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[0], COLOR_MAX[0]); // red
-    rgbArr[1] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[1], COLOR_MAX[1]); // green
-    rgbArr[2] = colourLinearisation(speed, COLOR_MAX_SPEED, COLOR_MIN[2], COLOR_MAX[2]); // blue
-    // printf("Speed: %d, R: %d, G: %d, B: %d\n", speed, rgbArr[0], rgbArr[1], rgbArr[2]);
-    return rgbArr;
-}   
-
-// Linear interpolation of colour against speed
-Uint8 colourLinearisation(int speed, int color_max_speed, int color_min, int color_max){
-    return (color_max - color_min) * (speed / color_max_speed) + color_min;
-}
-
-// // Particle filter iterator using boost
-// void particleFilterIterator(coro_t::push_type& yield, std::vector<Dot> &circles, std::vector<Entry> &particleHashEntries, std::vector<int> &spacialKeys, Dot &dotA){
-    
-//     //Computing 3x3 spacial hash 
-//     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getPosX(), (int)dotA.getPosY());
-
-//     //Iterating through spacial hashes
-//     for (int hash : spacial_hashes_full)
-//     {
-//         int key = spacialKeys[hash];
-//         if ( key == INT_MAX){
-//             continue;
-//         }
-//         for (int i = key; i < circles.size(); i++)
-//         {
-//             if (particleHashEntries[i].hash != hash){
-//                 break;
-//             }
-
-//             Dot &dot = circles[particleHashEntries[i].index];
-//             if ( &dot == &dotA )
-//             {
-//                 continue;
-//             }
-//             yield(&dot);
-//         }
-//     }
-// }

@@ -12,13 +12,13 @@ class Collider
 {
     public:
         Collider(int x, int y, int radius, int fr = FORCE_RADIUS);
-        Circle& getColliders();
+        const Circle& getColliders() const;
         void setDensity( float density );
-        float getDensity();
+        float getDensity() const;
         void setfR( float fR );
-        float getfR();
+        float getfR() const;
         void setForceMultiplier( float forceMultiplier );
-        float getForceMultiplier();
+        float getForceMultiplier() const;
 
     protected: 
         // Force radius

@@ -39,4 +39,7 @@ extern const float COLOR_MAX_SPEED;
 extern const float COLOR_MIN[3];
 extern const float COLOR_MAX[3];
 
+extern const float COLOR_H_MIN;
+extern const float COLOR_H_MAX;
+
 #endif

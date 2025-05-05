@@ -7,6 +7,7 @@
 #include <SDL_image.h>
 #include <stdio.h>
 #include <string>
+#include <array>
 
 //Texture wrapper class
 class LTexture
@@ -21,8 +22,13 @@ class LTexture
         //Loads image at specified path
         bool loadFromFile( SDL_Renderer* gRenderer, std::string path );
 
+        void setColorForSpeed(int speed);
+        void setColorForSpeedHSL(float speed);
+
         //Set color modulation
-        void setColor( Uint8 red, Uint8 green, Uint8 blue );
+        void setColor(Uint8 red, Uint8 green, Uint8 blue);
+        //Set color modulation
+        void setColorHSL(float h, float s, float l);
 
         // //Set blending
         // void setBlendMode( SDL_BlendMode blending );
@@ -47,6 +53,17 @@ class LTexture
         //Image dimensions
         int mWidth;
         int mHeight;
+
+		// Color Linearisation
+        Uint8 colourLinearisationRGB(int speed, int color_max_speed, int color_min, int color_max);
+        std::array<Uint8, 3> colourLinearisationHSL(float speed, float color_max_speed, float hMin, float hMax);
+
+		// Color Processors from speed
+        std::array<Uint8, 3> colourProcessorRGBtoRGB(int speed);
+
+		// Convert hsl to rgb
+        std::array<Uint8, 3> hslToRgb(float h, float s, float l);
+        float hueToRgb(float p, float q, float t);
 };
 
 #endif

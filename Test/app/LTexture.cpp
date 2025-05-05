@@ -1,4 +1,5 @@
 #include "incl/LTexture.h"
+#include "incl/constants.h"
 
 LTexture::LTexture()
 {
@@ -55,11 +56,92 @@ bool LTexture::loadFromFile( SDL_Renderer* gRenderer, std::string path )
     return mTexture != NULL;
 }
 
-
+// ---------------------------------------------------------------------------------------------
+// RGB implementation
+// Set blending function
 void LTexture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 {
     //Modulate texture
     SDL_SetTextureColorMod( mTexture, red, green, blue );
+}
+
+//Set blending function
+void LTexture::setColorForSpeed(int speed) {
+    const std::array<Uint8, 3>& colors = colourProcessorRGBtoRGB(speed);
+    setColor(colors[0], colors[1], colors[2]);
+}
+
+std::array<Uint8, 3> LTexture::colourProcessorRGBtoRGB(int speed) {
+    std::array<Uint8, 3> rgbArr;
+    rgbArr[0] = colourLinearisationRGB(speed, COLOR_MAX_SPEED, COLOR_MIN[0], COLOR_MAX[0]); // red
+    rgbArr[1] = colourLinearisationRGB(speed, COLOR_MAX_SPEED, COLOR_MIN[1], COLOR_MAX[1]); // green
+    rgbArr[2] = colourLinearisationRGB(speed, COLOR_MAX_SPEED, COLOR_MIN[2], COLOR_MAX[2]); // blue
+    //printf("Speed: %d, R: %d, G: %d, B: %d\n", speed, rgbArr[0], rgbArr[1], rgbArr[2]);
+    return rgbArr;
+}
+
+// Linear interpolation of colour against speed
+Uint8 LTexture::colourLinearisationRGB(int speed, int color_max_speed, int color_min, int color_max) {
+    return (color_max - color_min) * (speed / color_max_speed) + color_min;
+}
+
+// ----------------------------------------------------------------------------------------------
+// HSL implementation
+//Set blending function
+void LTexture::setColorForSpeedHSL(float speed) {
+    const std::array<Uint8, 3>& colors = colourLinearisationHSL((float)speed, COLOR_MAX_SPEED, COLOR_H_MIN, COLOR_H_MAX);
+    setColor(colors[0], colors[1], colors[2]);
+}
+
+// Linear interpolation of colour against speed using HSL
+std::array<Uint8, 3> LTexture::colourLinearisationHSL(float speed, float color_max_speed, float hMin, float hMax) {
+	float h = ((hMax - hMin) * (speed / color_max_speed) + hMin ) / 360.0f;
+	float s = 1.0f;
+	float l = 0.5f;
+	// Convert HSL to RGB
+	std::array<Uint8, 3> rgb = hslToRgb(h, s, l);
+	//printf("Speed: %f, H: %f, S: %f, L: %f, R: %d, G: %d, B: %d\n", speed, h, s, l, rgb[0], rgb[1], rgb[2]);
+	return rgb;  
+}
+
+//Set color modulation HSL
+void LTexture::setColorHSL(float h, float s, float l) {
+    // Convert HSL to RGB
+    std::array<Uint8, 3> rgb = hslToRgb(h, s, l);
+    // Set the color modulation
+    setColor(rgb[0], rgb[1], rgb[2]);
+}
+
+// HSL to RGB conversion
+std::array<Uint8, 3> LTexture::hslToRgb(float h, float s, float l) {
+    float r, g, b;
+
+    if (s == 0) {
+        r = g = b = l; // achromatic
+    }
+    else {
+        Uint8 q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        Uint8 p = 2 * l - q;
+        r = hueToRgb(p, q, h + 1.0 / 3.0);
+        g = hueToRgb(p, q, h);
+        b = hueToRgb(p, q, h - 1.0 / 3.0);
+    }
+    
+    return {
+        static_cast<Uint8>(round(r * 255)),
+        static_cast<Uint8>(round(g * 255)),
+        static_cast<Uint8>(round(b * 255))
+    };
+}
+
+// Helper function for HSL to RGB conversion
+float LTexture::hueToRgb(float p, float q, float t) {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1.0 / 6.0) return p + (q - p) * 6 * t;
+    if (t < 1.0 / 2.0) return q;
+    if (t < 2.0 / 3.0) return p + (q - p) * (2.0 / 3.0 - t) * 6;
+    return p;
 }
 
 void LTexture::free()

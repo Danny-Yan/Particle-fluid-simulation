@@ -2,23 +2,16 @@
 
 int Dot::ID = 0;
 
-Dot::Dot( int x, int y , float velX, float velY, int radius) : Collider(x, y, radius, FORCE_RADIUS)
+Dot::Dot( int x, int y , float velX, float velY, int radius) 
+    : Collider(x, y, radius, FORCE_RADIUS),
+	mVelX(velX), mVelY(velY),
+	Velx(velX), Vely(velY),
+
+    PosX(x), PosY(y),
+	mPosX(x), mPosY(y),
+	sPosX(x), sPosY(y)
 {
     id = ID++;
-    //Initialize the offsets
-    PosX = x; // NOT USED
-    PosY = y; // NOT USED
-    mPosX = x;
-    mPosY = y;
-    sPosX = x;
-    sPosY = y;
-
-    //Initialize the velocity
-    Velx = velX; // NOT USED
-    Vely = velY; // NOT USED
-    mVelX = velX;
-    mVelY = velY;
-
     //Move collider relative to the circle
     shiftColliders();
 }
@@ -53,7 +46,6 @@ void Dot::movePrediction(float deltaTime, float constantDelta = 0)
     Vely = mVelY;
     shiftColliders();
 }
-
 
 void Dot::move(float deltaTime)
 {
@@ -511,21 +503,21 @@ void Dot::shiftCollidersPos()
 }
 
 //GETS/SETS
-float Dot::getVelX()
+float Dot::getVelX() const
 {
     return Velx;
 }
 
-float Dot::getVelY()
+float Dot::getVelY() const
 {
     return Vely;
 }
 
-float Dot::getmVelX()
+float Dot::getmVelX() const
 {
     return mVelX;
 }
-float Dot::getmVelY()
+float Dot::getmVelY() const
 {
     return mVelY;
 }
@@ -542,36 +534,36 @@ void Dot::addmVelY( float velY )
 }
 
 
-float Dot::getmPosX()
+float Dot::getmPosX() const
 {
     return mPosX;
 }
 
-float Dot::getmPosY()
+float Dot::getmPosY() const
 {
     return mPosY;
 }
 
-float Dot::getPosX()
+float Dot::getPosX() const
 {
     return PosX;
 }
 
-float Dot::getPosY()
+float Dot::getPosY() const
 {
     return PosY;
 }
 
-float Dot::getsPosX()
+float Dot::getsPosX() const
 {
     return sPosX;
 }
-float Dot::getsPosY()
+float Dot::getsPosY() const
 {
     return sPosY;
 }
 
-int Dot::getID()
+int Dot::getID()  const
 {
     return id;
 }
