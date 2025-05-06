@@ -1,12 +1,11 @@
 #ifndef COLLIDER_H
 #define COLLIDER_H
 
-#include <stdio.h>
+#include <cstdio>
 #include <cmath>
 #include <algorithm>
-#include "collision_check.h"
-#include "constants.h"
-
+#include "incl/collision_check.h"
+#include "incl/constants.h"
 
 class Collider
 {
@@ -17,9 +16,14 @@ class Collider
         float getDensity() const;
         void setfR( float fR );
         float getfR() const;
+        float getmPosX() const;
+        float getmPosY() const;
+        void setmPosX(float val);
+        void setmPosY(float val);
         void setForceMultiplier( float forceMultiplier );
         float getForceMultiplier() const;
 
+        float mPosX, mPosY;
     protected: 
         // Force radius
         float fR;
@@ -32,9 +36,9 @@ class Collider
 
         // Collision circle
         Circle mCollider;
-        
-        //Moves the collision circle relative to the dot's offset
-        virtual void shiftColliders() = 0;
+
+        //Moves the collision circle
+        void shiftColliders();
 };
 
 #endif

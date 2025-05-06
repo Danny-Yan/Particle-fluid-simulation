@@ -1,6 +1,6 @@
 #include "incl/Mouse.h"
 
-Mouse::Mouse( int radius, int fR, float forceMultiplier ) : Collider(x, y, radius, fR)
+Mouse::Mouse( int radius, int fR, float forceMultiplier ) : Collider(0, 0, radius, fR)
 {
     setForceMultiplier(forceMultiplier);
 }
@@ -9,12 +9,7 @@ Mouse::Mouse( int radius, int fR, float forceMultiplier ) : Collider(x, y, radiu
 void Mouse::move()
 {
     this->shiftColliders();
-}
-
-void Mouse::shiftColliders()
-{
-    mCollider.x = x;
-    mCollider.y = y;
+	//printf("%f %f", mPosX, mPosY);
 }
 
 bool Mouse::hasBeenPressed() const {

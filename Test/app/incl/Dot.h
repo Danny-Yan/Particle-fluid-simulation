@@ -44,8 +44,6 @@ class Dot : public Collider
         float getmVelY() const;
         float getVelX() const;
         float getVelY() const;
-        float getmPosX() const;
-        float getmPosY() const;
         float getPosX() const;
         float getPosY() const;
         float getsPosX() const;
@@ -65,7 +63,6 @@ class Dot : public Collider
         int id;
 
         //The X and Y offsets of the dot
-        float mPosX, mPosY;
         float PosX, PosY;
         float sPosX, sPosY;
 
@@ -76,7 +73,6 @@ class Dot : public Collider
         //Dot's collision vector with another dot
         Collision cLVector;
 
-        void shiftColliders() override;
         void shiftCollidersPos();
         Collision checkDotCollision( Dot& b );
 };

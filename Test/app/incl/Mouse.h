@@ -1,19 +1,16 @@
 #ifndef MOUSE_H
 #define MOUSE_H
 
-#include <stdio.h>
-#include "collider.h"
+#include <cstdio>
+#include "incl/collider.h"
 
 //Mouse structure
-class Mouse : public Collider
+class Mouse : public virtual Collider
 {
     public:
         //Initializes the variables
         Mouse( int radius, int fR, float forceMultiplier = 0);
 
-        int x; 
-        int y;
-        int r;
         int velX; 
         int velY;
 
@@ -24,7 +21,6 @@ class Mouse : public Collider
 
     protected:
         bool isPressed = false;
-        void shiftColliders() override;
 };
 
 

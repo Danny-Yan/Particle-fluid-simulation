@@ -1,9 +1,9 @@
 #ifndef SPATIAL_HASHERS_H
 #define SPATIAL_HASHERS_H
 #include <vector>
-#include "constants.h"
+#include "incl/constants.h"
 #include <tuple>
-#include "Dot.h"
+#include "incl/Dot.h"
 
 //Computing full 3x3 spacial area
 std::vector<int> compute_full_spatial_area(int mPosX, int mPosY);

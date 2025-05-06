@@ -2,12 +2,11 @@
 
 
 Collider::Collider(float x, float y, int radius, int fr)
-    : fR(fr)
+	: fR(fr), mPosX(x), mPosY(y)
 {
     //Initialize the offsets
     mCollider.x = (int)x;
     mCollider.y = (int)y;
-    
     mCollider.r = radius * SCALE;
 }
 
@@ -44,4 +43,31 @@ float Collider::getForceMultiplier() const
 void Collider::setForceMultiplier( float forceMultiplier )
 {
     this->forceMultiplier = forceMultiplier;
+}
+
+float Collider::getmPosX() const
+{
+    return mPosX;
+}
+
+float Collider::getmPosY() const
+{
+    return mPosY;
+}
+
+void Collider::setmPosX(float val) {
+    mPosX = val;
+}
+
+void Collider::setmPosY(float val) {
+    mPosY = val;
+}
+
+
+//SHIFT COLLIDERS
+void Collider::shiftColliders()
+{
+    //Align collider to center of dot
+    mCollider.x = mPosX;
+    mCollider.y = mPosY;
 }

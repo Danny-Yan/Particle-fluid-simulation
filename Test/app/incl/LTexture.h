@@ -5,7 +5,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_image.h>
-#include <stdio.h>
+#include <cstdio>
 #include <string>
 #include <array>
 

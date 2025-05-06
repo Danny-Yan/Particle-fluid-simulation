@@ -201,7 +201,10 @@ void engine::pollEvent()
 
             // MOUSE MOVE
         case SDL_MOUSEMOTION:
-            SDL_GetMouseState(&mouse.x, &mouse.y);
+            int mouseX, mouseY;
+            SDL_GetMouseState(&mouseX, &mouseY);
+			mouse.setmPosX((float)mouseX);
+			mouse.setmPosY((float)mouseY);
             mouse.move();
             break;
 
@@ -449,9 +452,9 @@ void engine::runFluidMouseForceFrame(std::vector<Dot>& dots)
 {
 	if (mouse.hasBeenPressed() == false) { return; }
     // Loop through area around mouse cursor and update
-    forParticlesAroundPoint(mouse.x, mouse.y, particleEntries, [&](Dot& dotB) {
+    forParticlesAroundPoint(mouse.mPosX, mouse.mPosY, particleEntries, [&](Dot& dotB) {
         // Check if distance is less than radius
-        float distance_squared = distanceSquared(mouse.x, mouse.y, dotB.getmPosX(), dotB.getmPosY());
+        float distance_squared = distanceSquared(mouse.mPosX, mouse.mPosY, dotB.getmPosX(), dotB.getmPosY());
 
         if (distance_squared < MOUSE_RADIUS_SQUARED) {
             // Calc and apply mouse force
@@ -477,9 +480,9 @@ void engine::runFluidMouseDensityFrame(std::vector<Dot>& dots)
 {
     if (mouse.hasBeenPressed() == false) { return; }
     // Loop through area around mouse cursor and update
-    forParticlesAroundPoint(mouse.x, mouse.y, particleEntries, [&](Dot& dotB) {
+    forParticlesAroundPoint(mouse.getmPosX(), mouse.getmPosY(), particleEntries, [&](Dot& dotB) {
         // Check if distance is less than radius
-        float distance_squared = distanceSquared(mouse.x, mouse.y, dotB.getmPosX(), dotB.getmPosY());
+        float distance_squared = distanceSquared(mouse.getmPosX(), mouse.getmPosX(), dotB.getmPosX(), dotB.getmPosY());
 
         if (distance_squared < MOUSE_RADIUS_SQUARED) {
             // Calc and apply mouse force

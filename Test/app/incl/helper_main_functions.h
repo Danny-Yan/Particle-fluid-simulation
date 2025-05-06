@@ -2,20 +2,21 @@
 #define HELPER_MAIN_FUNCTIONS_H
 
 #define _USE_MATH_DEFINES
-#include <math.h>
+#include <cmath>
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
-#include <stdio.h>
+#include <cstdio>
 #include <vector>
 #include <algorithm>
-#include "incl/Dot.h"
-#include "incl/helper_structs.h"
-#include "incl/spatial_hashers.h"
 #include <memory>
 #include <cmath>
 #include <array> 
 #include <functional>
+
+#include "incl/Dot.h"
+#include "incl/helper_structs.h"
+#include "incl/spatial_hashers.h"
 
 // add namespace helper
 [[deprecated("Use updateDensities(ParticleEntries& particleEntries) overload instead.")]]

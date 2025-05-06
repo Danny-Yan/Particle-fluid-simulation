@@ -8,7 +8,6 @@ Dot::Dot( float x, float y , float velX, float velY, int radius)
 	Velx(velX), Vely(velY),
 
     PosX(x), PosY(y),
-	mPosX(x), mPosY(y),
 	sPosX(x), sPosY(y)
 {
     id = globalID++;
@@ -487,15 +486,6 @@ Collision Dot::checkCircleForce( Collider &dotB )
     return collision;
 }
 
-
-//SHIFT COLLIDERS
-void Dot::shiftColliders()
-{
-    //Align collider to center of dot
-    mCollider.x = mPosX;
-    mCollider.y = mPosY;
-}
-
 void Dot::shiftCollidersPos()
 {
     //Align collider to center of dot
@@ -532,17 +522,6 @@ void Dot::addmVelX( float velX )
 void Dot::addmVelY( float velY )
 {
     mVelY += velY;
-}
-
-
-float Dot::getmPosX() const
-{
-    return mPosX;
-}
-
-float Dot::getmPosY() const
-{
-    return mPosY;
 }
 
 float Dot::getPosX() const
