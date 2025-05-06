@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <vector>
 #include <algorithm>
-#include "Dot.h"
-#include "helper_structs.h"
-#include "spatial_hashers.h"
+#include "incl/Dot.h"
+#include "incl/helper_structs.h"
+#include "incl/spatial_hashers.h"
 #include <memory>
 #include <cmath>
 #include <array> 

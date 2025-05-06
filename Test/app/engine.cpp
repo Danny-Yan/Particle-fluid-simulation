@@ -23,7 +23,7 @@ bool engine::initSDL()
     }
 
     //Create window
-    gwindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    gwindow = SDL_CreateWindow("Fluid Simulation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (gwindow == NULL)
     {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -378,8 +378,8 @@ void engine::runFluidSimFrame()
 
     // Run simulation frames
     runFluidParticlesFrame(dots);
-    runFluidMouseFrame(dots);
-    fluidSimRenderParticles(dots);
+    runFluidMouseForceFrame(dots);
+    runSimRenderFrame(dots);
 
     //Update screen
     SDL_RenderPresent(gRenderer);
@@ -422,7 +422,6 @@ void engine::runFluidParticlesFrame(std::vector<Dot>& dots)
     for (int i = 0; i < PARTICLE_NUM; i++)
     {
         Dot& dot = dots[i];
-        dot.check_wall_no_shift();
 
         // Update pressure gradient
         pressureGradient = { 0, 0 };
@@ -437,6 +436,8 @@ void engine::runFluidParticlesFrame(std::vector<Dot>& dots)
             }
         });
 
+        dot.check_wall_no_shift();
+
         if (abs(dot.getDensity()) > DENSITY_UPPER)
         {
             dot.addmVelX(pressureGradient[0] / dot.getDensity());
@@ -444,7 +445,7 @@ void engine::runFluidParticlesFrame(std::vector<Dot>& dots)
         }
     }
 }
-void engine::runFluidMouseFrame(std::vector<Dot>& dots)
+void engine::runFluidMouseForceFrame(std::vector<Dot>& dots)
 {
 	if (mouse.hasBeenPressed() == false) { return; }
     // Loop through area around mouse cursor and update
@@ -458,7 +459,7 @@ void engine::runFluidMouseFrame(std::vector<Dot>& dots)
         }
     });
 }
-void engine::fluidSimRenderParticles(std::vector<Dot>& dots)
+void engine::runSimRenderFrame(std::vector<Dot>& dots)
 {
     ////Move all dots
     for (Dot& dot : dots)
@@ -471,4 +472,24 @@ void engine::fluidSimRenderParticles(std::vector<Dot>& dots)
         // RENDERING
         dot.render(gRenderer, gDotTexture);
     }
+}
+void engine::runFluidMouseDensityFrame(std::vector<Dot>& dots)
+{
+    if (mouse.hasBeenPressed() == false) { return; }
+    // Loop through area around mouse cursor and update
+    forParticlesAroundPoint(mouse.x, mouse.y, particleEntries, [&](Dot& dotB) {
+        // Check if distance is less than radius
+        float distance_squared = distanceSquared(mouse.x, mouse.y, dotB.getmPosX(), dotB.getmPosY());
+
+        if (distance_squared < MOUSE_RADIUS_SQUARED) {
+            // Calc and apply mouse force
+            calculatePressureGradient(pressureGradient, &dotB, &mouse);
+        }
+
+        if (abs(dotB.getDensity()) > DENSITY_UPPER)
+        {
+            dotB.addmVelX(pressureGradient[0] / dotB.getDensity());
+            dotB.addmVelY(pressureGradient[1] / dotB.getDensity());
+        }
+    });
 }

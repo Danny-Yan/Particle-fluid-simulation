@@ -97,8 +97,9 @@ private:
 	void runFluidSimFrame();
 	void runBallCollisionFrame();
 	void runFluidParticlesFrame(std::vector<Dot>& dots);
-	void runFluidMouseFrame(std::vector<Dot>& dots);
-	void fluidSimRenderParticles(std::vector<Dot>& dots);
+	void runFluidMouseForceFrame(std::vector<Dot>& dots);
+	void runFluidMouseDensityFrame(std::vector<Dot>& dots);
+	void runSimRenderFrame(std::vector<Dot>& dots);
 };
 
 #endif
