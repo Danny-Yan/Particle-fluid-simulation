@@ -16,10 +16,14 @@ class Mouse : public Collider
         int r;
         int velX; 
         int velY;
+
         //Moves the mouse
         void move();
-    
+        bool hasBeenPressed() const;
+        void setIsPressed(bool val);
+
     protected:
+        bool isPressed = false;
         void shiftColliders() override;
 };
 

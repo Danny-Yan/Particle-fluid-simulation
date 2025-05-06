@@ -15,21 +15,25 @@ int GRID_WIDTH = (int)FORCE_RADIUS;
 int GRID_HEIGHT = (int)FORCE_RADIUS;
 int SPATIAL_WIDTH = SCREEN_WIDTH / GRID_WIDTH;
 int SPATIAL_HEIGHT = SCREEN_HEIGHT / GRID_HEIGHT;
+
+// Simulation Constants
 float TIMEINTERVAL = 1.0f; // Min 1
+float PREDICTIVE_STEPS = 0.5f;
 
 //Dot constants
 const float RADIUS = 10.0f;               // ***
 const float SPACING = 10.0f;               // ***
-const float accel = 0;               // Hella buggy
-const float RESISTANCE = 0.8f;
-
 const float SCALE = 0.4f;
 const int PARTICLE_NUM = 3000; // does not work for < 200
 
-// MOUSE
-const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS;
-const float MOUSE_FORCE = -0.1f;
+// Motion constants
+const float accel = 0;               // Hella buggy
+const float RESISTANCE = 0.8f;
 
+// MOUSE
+const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS * 3;
+const float MOUSE_RADIUS_SQUARED = MOUSE_FORCE_RADIUS * MOUSE_FORCE_RADIUS;
+const float MOUSE_FORCE = 10.0f;
 
 // CONTACT
 // CONVERT TO CONTACT FORCE
@@ -53,5 +57,6 @@ const float COLOR_MAX_SPEED = 2000; // speed * 100
 const float COLOR_MIN[3] = {0, 249, 241};
 const float COLOR_MAX[3] = {238, 86, 86};
 
+// Hsl Constants
 const float COLOR_H_MIN = 215;
 const float COLOR_H_MAX = 1;

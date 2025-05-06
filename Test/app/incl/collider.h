@@ -11,7 +11,7 @@
 class Collider
 {
     public:
-        Collider(int x, int y, int radius, int fr = FORCE_RADIUS);
+        Collider(float x, float y, int radius, int fr = FORCE_RADIUS);
         const Circle& getColliders() const;
         void setDensity( float density );
         float getDensity() const;
@@ -25,7 +25,7 @@ class Collider
         float fR;
 
         // Density around the collider
-        float density;
+        float density = 0.0f;
 
         //Force multipler
         float forceMultiplier = 1.0f;

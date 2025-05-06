@@ -57,7 +57,7 @@ bool LTexture::loadFromFile( SDL_Renderer* gRenderer, std::string path )
 }
 
 // ---------------------------------------------------------------------------------------------
-// RGB implementation
+// RGB implementation (OLD)
 // Set blending function
 void LTexture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 {

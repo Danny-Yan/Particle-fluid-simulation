@@ -129,7 +129,7 @@ void engine::generalSimulationSetUp()
 
         x_cord = x + PARTICLE_START_X;
         y_cord = y + PARTICLE_START_Y;
-        Dot dot(x_cord, y_cord, 0, 0, RADIUS);
+        Dot dot(x_cord, y_cord, 0, 0, (int)RADIUS);
         dots.push_back(dot);
     }
 
@@ -151,7 +151,6 @@ void engine::generalSimSetUp() {
     int particlesPerCol = (PARTICLE_NUM - 1) / particlesPerRow + 1;
     float x_cord;
     float y_cord;
-    float particle_density;
 
     for (int i = 0; i < PARTICLE_NUM; i++)
     {
@@ -166,7 +165,9 @@ void engine::generalSimSetUp() {
 
     updateDensities(particleEntries);
 }
+
 void engine::fluidSimulationSetUp(){}
+
 void engine::collisionSimulationSetUp(){}
 
 void engine::whileRunning(const std::function<void()>& func)
@@ -175,20 +176,16 @@ void engine::whileRunning(const std::function<void()>& func)
         pollEvent();
         clearScreen();
 
-        //Render wall
-        SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-        SDL_RenderDrawRect(gRenderer, &wall);
+        ////Render wall
+        //SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+        //SDL_RenderDrawRect(gRenderer, &wall);
 
         float deltaTime = (timer.getTicks() - interval) * 100000 / (float)SDL_GetPerformanceFrequency(); // Get the time passed in ms since the start of the frame.        
-        // printf("%f\n", deltaTime);
         if (deltaTime >= TIMEINTERVAL && timer.isPaused() == 0)
         {
            func();
         }
     }
-
-	// Free resources and close SDL
-    close();
 }
 
 void engine::pollEvent()
@@ -267,11 +264,13 @@ void engine::pollEvent()
     }
 
 }
+
 void engine::clearScreen() {
     //Clear screen
     SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(gRenderer);
 }
+
 void engine::runFluidSimulationFrame()
 {
     //DENSITY METHOD w/ PREDICTIVE STEPS -------------------------------------------------------------------------------------------------------
@@ -357,6 +356,7 @@ void engine::runFluidSimulationFrame()
     SDL_RenderPresent(gRenderer);
     interval = timer.getTicks();
 }
+
 void engine::runFluidSimFrame()
 {
     //DENSITY METHOD w/ PREDICTIVE STEPS -------------------------------------------------------------------------------------------------------
@@ -367,7 +367,7 @@ void engine::runFluidSimFrame()
     for (int i = 0; i < PARTICLE_NUM; i++)
     {
         Dot& dot = dots[i];
-        dot.movePrediction(TIMEINTERVAL, 0.5f);
+        dot.movePrediction(TIMEINTERVAL, PREDICTIVE_STEPS);
     }
 
     // Update spacial lookup after moving
@@ -376,50 +376,16 @@ void engine::runFluidSimFrame()
     //Update densities after moving
     updateDensities(particleEntries);
 
-    for (int i = 0; i < PARTICLE_NUM; i++)
-    {
-        Dot& dot = dots[i];
-        dot.check_wall_no_shift();
-
-        // Update pressure gradient
-        pressureGradient = { 0, 0 };
-
-		forParticles(dot, particleEntries, [&](Dot& dotB) {
-            // Calc pressure gradient (Loop and keep track of pressure gradient)
-
-            // Check if distance is less than radius
-            float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
-
-            if (distance_squared < FORCE_RADIUS_SQUARED) {
-                calculatePressureGradient(pressureGradient, &dotB, &dot);
-            }
-		});
-        
-        if (abs(dot.getDensity()) > DENSITY_UPPER)
-        {
-            dot.addmVelX(pressureGradient[0] / dot.getDensity());
-            dot.addmVelY(pressureGradient[1] / dot.getDensity()); 
-        }
-    }
-
-    ////Move all dots
-    for (Dot& dot : dots)
-    {
-        dot.move(TIMEINTERVAL);
-        // COLORING
-        float speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
-        gDotTexture.setColorForSpeedHSL(speed);
-
-        // RENDERING
-        dot.render(gRenderer, gDotTexture);
-    }
-
-    // ========================================================================================================================
+    // Run simulation frames
+    runFluidParticlesFrame(dots);
+    runFluidMouseFrame(dots);
+    fluidSimRenderParticles(dots);
 
     //Update screen
     SDL_RenderPresent(gRenderer);
     interval = timer.getTicks();
 }
+
 void engine::runBallCollisionFrame()
 {
      // CONTACT METHOD ------------------------------------------------------------------------------------------------------
@@ -448,4 +414,61 @@ void engine::runBallCollisionFrame()
      }
      // ========================================================================================================================
 
+}
+
+void engine::runFluidParticlesFrame(std::vector<Dot>& dots)
+{
+    // Loop through and update all particles
+    for (int i = 0; i < PARTICLE_NUM; i++)
+    {
+        Dot& dot = dots[i];
+        dot.check_wall_no_shift();
+
+        // Update pressure gradient
+        pressureGradient = { 0, 0 };
+
+        forParticles(dot, particleEntries, [&](Dot& dotB) {
+            // Check if distance is less than radius
+            float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
+
+            if (distance_squared < FORCE_RADIUS_SQUARED) {
+                // Calc pressure gradient (Loop and keep track of pressure gradient)
+                calculatePressureGradient(pressureGradient, &dotB, &dot);
+            }
+        });
+
+        if (abs(dot.getDensity()) > DENSITY_UPPER)
+        {
+            dot.addmVelX(pressureGradient[0] / dot.getDensity());
+            dot.addmVelY(pressureGradient[1] / dot.getDensity());
+        }
+    }
+}
+void engine::runFluidMouseFrame(std::vector<Dot>& dots)
+{
+	if (mouse.hasBeenPressed() == false) { return; }
+    // Loop through area around mouse cursor and update
+    forParticlesAroundPoint(mouse.x, mouse.y, particleEntries, [&](Dot& dotB) {
+        // Check if distance is less than radius
+        float distance_squared = distanceSquared(mouse.x, mouse.y, dotB.getmPosX(), dotB.getmPosY());
+
+        if (distance_squared < MOUSE_RADIUS_SQUARED) {
+            // Calc and apply mouse force
+            dotB.check_mouse_force(&mouse);
+        }
+    });
+}
+void engine::fluidSimRenderParticles(std::vector<Dot>& dots)
+{
+    ////Move all dots
+    for (Dot& dot : dots)
+    {
+        dot.move(TIMEINTERVAL);
+        // COLORING
+        float speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
+        gDotTexture.setColorForSpeedHSL(speed);
+
+        // RENDERING
+        dot.render(gRenderer, gDotTexture);
+    }
 }

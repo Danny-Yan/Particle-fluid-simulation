@@ -4,7 +4,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_image.h>
-#include <stdio.h>
+#include <cstdio>
 #include <vector>
 #include <functional>
 
@@ -31,7 +31,7 @@ private:
 
 	//The window renderer
 	SDL_Renderer* gRenderer = NULL;
-
+	
 	//Scene textures
 	LTexture gDotTexture;
 
@@ -96,6 +96,9 @@ private:
 	void runFluidSimulationFrame();
 	void runFluidSimFrame();
 	void runBallCollisionFrame();
+	void runFluidParticlesFrame(std::vector<Dot>& dots);
+	void runFluidMouseFrame(std::vector<Dot>& dots);
+	void fluidSimRenderParticles(std::vector<Dot>& dots);
 };
 
 #endif

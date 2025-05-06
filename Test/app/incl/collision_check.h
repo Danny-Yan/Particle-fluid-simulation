@@ -40,18 +40,14 @@ Collision checkXCollision( Circle& a, SDL_Rect& b );
 Collision checkYCollision( Circle& a, SDL_Rect& b );
 
 //Calculates distance squared between two points
-float distanceSquared( int x1, int y1, int x2, int y2 );
+float distanceSquared(float x1, float y1, float x2, float y2 );
 
 //Convert any vector into a unit vector
 std::vector<float> unitVector(float x, float y);
 
 float sharedDensity( float density1, float density2 );
 
-
 //Calculates the sign of a number
 int sgn( int val ); // Turn into template
-
-// std::map<int, int> mapping_spacial;
-// void initMap();
 
 #endif

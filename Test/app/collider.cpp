@@ -1,12 +1,12 @@
 #include "incl/collider.h"
 
 
-Collider::Collider(int x, int y, int radius, int fr)
+Collider::Collider(float x, float y, int radius, int fr)
     : fR(fr)
 {
     //Initialize the offsets
-    mCollider.x = x;
-    mCollider.y = y;
+    mCollider.x = (int)x;
+    mCollider.y = (int)y;
     
     mCollider.r = radius * SCALE;
 }

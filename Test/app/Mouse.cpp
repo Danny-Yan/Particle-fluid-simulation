@@ -16,3 +16,10 @@ void Mouse::shiftColliders()
     mCollider.x = x;
     mCollider.y = y;
 }
+
+bool Mouse::hasBeenPressed() const {
+	return isPressed;
+}
+void Mouse::setIsPressed(bool val) {
+	isPressed = val;
+}

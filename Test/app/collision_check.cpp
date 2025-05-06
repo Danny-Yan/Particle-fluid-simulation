@@ -153,10 +153,10 @@ Collision checkYCollision( Circle& a, SDL_Rect& b )
 }
 
 //Calculate distance squared between two points
-float distanceSquared( int x1, int y1, int x2, int y2 )
+float distanceSquared( float x1, float y1, float x2, float y2 )
 {
-    int deltaX = x2 - x1;
-    int deltaY = y2 - y1;
+    float deltaX = x2 - x1;
+    float deltaY = y2 - y1;
     return deltaX*deltaX + deltaY*deltaY;
 }
 
@@ -175,19 +175,6 @@ float sharedDensity( float density1, float density2 )
 
 }
 
-
-
 int sgn(int val) {
     return (0 < val) - (val < 0);
 }
-
-// void initMap(){
-//     mapping_spacial.insert(std::pair<int,int>(1,1));
-//     mapping_spacial.insert(std::pair<int,int>(0,0));
-//     mapping_spacial.insert(std::pair<int,int>(-1,-1));
-//     mapping_spacial.insert(std::pair<int,int>(0,1));
-//     mapping_spacial.insert(std::pair<int,int>(1,0));
-//     mapping_spacial.insert(std::pair<int,int>(-1,0));
-//     mapping_spacial.insert(std::pair<int,int>(0,-1));
-//     mapping_spacial.insert(std::pair<int,int>(1,-1));
-// }

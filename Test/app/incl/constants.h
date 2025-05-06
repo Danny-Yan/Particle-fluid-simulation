@@ -12,6 +12,7 @@ extern int SPATIAL_WIDTH;
 extern int SPATIAL_HEIGHT;
 
 extern float TIMEINTERVAL;
+extern float PREDICTIVE_STEPS;
 
 extern const float accel;
 extern const float RESISTANCE;
@@ -23,6 +24,7 @@ extern const float SPACING;
 
 extern const float MOUSE_FORCE;
 extern const int MOUSE_FORCE_RADIUS;
+extern const float MOUSE_RADIUS_SQUARED;
 
 extern const float FORCE_RADIUS;
 extern const float FORCE_RADIUS_SQUARED;

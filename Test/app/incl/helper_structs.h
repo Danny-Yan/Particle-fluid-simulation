@@ -5,16 +5,14 @@
 class Dot;
 
 struct Entry{
-    int hash;
-    int index;
+    int hash = 0;
+    int index = 0;
     Entry(){}
     Entry(int hash, int index){
         this->hash = hash;
         this->index = index;
     }
 };
-
-
 
 struct ParticleEntries{
 

@@ -1,9 +1,9 @@
 #include "incl/Dot.h"
 
-int Dot::ID = 0;
+int Dot::globalID = 0;
 
-Dot::Dot( int x, int y , float velX, float velY, int radius) 
-    : Collider(x, y, radius, FORCE_RADIUS),
+Dot::Dot( float x, float y , float velX, float velY, int radius) 
+    : Collider(x, y, radius, (int)FORCE_RADIUS),
 	mVelX(velX), mVelY(velY),
 	Velx(velX), Vely(velY),
 
@@ -11,7 +11,7 @@ Dot::Dot( int x, int y , float velX, float velY, int radius)
 	mPosX(x), mPosY(y),
 	sPosX(x), sPosY(y)
 {
-    id = ID++;
+    id = globalID++;
     //Move collider relative to the circle
     shiftColliders();
 }
@@ -174,7 +174,8 @@ Collision Dot::checkDotCollision( Dot & dotB )
     if (dotAp.mVelX == 0 && dotB.mVelX == 0 && dotAp.mVelY == 0 && dotB.mVelY == 0){
         return collision;    
     }
-
+    
+   
     Circle a = dotAp.getColliders();
     Circle b = dotB.getColliders();
     //Calculate total radius squared

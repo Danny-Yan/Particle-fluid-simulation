@@ -3,7 +3,7 @@
 
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
-#include <stdio.h>
+#include <cstdio>
 #include <cmath>
 #include <algorithm>
 #include "collision_check.h"
@@ -19,7 +19,7 @@ class Dot : public Collider
 {
     public:
         //Initializes the variables -- make x, y virtual variables
-        Dot( int x, int y , float velX, float velY, int radius);
+        Dot( float x, float y , float velX, float velY, int radius);
 
         //Moves the dot
         void movePrediction( float deltaTime, float constantDelta );
@@ -50,7 +50,6 @@ class Dot : public Collider
         float getPosY() const;
         float getsPosX() const;
         float getsPosY() const;
-
         int getID() const;
 
         //Setters
@@ -60,8 +59,7 @@ class Dot : public Collider
         //Shows the dot on the screen
         void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
 
-        static int ID;
-
+        static int globalID;
     private:
         // Dot ID:
         int id;
