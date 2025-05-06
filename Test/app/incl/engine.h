@@ -44,6 +44,8 @@ private:
 	// Initialising vectors
 
 	ParticleEntries particleEntries = ParticleEntries();
+
+	// DEPRECATED
 	std::vector<Entry> particleHashEntries = std::vector<Entry>(PARTICLE_NUM);
 	std::vector<int> spacialKeys = std::vector<int>(PARTICLE_NUM);
 	std::vector<Dot> dots;
@@ -83,23 +85,29 @@ private:
 	void clearScreen();
 
 	// Set up particle simulation
-	void generalSimulationSetUp();
 	void generalSimSetUp();
-
-	void fluidSimulationSetUp();
 	void collisionSimulationSetUp();
+	void fluidSimulationSetUp();
 
 	// Run simulation
 	void whileRunning( const std::function<void()>& func);
 
 	// Simulation frames
-	void runFluidSimulationFrame();
+	// Fluid
 	void runFluidSimFrame();
-	void runBallCollisionFrame();
 	void runFluidParticlesFrame(std::vector<Dot>& dots);
 	void runFluidMouseForceFrame(std::vector<Dot>& dots);
 	void runFluidMouseDensityFrame(std::vector<Dot>& dots);
 	void runSimRenderFrame(std::vector<Dot>& dots);
+
+	//Collision
+	void runBallCollisionFrame();
+
+	[[deprecated("Use generalSimSetUp() instead.")]]
+	void generalSimulationSetUp();
+
+	[[deprecated("Use runFluidSimFrame() instead.")]]
+	void runFluidSimulationFrame();
 };
 
 #endif
