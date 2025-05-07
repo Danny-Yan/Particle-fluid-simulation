@@ -53,7 +53,7 @@ const float DENSITY_UPPER = 0.0001f;
 
 
 // Colour constants
-const float COLOR_MAX_SPEED = 2000; // speed * 100
+const float COLOR_MAX_SPEED = 20;
 const float COLOR_MIN[3] = {0, 249, 241};
 const float COLOR_MAX[3] = {238, 86, 86};
 

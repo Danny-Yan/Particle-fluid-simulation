@@ -265,7 +265,6 @@ void engine::pollEvent()
             }
         }
     }
-
 }
 
 void engine::clearScreen() {
@@ -452,9 +451,9 @@ void engine::runFluidMouseForceFrame(std::vector<Dot>& dots)
 {
 	if (mouse.hasBeenPressed() == false) { return; }
     // Loop through area around mouse cursor and update
-    forParticlesAroundPoint(mouse.mPosX, mouse.mPosY, particleEntries, [&](Dot& dotB) {
+    forParticlesAroundPoint(mouse.getmPosX(), mouse.getmPosY(), particleEntries, [&](Dot& dotB) {
         // Check if distance is less than radius
-        float distance_squared = distanceSquared(mouse.mPosX, mouse.mPosY, dotB.getmPosX(), dotB.getmPosY());
+        float distance_squared = distanceSquared(mouse.getmPosX(), mouse.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
         if (distance_squared < MOUSE_RADIUS_SQUARED) {
             // Calc and apply mouse force
@@ -469,7 +468,7 @@ void engine::runSimRenderFrame(std::vector<Dot>& dots)
     {
         dot.move(TIMEINTERVAL);
         // COLORING
-        float speed = (abs(dot.getVelX()) + abs(dot.getVelY())) * 100;
+        float speed = (abs(dot.getVelX()) + abs(dot.getVelY()));
         gDotTexture.setColorForSpeedHSL(speed);
 
         // RENDERING

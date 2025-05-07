@@ -11,9 +11,6 @@ class Mouse : public virtual Collider
         //Initializes the variables
         Mouse( int radius, int fR, float forceMultiplier = 0);
 
-        int velX; 
-        int velY;
-
         //Moves the mouse
         void move();
         bool hasBeenPressed() const;
@@ -21,6 +18,8 @@ class Mouse : public virtual Collider
 
     protected:
         bool isPressed = false;
+        int velX;
+        int velY;
 };
 
 

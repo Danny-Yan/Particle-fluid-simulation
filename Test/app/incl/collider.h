@@ -22,8 +22,6 @@ class Collider
         void setmPosY(float val);
         void setForceMultiplier( float forceMultiplier );
         float getForceMultiplier() const;
-
-        float mPosX, mPosY;
     protected: 
         // Force radius
         float fR;
@@ -36,6 +34,8 @@ class Collider
 
         // Collision circle
         Circle mCollider;
+
+        float mPosX, mPosY;
 
         //Moves the collision circle
         void shiftColliders();
