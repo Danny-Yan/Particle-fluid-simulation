@@ -15,6 +15,7 @@
 #include "incl/Mouse.h"
 #include "incl/collision_check.h"
 #include "incl/helper_structs.h"
+#include "incl/helper_main_functions.h"
 #include "incl/ParticleManager.h"
 #include "incl/Helper.h"
 
@@ -42,8 +43,15 @@ private:
 	//Event handler
 	SDL_Event e;
 
-	// ParticleManager
-	ParticleManager particleManager = ParticleManager(PARTICLE_NUM);
+	// Initialising vectors
+
+	ParticleEntries particleEntries = ParticleEntries();
+
+	// DEPRECATED
+	std::vector<Entry> particleHashEntries = std::vector<Entry>(PARTICLE_NUM);
+	std::vector<int> spacialKeys = std::vector<int>(PARTICLE_NUM);
+	std::vector<Dot> dots;
+	std::vector<Dot*> filtered_dots;
 
 	//Set the wall
 	SDL_Rect wall;
@@ -78,21 +86,30 @@ private:
 	// Clear screen
 	void clearScreen();
 
+	// Set up particle simulation
+	void generalSimSetUp();
+	void collisionSimulationSetUp();
+	void fluidSimulationSetUp();
+
 	// Run simulation
 	void whileRunning( const std::function<void()>& func);
 
 	// Simulation frames
-	// Fluid w/ particle manager
-	void mGeneralSimSetUp();
-	void mRunFluidSimFrame();
-
-	void runFluidParticlesFrame();
-	void runFluidMouseForceFrame();
-	void runFluidMouseDensityFrame();
-	void runSimRenderFrame();
+	// Fluid
+	void runFluidSimFrame();
+	void runFluidParticlesFrame(std::vector<Dot>& dots);
+	void runFluidMouseForceFrame(std::vector<Dot>& dots);
+	void runFluidMouseDensityFrame(std::vector<Dot>& dots);
+	void runSimRenderFrame(std::vector<Dot>& dots);
 
 	//Collision
 	void runBallCollisionFrame();
+
+	[[deprecated("Use generalSimSetUp() instead.")]]
+	void generalSimulationSetUp();
+
+	[[deprecated("Use runFluidSimFrame() instead.")]]
+	void runFluidSimulationFrame();
 };
 
 #endif

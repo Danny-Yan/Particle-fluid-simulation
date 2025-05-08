@@ -24,7 +24,11 @@ class Dot : public Collider
         void movePrediction( float deltaTime, float constantDelta );
         void move( float deltaTime );
 
+        // Previous design
+        void moveVector( float deltaTime );
+
         //Check collision with another dot
+        void check_vector_collision( float deltaTime, SDL_Rect& square, std::vector<Dot>& circles, std::vector<Entry>& particleHashEntries, std::vector<int> &spacialKeys, int index );
         void check_vector_force( Dot &dot );
         void check_wall_collision();
         void check_wall_no_shift();
@@ -57,20 +61,18 @@ class Dot : public Collider
         // Dot ID:
         int id;
 
-        //The X and Y coords
+        //The X and Y offsets of the dot
         float PosX, PosY;
-
-		//Predicted X and Y coords
         float sPosX, sPosY;
 
         //The velocity of the dot
         float mVelX, mVelY;
-
-        // Velocity of dot from prev frame
         float Velx, Vely;
 
         //Dot's collision vector with another dot
         Collision cLVector;
+
+        void shiftCollidersPos();
         Collision checkDotCollision( Dot& b );
 };
 

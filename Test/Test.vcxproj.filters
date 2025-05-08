@@ -27,9 +27,6 @@
     <ClCompile Include="app\Dot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\helper_main_functions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="app\LTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -39,13 +36,16 @@
     <ClCompile Include="app\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\spatial_hashers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="app\time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\ParticleManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="app\Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,9 +62,6 @@
     <ClInclude Include="app\incl\Dot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\incl\helper_main_functions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="app\incl\helper_structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -74,13 +71,16 @@
     <ClInclude Include="app\incl\Mouse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app\incl\spatial_hashers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="app\incl\time.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\incl\engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\ParticleManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\Helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

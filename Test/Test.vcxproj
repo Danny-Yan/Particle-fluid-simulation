@@ -141,14 +141,14 @@
     <ClCompile Include="app\constants.cpp" />
     <ClCompile Include="app\Dot.cpp" />
     <ClCompile Include="app\engine.cpp" />
-    <ClCompile Include="app\helper_main_functions.cpp" />
     <ClCompile Include="app\LTexture.cpp" />
     <ClCompile Include="app\main.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ShowIncludes>
     </ClCompile>
     <ClCompile Include="app\Mouse.cpp" />
-    <ClCompile Include="app\spatial_hashers.cpp" />
     <ClCompile Include="app\time.cpp" />
+    <ClCompile Include="app\ParticleManager.cpp" />
+    <ClCompile Include="app\Helper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\collider.h" />
@@ -156,12 +156,12 @@
     <ClInclude Include="app\incl\constants.h" />
     <ClInclude Include="app\incl\Dot.h" />
     <ClInclude Include="app\incl\engine.h" />
-    <ClInclude Include="app\incl\helper_main_functions.h" />
     <ClInclude Include="app\incl\helper_structs.h" />
     <ClInclude Include="app\incl\LTexture.h" />
     <ClInclude Include="app\incl\Mouse.h" />
-    <ClInclude Include="app\incl\spatial_hashers.h" />
     <ClInclude Include="app\incl\time.h" />
+    <ClInclude Include="app\incl\ParticleManager.h" />
+    <ClInclude Include="app\incl\Helper.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\dot.bmp" />

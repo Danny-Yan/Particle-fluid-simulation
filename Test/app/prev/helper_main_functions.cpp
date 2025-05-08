@@ -86,7 +86,7 @@ void calculatePressureGradient( std::vector<float> &pressureGradient, Collider *
     //     dotA->applyDotCollison(*dotB);
     // }
 
-    if (magnitude == 0)
+    if (magnitude == 0.0f)
     {
         std::vector<float> randomNormal = getRandomDirection();
         normalX = randomNormal[0];
@@ -117,7 +117,7 @@ void calculatePressureGradient(std::vector<float>& pressureGradient, float magni
     //     dotA->applyDotCollison(*dotB);
     // }
 
-    if (magnitude == 0)
+    if (magnitude == 0.0f)
     {
         std::vector<float> randomNormal = getRandomDirection();
         normalX = randomNormal[0];
