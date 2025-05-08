@@ -1,4 +1,4 @@
-#include "incl/Dot.h"
+#include "../../incl/Dot.h"
 
 int Dot::globalID = 0;
 
@@ -54,7 +54,7 @@ Collision Dot::checkDotCollision( Dot & dotB )
     //Calculate total radius squared
     int totalRadius = a.r + b.r;
     float totalRadiusSquared = totalRadius * totalRadius;
-    float distance_Squared = distanceSquared( a.x, a.y, b.x, b.y );
+    float distance_Squared = Helper::distanceSquared( a.x, a.y, b.x, b.y );
 
     //If the distance between the centers of the circles is less than the sum of their radii
     if( distance_Squared <= ( totalRadiusSquared ) )
@@ -320,7 +320,7 @@ Collision Dot::checkCircleForce( Collider &dotB )
     //Calculate total radius squared
     float totalRadius = dotAp.getfR() + dotB.getfR();
     float totalRadiusSquared = totalRadius * totalRadius;
-    float distance_Squared = distanceSquared( a.x, a.y, b.x, b.y );
+    float distance_Squared = Helper::distanceSquared( a.x, a.y, b.x, b.y );
 
     //If the distance between the centers of the circles is less than the sum of their radii
     if( distance_Squared <= ( totalRadiusSquared ) )

@@ -10,8 +10,8 @@
 #include <memory>
 #include <array> 
 #include <functional>
-
-#include "incl/Dot.h"
+#include "Helper.h"
+#include "Dot.h"
 
 class ParticleManager
 {

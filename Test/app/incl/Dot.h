@@ -6,12 +6,12 @@
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
-#include "incl/collision_check.h"
-#include "incl/LTexture.h"
-#include "incl/constants.h"
-#include "incl/helper_structs.h"
-#include "incl/collider.h"
-#include "incl/Mouse.h"
+#include "Helper.h"
+#include "LTexture.h"
+#include "constants.h"
+#include "helper_structs.h"
+#include "collider.h"
+#include "Mouse.h"
 
 //The dot that will move around on the screen
 class Dot : public Collider

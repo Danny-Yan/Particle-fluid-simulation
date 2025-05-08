@@ -1,4 +1,4 @@
-#include "incl/constants.h"
+#include "../incl/constants.h"
 
 //Force constants
 const float FORCE_RADIUS = 40.0f;           // ***

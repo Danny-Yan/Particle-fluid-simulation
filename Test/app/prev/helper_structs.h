@@ -14,7 +14,11 @@ struct Entry{
         this->index = index;
     }
 };
-
+struct ParticleEntries {
+    std::vector<Dot> dots;
+    std::vector<Entry> particleHashEntries = std::vector<Entry>(particleCount);
+    std::vector<int> spacialKeys = std::vector<int>(particleCount);
+};
 //A circle stucture
 struct Circle
 {

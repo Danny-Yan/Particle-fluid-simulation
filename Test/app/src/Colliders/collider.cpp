@@ -1,4 +1,4 @@
-#include "incl/collider.h"
+#include "../../incl/collider.h"
 
 
 Collider::Collider(float x, float y, int radius, int fr)

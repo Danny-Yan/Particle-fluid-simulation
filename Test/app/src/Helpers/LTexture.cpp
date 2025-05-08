@@ -1,5 +1,5 @@
-#include "incl/LTexture.h"
-#include "incl/constants.h"
+#include "../../incl/LTexture.h"
+#include "../../incl/constants.h"
 
 LTexture::LTexture()
 {

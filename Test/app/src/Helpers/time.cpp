@@ -1,4 +1,4 @@
-#include "incl/time.h"
+#include "../../incl/time.h"
 
 LTimer::LTimer()
 {

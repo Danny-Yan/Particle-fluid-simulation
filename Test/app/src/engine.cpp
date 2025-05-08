@@ -1,4 +1,4 @@
-#include "incl/engine.h"
+#include "../incl/engine.h"
 
 
 engine::engine()
@@ -309,7 +309,7 @@ void engine::runFluidParticlesFrame()
 
         particleManager.forParticles(dot, [&](Dot& dotB) {
             // Check if distance is less than radius
-            float distance_squared = distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
+            float distance_squared = Helper::distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
             if (distance_squared < FORCE_RADIUS_SQUARED) {
                 // Calc pressure gradient (Loop and keep track of pressure gradient)
@@ -332,7 +332,7 @@ void engine::runFluidMouseForceFrame()
     // Loop through area around mouse cursor and update
     particleManager.forParticlesAroundPoint(mouse.getmPosX(), mouse.getmPosY(), [&](Dot& dotB) {
         // Check if distance is less than radius
-        float distance_squared = distanceSquared(mouse.getmPosX(), mouse.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
+        float distance_squared = Helper::distanceSquared(mouse.getmPosX(), mouse.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
         if (distance_squared < MOUSE_RADIUS_SQUARED) {
             // Calc and apply mouse force
@@ -361,7 +361,7 @@ void engine::runFluidMouseDensityFrame()
     // Loop through area around mouse cursor and update
     particleManager.forParticlesAroundPoint(mouse.getmPosX(), mouse.getmPosY(), [&](Dot& dotB) {
         // Check if distance is less than radius
-        float distance_squared = distanceSquared(mouse.getmPosX(), mouse.getmPosX(), dotB.getmPosX(), dotB.getmPosY());
+        float distance_squared = Helper::distanceSquared(mouse.getmPosX(), mouse.getmPosX(), dotB.getmPosX(), dotB.getmPosY());
 
         pressureGradient = { 0, 0 };
         if (distance_squared < MOUSE_RADIUS_SQUARED) {

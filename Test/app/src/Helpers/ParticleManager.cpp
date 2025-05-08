@@ -1,4 +1,4 @@
-#include "incl/ParticleManager.h"
+#include "../../incl/ParticleManager.h"
 
 ParticleManager::ParticleManager(int particleNumber)
 {
@@ -52,7 +52,7 @@ float ParticleManager::calcDensity(Dot& dotB, float x, float y)
 {
     Circle b = dotB.getColliders();
     float influence = 0;
-    float distance_squared = distanceSquared(x, y, b.x, b.y);
+    float distance_squared = Helper::distanceSquared(x, y, b.x, b.y);
     if (distance_squared < FORCE_RADIUS_SQUARED)
     {
         float distance = sqrt(distance_squared);
@@ -76,7 +76,7 @@ void ParticleManager::calculatePressureGradient(std::vector<float>& pressureGrad
     float normalX = 0;
     float normalY = 0;
 
-    float magnitude = sqrt(distanceSquared(a.x, a.y, b.x, b.y));
+    float magnitude = sqrt(Helper::distanceSquared(a.x, a.y, b.x, b.y));
 
     // // CHECK FOR COLLISON
     // if(distance_squared < radius_squared){
@@ -95,7 +95,7 @@ void ParticleManager::calculatePressureGradient(std::vector<float>& pressureGrad
         normalY = (a.y - b.y) / magnitude;
     }
     float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
-    float density = sharedDensity(dotB->getDensity(), dotA->getDensity());
+    float density = Helper::sharedDensity(dotB->getDensity(), dotA->getDensity());
     density = (density != 0.0f) ? density : DENSITY_LOWER;
 
     pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
@@ -126,7 +126,7 @@ void ParticleManager::calculatePressureGradient(std::vector<float>& pressureGrad
         normalY = (a.y - b.y) / magnitude;
     }
     float slope = smoothingKernelDerivative(magnitude, FORCE_RADIUS);
-    float density = sharedDensity(dotB->getDensity(), dotA->getDensity());
+    float density = Helper::sharedDensity(dotB->getDensity(), dotA->getDensity());
     density = (density != 0.0f) ? density : DENSITY_LOWER;
 
     pressureGradient[0] += -densityToPressure(density) * normalX * slope / density;
@@ -151,7 +151,7 @@ std::vector<float> ParticleManager::getRandomDirection()
 {
     float x = std::rand() % 3 - 1;
     float y = std::rand() % 3 - 1;
-    //float magnitude = sqrt(distanceSquared(0, 0, x, y));
+    //float magnitude = sqrt(Helper::distanceSquared(0, 0, x, y));
     return { x , y };
 }
 

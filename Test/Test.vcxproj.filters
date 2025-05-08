@@ -15,45 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="app\collider.cpp">
+    <ClCompile Include="app\src\Colliders\collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\collision_check.cpp">
+    <ClCompile Include="app\src\constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\constants.cpp">
+    <ClCompile Include="app\src\Colliders\Dot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\Dot.cpp">
+    <ClCompile Include="app\src\Helpers\LTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\LTexture.cpp">
+    <ClCompile Include="app\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\main.cpp">
+    <ClCompile Include="app\src\Colliders\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\Mouse.cpp">
+    <ClCompile Include="app\src\Helpers\time.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\time.cpp">
+    <ClCompile Include="app\src\engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\engine.cpp">
+    <ClCompile Include="app\src\Helpers\ParticleManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\ParticleManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="app\Helper.cpp">
+    <ClCompile Include="app\src\Helpers\Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\collider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="app\incl\collision_check.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\incl\constants.h">

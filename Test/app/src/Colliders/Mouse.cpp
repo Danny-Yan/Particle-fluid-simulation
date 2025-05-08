@@ -1,4 +1,4 @@
-#include "incl/Mouse.h"
+#include "../../incl/Mouse.h"
 
 Mouse::Mouse( int radius, int fR, float forceMultiplier ) : Collider(0, 0, radius, fR)
 {

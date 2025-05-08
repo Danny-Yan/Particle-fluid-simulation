@@ -2,7 +2,7 @@
 #define MOUSE_H
 
 #include <cstdio>
-#include "incl/collider.h"
+#include "collider.h"
 
 //Mouse structure
 class Mouse : public virtual Collider

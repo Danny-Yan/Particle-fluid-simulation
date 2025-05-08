@@ -4,8 +4,8 @@
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
-#include "incl/collision_check.h"
-#include "incl/constants.h"
+#include "helper_structs.h"
+#include "constants.h"
 
 class Collider
 {

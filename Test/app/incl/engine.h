@@ -8,15 +8,14 @@
 #include <vector>
 #include <functional>
 
-#include "incl/Dot.h"
-#include "incl/constants.h"
-#include "incl/LTexture.h"
-#include "incl/time.h"
-#include "incl/Mouse.h"
-#include "incl/collision_check.h"
-#include "incl/helper_structs.h"
-#include "incl/ParticleManager.h"
-#include "incl/Helper.h"
+#include "Dot.h"
+#include "constants.h"
+#include "LTexture.h"
+#include "time.h"
+#include "Mouse.h"
+#include "Helper.h"
+#include "helper_structs.h"
+#include "ParticleManager.h"
 
 class engine
 {

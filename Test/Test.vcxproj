@@ -136,23 +136,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app\collider.cpp" />
-    <ClCompile Include="app\collision_check.cpp" />
-    <ClCompile Include="app\constants.cpp" />
-    <ClCompile Include="app\Dot.cpp" />
-    <ClCompile Include="app\engine.cpp" />
-    <ClCompile Include="app\LTexture.cpp" />
-    <ClCompile Include="app\main.cpp">
+    <ClCompile Include="app\src\Colliders\collider.cpp" />
+    <ClCompile Include="app\src\constants.cpp" />
+    <ClCompile Include="app\src\Colliders\Dot.cpp" />
+    <ClCompile Include="app\src\engine.cpp" />
+    <ClCompile Include="app\src\Helpers\LTexture.cpp" />
+    <ClCompile Include="app\src\main.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ShowIncludes>
     </ClCompile>
-    <ClCompile Include="app\Mouse.cpp" />
-    <ClCompile Include="app\time.cpp" />
-    <ClCompile Include="app\ParticleManager.cpp" />
-    <ClCompile Include="app\Helper.cpp" />
+    <ClCompile Include="app\src\Colliders\Mouse.cpp" />
+    <ClCompile Include="app\src\Helpers\time.cpp" />
+    <ClCompile Include="app\src\Helpers\ParticleManager.cpp" />
+    <ClCompile Include="app\src\Helpers\Helper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\collider.h" />
-    <ClInclude Include="app\incl\collision_check.h" />
     <ClInclude Include="app\incl\constants.h" />
     <ClInclude Include="app\incl\Dot.h" />
     <ClInclude Include="app\incl\engine.h" />
