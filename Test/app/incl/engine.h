@@ -16,6 +16,7 @@
 #include "Helper.h"
 #include "helper_structs.h"
 #include "ParticleManager.h"
+#include <cstdlib>
 
 class engine
 {
@@ -88,7 +89,7 @@ private:
 	void runFluidParticlesFrame();
 	void runFluidMouseForceFrame();
 	void runFluidMouseDensityFrame();
-	void runSimRenderFrame();
+	void runSimRenderFrame(int timeInterval);
 
 	//Collision
 	void runBallCollisionFrame();

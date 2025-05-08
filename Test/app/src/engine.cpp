@@ -1,4 +1,5 @@
 #include "../incl/engine.h"
+#include "../../images/transparent_dot.xpm"
 
 
 engine::engine()
@@ -59,8 +60,15 @@ bool engine::loadMedia()
     //Loading success flag
     bool success = true;
 
+    ////Load Foo' texture
+    //if (!gDotTexture.loadFromFile(gRenderer, "images/transparent_dot.png"))
+    //{
+    //    printf("Failed to load dot' texture image!\n");
+    //    success = false;
+    //}
+
     //Load Foo' texture
-    if (!gDotTexture.loadFromFile(gRenderer, "images/transparent_dot.png"))
+    if (!gDotTexture.loadFromXPM(gRenderer, const_cast<char**>(transparent_dot_xpm)))
     {
         printf("Failed to load dot' texture image!\n");
         success = false;
@@ -98,6 +106,7 @@ void engine::run()
     if (!loadMedia())
     {
         printf("Failed to load media!\n");
+        system("pause");
         return;
     }
 
@@ -260,7 +269,7 @@ void engine::mRunFluidSimFrame()
     // Run simulation frames
     runFluidParticlesFrame();
     runFluidMouseForceFrame();
-    runSimRenderFrame();
+    runSimRenderFrame(TIMEINTERVAL);
 
     //Update screen
     SDL_RenderPresent(gRenderer);
@@ -335,18 +344,19 @@ void engine::runFluidMouseForceFrame()
         float distance_squared = Helper::distanceSquared(mouse.getmPosX(), mouse.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
         if (distance_squared < MOUSE_RADIUS_SQUARED) {
+            //printf("distance_squared: %f\n", distance_squared);
             // Calc and apply mouse force
             dotB.check_mouse_force(&mouse);
         }
-        });
+    });
 }
-void engine::runSimRenderFrame()
+void engine::runSimRenderFrame(int timeInterval)
 {
 	std::vector<Dot>& dots = particleManager.getDots();
     ////Move all dots
     for (Dot& dot : dots)
     {
-        dot.move(TIMEINTERVAL);
+        dot.move(timeInterval);
         // COLORING
         float speed = (abs(dot.getVelX()) + abs(dot.getVelY()));
         gDotTexture.setColorForSpeedHSL(speed);
@@ -365,8 +375,10 @@ void engine::runFluidMouseDensityFrame()
 
         pressureGradient = { 0, 0 };
         if (distance_squared < MOUSE_RADIUS_SQUARED) {
+            //printf("distance_squared: %f\n", distance_squared);
             // Calc and apply mouse force
             particleManager.calculatePressureGradient(pressureGradient, &dotB, &mouse);
+            //printf("%f %f\n", pressureGradient[0], pressureGradient[1]);
         }
 
         if (abs(dotB.getDensity()) > DENSITY_UPPER)
@@ -374,5 +386,5 @@ void engine::runFluidMouseDensityFrame()
             dotB.addmVelX(pressureGradient[0] / dotB.getDensity());
             dotB.addmVelY(pressureGradient[1] / dotB.getDensity());
         }
-        });
+    });
 }

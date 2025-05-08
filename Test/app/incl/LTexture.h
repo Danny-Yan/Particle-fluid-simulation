@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <string>
 #include <array>
+#include "constants.h"
 
 //Texture wrapper class
 class LTexture
@@ -21,6 +22,7 @@ class LTexture
 
         //Loads image at specified path
         bool loadFromFile( SDL_Renderer* gRenderer, std::string path );
+        bool loadFromXPM(SDL_Renderer* gRenderer, char** path);
 
         void setColorForSpeed(int speed);
         void setColorForSpeedHSL(float speed);
