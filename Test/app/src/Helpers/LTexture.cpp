@@ -63,7 +63,7 @@ bool LTexture::loadFromXPM(SDL_Renderer* gRenderer, char** path) {
     SDL_Texture* newTexture = NULL;
 
     //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_ReadXPMFromArray(path);
+    SDL_Surface* loadedSurface = IMG_ReadXPMFromArrayToRGB888(path);
     if (loadedSurface == NULL)
     {
         printf("Unable to load image! SDL_image Error: %s\n", IMG_GetError());

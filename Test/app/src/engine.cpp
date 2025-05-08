@@ -155,10 +155,10 @@ void engine::whileRunning(const std::function<void()>& func)
         //SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         //SDL_RenderDrawRect(gRenderer, &wall);
 
-        float deltaTime = (timer.getTicks() - interval) * 100000 / (float)SDL_GetPerformanceFrequency(); // Get the time passed in ms since the start of the frame.        
-        if (deltaTime >= TIMEINTERVAL && timer.isPaused() == 0)
+        if (timer.timerHasTicked(TIMEINTERVAL * 5) && timer.isRunning() == true)
         {
            func();
+           deltaTime = 0;
         }
     }
 }
@@ -206,36 +206,22 @@ void engine::pollEvent()
 
                 // Start/stop
             case SDLK_s:
-                if (timer.isStarted())
-                {
-                    timer.stop();
-                }
-                else
-                {
-                    timer.start();
+                switch (timer.isRunning()) {
+				    case true:
+					    timer.stop();
+					    break;
+				    case false:
+					    timer.start();
+					    break;
                 }
                 break;
 
                 // Pause/Unpause
             case SDLK_p:
-                if (timer.isPaused())
-                {
-                    timer.resetTicked();
-                    timer.unpause();
-                }
-                else
-                {
-                    timer.pause();
-                }
                 break;
 
                 // Ticked
             case SDLK_t:
-                if (timer.isPaused())
-                {
-                    timer.unpause();
-                    timer.setTicked();
-                }
                 break;
             }
         }
@@ -273,7 +259,6 @@ void engine::mRunFluidSimFrame()
 
     //Update screen
     SDL_RenderPresent(gRenderer);
-    interval = timer.getTicks();
 }
 
 void engine::runBallCollisionFrame()

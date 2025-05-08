@@ -1,42 +1,22 @@
-#define SDL_MAIN_HANDLED
-#include <SDL.h>
-#include <SDL_image.h>
-#include <cstdio>
-#include <string>
-#include <sstream>
+#include <chrono>
 
 //Timer wrapper class
+typedef std::chrono::high_resolution_clock Clock;
 class LTimer
 {
     public:
         //Initializes variables
         LTimer();
 
-        //The various clock actions
         void start();
-        void stop();
-        void pause();
-        void unpause();
-        void setTicked();
-        void resetTicked();
-
-        //Gets the timer's time
-        Uint64 getTicks();
-
-        //Checks the status of the timer
-        bool isStarted();
-        bool isPaused();
-        bool getTicked();
+        std::chrono::milliseconds getTicks();
+        bool timerHasTicked(float interval);
+		void stop();
+        void reset();
+        bool isRunning() const;
 
     private:
-        //The clock time when the timer started
-        Uint64 mStartTicks;
-
-        //The ticks stored when the timer was paused
-        Uint64 mPausedTicks;
-
-        //The timer status
-        bool mPaused;
-        bool mStarted;
-        bool hasTicked;
+		Clock::time_point startTime;
+        Clock::time_point curTime;
+		bool bIsRunning = false;
 };

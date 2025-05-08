@@ -2,8 +2,8 @@
 static const char *transparent_dot_xpm[] = {
 /* columns rows colors chars-per-pixel */
 "24 23 2 1 ",
-"  c cyan",
-". c white",
+"  c #00FFFF",
+". c #FFFFFF",
 /* pixels */
 "        ........        ",
 "      ............      ",
