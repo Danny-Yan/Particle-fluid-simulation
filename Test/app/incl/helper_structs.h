@@ -1,7 +1,6 @@
 #ifndef HELPER_STRUCTS_H
 #define HELPER_STRUCTS_H
 #include <vector>
-#include "constants.h"
 
 class Dot;
 

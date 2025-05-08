@@ -8,6 +8,10 @@ ParticleManager::ParticleManager(int particleNumber)
 
 ParticleManager::~ParticleManager()
 {
+	dots.clear();
+	particleHashEntries.clear();
+	spacialKeys.clear();
+	spatial_map.clear();
 }
 
 void ParticleManager::createParticles(){

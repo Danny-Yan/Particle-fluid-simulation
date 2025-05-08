@@ -20,13 +20,13 @@ public:
 	~ParticleManager();
 
 	void updateDensities();
+	void updateSpatialLookup();
+
 	void calculatePressureGradient(std::vector<float>& pressureGradient, Collider* dotB, Collider* dotA);
 	void calculatePressureGradient(std::vector<float>& pressureGradient, float magnitude, Dot* dotB, Dot* dotA);
 
 	void forParticles(Dot& dotA, const std::function<void(Dot&)>& func);
 	void forParticlesAroundPoint(int x, int y, const std::function<void(Dot&)>& func);
-
-	void updateSpatialLookup();
 
 	std::vector<Dot>& getDots();
 	std::vector<Entry>& getHashEntries();
