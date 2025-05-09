@@ -155,7 +155,7 @@ void engine::whileRunning(const std::function<void()>& func)
         //SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
         //SDL_RenderDrawRect(gRenderer, &wall);
 
-        if (timer.timerHasTicked(TIMEINTERVAL * 5) && timer.isRunning() == true)
+        if (timer.timerHasTicked(TIMEINTERVAL) && timer.isRunning() == true)
         {
            func();
            deltaTime = 0;
