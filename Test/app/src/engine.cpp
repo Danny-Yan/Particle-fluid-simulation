@@ -92,14 +92,12 @@ void engine::close()
     IMG_Quit();
     SDL_Quit();
 }
-
-void engine::run()
-{
+bool engine::start() {
     //Start up SDL and create window
     if (!initSDL())
     {
         printf("Failed to initialize!\n");
-        return;
+        return false;
     }
 
     //Load media
@@ -107,10 +105,23 @@ void engine::run()
     {
         printf("Failed to load media!\n");
         system("pause");
-        return;
+        return false;
     }
 
     timer.start();
+
+    return true;
+}
+
+bool engine::isRunning() {
+    return !quit;
+}
+
+void engine::run()
+{
+    if (!start()) {
+        return;
+    }
     // Setup simulation
     mGeneralSimSetUp();
 
@@ -147,7 +158,7 @@ void engine::mGeneralSimSetUp() {
 
 void engine::whileRunning(const std::function<void()>& func)
 {
-    while (!quit) {
+    while (isRunning()) {
         pollEvent();
         clearScreen();
 
@@ -305,11 +316,18 @@ void engine::runFluidParticlesFrame()
             // Check if distance is less than radius
             float distance_squared = Helper::distanceSquared(dot.getmPosX(), dot.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
+			
+   //         if (distance_squared < RADIUS_SQUARED) {
+			//	// Calc pressure gradient (Loop and keep track of pressure gradient)
+			//	//particleManager.calculatePressureGradient(pressureGradient, &dotB, &dot);
+			//}
+   //         else 
             if (distance_squared < FORCE_RADIUS_SQUARED) {
                 // Calc pressure gradient (Loop and keep track of pressure gradient)
                 particleManager.calculatePressureGradient(pressureGradient, &dotB, &dot);
             }
-            });
+            //dot.applyDotCollison(dotB);
+        });
 
         dot.check_wall_no_shift();
 
@@ -339,6 +357,8 @@ void engine::runSimRenderFrame(int timeInterval)
 {
 	std::vector<Dot>& dots = particleManager.getDots();
     ////Move all dots
+    float xTotal = 0;
+    float yTotal = 0;
     for (Dot& dot : dots)
     {
         dot.move(timeInterval);
@@ -347,8 +367,12 @@ void engine::runSimRenderFrame(int timeInterval)
         gDotTexture.setColorForSpeedHSL(speed);
 
         // RENDERING
+		xTotal += dot.getVelX();
+        yTotal += dot.getVelY();
         dot.render(gRenderer, gDotTexture);
     }
+
+	printf("total change %f %f\n", xTotal, yTotal);
 }
 void engine::runFluidMouseDensityFrame()
 {

@@ -57,7 +57,7 @@ float ParticleManager::calcDensity(Dot& dotB, float x, float y)
     Circle b = dotB.getColliders();
     float influence = 0;
     float distance_squared = Helper::distanceSquared(x, y, b.x, b.y);
-    if (distance_squared < FORCE_RADIUS_SQUARED)
+    if (distance_squared < FORCE_RADIUS_SQUARED && distance_squared > 0)
     {
         float distance = sqrt(distance_squared);
         influence = smoothingKernel(distance, FORCE_RADIUS);
@@ -87,7 +87,7 @@ void ParticleManager::calculatePressureGradient(std::vector<float>& pressureGrad
     //     dotA->applyDotCollison(*dotB);
     // }
 
-    if (magnitude == 0.0f)
+    if (magnitude <= 0.0f)
     {
         std::vector<float> randomNormal = getRandomDirection();
         normalX = randomNormal[0];
@@ -120,9 +120,9 @@ void ParticleManager::calculatePressureGradient(std::vector<float>& pressureGrad
 
     if (magnitude == 0.0f)
     {
-        std::vector<float> randomNormal = getRandomDirection();
-        normalX = randomNormal[0];
-        normalY = randomNormal[1];
+	    std::vector<float> randomNormal = getRandomDirection();
+		normalX = randomNormal[0];
+		normalY = randomNormal[1];
     }
     else
     {
@@ -153,10 +153,15 @@ float ParticleManager::smoothingKernelDerivative(float distance, float radius)
 
 std::vector<float> ParticleManager::getRandomDirection()
 {
-    float x = std::rand() % 3 - 1;
-    float y = std::rand() % 3 - 1;
-    //float magnitude = sqrt(Helper::distanceSquared(0, 0, x, y));
-    return { x , y };
+    while (true) {
+        float x = std::rand() % 3 - 1;
+        float y = std::rand() % 3 - 1;
+		if (x == 0 && y == 0) {
+			continue;
+		}
+        //float magnitude = sqrt(Helper::distanceSquared(0, 0, x, y));
+		return Helper::unitVector(x, y);
+    }
 }
 
 float ParticleManager::densityToPressure(float density)
@@ -261,6 +266,11 @@ void ParticleManager::updateSpatialLookup()
         std::tie(spatialX, spatialY) = compute_spatial_coords((int)dot.getsPosX(), (int)dot.getsPosY());
         int spatial_hash = compute_spatial_hash(spatialX, spatialY);
         if (spatial_hash < 0) {
+            printf("ID: %d\n", dots[i].getID());
+			printf("Density: %f\n", dots[i].getDensity());  
+            printf("POSITIONS: % d % d \n", (int)dot.getsPosX(), (int)dot.getsPosY());
+            printf("VELOCITY: % d % d \n", (int)dot.getmVelX(), (int)dot.getmVelY());
+			printf("SPATIAL CORD: %d %d\n", spatialX, spatialY);
             printf("NEGATIVE SPATIAL HASH: %d \n", spatial_hash);
             spatial_hash = abs(spatial_hash);
         }

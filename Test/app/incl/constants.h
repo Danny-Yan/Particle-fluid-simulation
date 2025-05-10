@@ -20,6 +20,7 @@ extern const float RESISTANCE;
 extern const float SCALE;
 extern const int PARTICLE_NUM;
 extern const float RADIUS;
+extern const float RADIUS_SQUARED;
 extern const float SPACING;
 
 extern const float MOUSE_FORCE;

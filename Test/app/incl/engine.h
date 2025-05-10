@@ -69,6 +69,9 @@ private:
 	//Loads media
 	bool loadMedia();
 
+	bool start();
+	bool isRunning();
+
 	//Frees media and shuts down SDL
 	void close();
 

@@ -8,7 +8,7 @@ const float FORCE_RADIUS_SQUARED = FORCE_RADIUS * FORCE_RADIUS;
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 1600;
-const int SCREEN_HEIGHT = 1200;
+const int SCREEN_HEIGHT = 920;
 const int PARTICLE_START_X = 700;
 const int PARTICLE_START_Y = 600;
 int GRID_WIDTH = (int)FORCE_RADIUS;
@@ -24,11 +24,13 @@ float PREDICTIVE_STEPS = 0.128f;
 const float RADIUS = 5.0f;               // ***
 const float SPACING = 5.0f;               // ***
 const float SCALE = 0.4f;
-const int PARTICLE_NUM = 10000; // does not work for < 200
+const int PARTICLE_NUM = 7000; // does not work for < 200
+
+const float RADIUS_SQUARED = RADIUS * RADIUS;
 
 // Motion constants
 const float accel = 0;               // Hella buggy
-const float RESISTANCE = 0.8f;
+const float RESISTANCE = 0.1f;      // *** UNSTABLE AT r = 1
 
 // MOUSE
 const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS * 4;

@@ -223,12 +223,8 @@ void Dot::check_wall_collision(){
 }
 
 void Dot::check_wall_no_shift(){
-
-    //Check if velocities are close to zero
-    if (mVelX == 0 || mVelY == 0) { return; }
-    
     //Check for screen wall collision
-    if( ( mPosX - mCollider.r < 0 ) )
+    if( ( mPosX - mCollider.r < 0 ) && mVelX != 0)
     {
         //Move back
         mPosX = mCollider.r;
@@ -242,7 +238,7 @@ void Dot::check_wall_no_shift(){
         mVelY *= RESISTANCE;
     } 
 
-    if ( ( mPosX + mCollider.r > SCREEN_WIDTH ) )
+    if ( ( mPosX + mCollider.r > SCREEN_WIDTH ) && mVelX != 0)
     {
         //Move back
         mPosX = SCREEN_WIDTH - mCollider.r;
@@ -257,7 +253,7 @@ void Dot::check_wall_no_shift(){
     }
 
     //Check for ceiling/floor collision
-    if( ( mPosY - mCollider.r < 0 ) )
+    if( ( mPosY - mCollider.r < 0 ) && mVelY != 0)
     {
         //Move back
         mPosY = mCollider.r;
@@ -271,7 +267,7 @@ void Dot::check_wall_no_shift(){
         mVelY *= RESISTANCE;
     } 
 
-    if( ( mPosY + mCollider.r > SCREEN_HEIGHT ) )
+    if( ( mPosY + mCollider.r > SCREEN_HEIGHT )  && mVelY != 0)
     {
         //Move back
         mPosY = SCREEN_HEIGHT - mCollider.r;
