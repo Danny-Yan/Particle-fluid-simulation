@@ -5,6 +5,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <cstdio>
+#include <iostream>
 #include <vector>
 #include <algorithm>
 #include <memory>
@@ -22,7 +23,7 @@ public:
 	void updateDensities();
 	void updateSpatialLookup();
 
-	void calculatePressureGradient(std::vector<float>& pressureGradient, Collider* dotB, Collider* dotA);
+	void calculatePressureGradient(std::vector<float>& pressureGradient, CircleCollider* dotB, CircleCollider* dotA);
 	void calculatePressureGradient(std::vector<float>& pressureGradient, float magnitude, Dot* dotB, Dot* dotA);
 
 	void forParticles(Dot& dotA, const std::function<void(Dot&)>& func);
@@ -36,6 +37,7 @@ public:
 	void createParticles();
 	void createParticles(const std::function<void()>& func);
 
+	void checkIfCollide(Circle& a, const auto& b);
 private:
 
 	int particleCount = PARTICLE_NUM;
@@ -57,6 +59,9 @@ private:
 	float calcDensity(Dot& dotB, float x, float y);
 	float calcDensity(float magnitude);
 
+	Collision checkCollision(Circle& a, Circle& b);
+	Collision checkCollision(Circle& a, SDL_Rect& b);
+
 	std::vector<Dot> dots;
 	std::vector<Entry> particleHashEntries = std::vector<Entry>(particleCount);
 	std::vector<int> spacialKeys = std::vector<int>(particleCount);
@@ -73,4 +78,3 @@ private:
 	{-1, -1}
 	};
 };
-

@@ -330,6 +330,7 @@ void engine::runFluidParticlesFrame()
         });
 
         dot.check_wall_no_shift();
+        dot.check_wall_collision();
 
         if (abs(dot.getDensity()) > DENSITY_UPPER)
         {

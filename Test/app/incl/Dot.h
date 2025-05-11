@@ -10,11 +10,11 @@
 #include "LTexture.h"
 #include "constants.h"
 #include "helper_structs.h"
-#include "collider.h"
+#include "CircleCollider.h"
 #include "Mouse.h"
 
 //The dot that will move around on the screen
-class Dot : public Collider
+class Dot : public CircleCollider
 {
     public:
         //Initializes the variables -- make x, y virtual variables
@@ -32,7 +32,7 @@ class Dot : public Collider
         void applyDotCollisons(std::vector<Dot>& dots);
         void applyDotCollisons(std::vector<Dot*>& dots);
         void check_mouse_force( Mouse *mouse );
-        Collision checkCircleForce( Collider& b );
+        Collision checkCircleForce( CircleCollider& b );
 
         //Getters
         float getmVelX() const;

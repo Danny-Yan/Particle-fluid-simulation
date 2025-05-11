@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <vector>
 #include "Mouse.h"
+#include "helper_structs.h"
 
 namespace Helper
 {
@@ -11,18 +12,8 @@ namespace Helper
 	void mouseRightPress(SDL_MouseButtonEvent& b, Mouse* mouse);
 	void mouseUnPress(SDL_MouseButtonEvent& b, Mouse* mouse);
 
-    //Forward declaration of Dot class
-    // class Dot;
-
-    //Circle/Circle collision detector
-    Collision checkCollision(Circle& a, Circle& b);
-
-    //Circle/Box collision detector
-    Collision checkCollision(Circle& a, SDL_Rect& b);
-
     // Collision checkCollision( Circle& a, Mouse mouse );
-
-    // Collision checkCollision( Dot& a, Dot& b );
+    //Collision checkCollision( Dot& a, Dot& b );
 
     Collision checkXCollision(Circle& a, SDL_Rect& b);
 

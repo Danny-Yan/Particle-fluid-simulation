@@ -1,9 +1,9 @@
-#include "../../incl/Dot.h"
+#include "../../../incl/Dot.h"
 
 int Dot::globalID = 0;
 
 Dot::Dot( float x, float y , float velX, float velY, int radius) 
-    : Collider(x, y, radius, (int)FORCE_RADIUS),
+    : CircleCollider(x, y, radius, (int)FORCE_RADIUS),
 	mVelX(velX), mVelY(velY),
 	Velx(velX), Vely(velY),
 
@@ -300,7 +300,7 @@ void Dot::check_mouse_force( Mouse *mP )
 }
 
 //Dot/Dot collision detector
-Collision Dot::checkCircleForce( Collider &dotB )
+Collision Dot::checkCircleForce( CircleCollider &dotB )
 {
     Dot dotAp = *this;
     Collision collision;
@@ -415,5 +415,5 @@ int Dot::getID()  const
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
 {
     //Show the dot
-    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE); // Change to sPosX and sPosY for predictive step
+    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE);
 }

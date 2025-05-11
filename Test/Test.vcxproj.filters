@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="app\src\Colliders\collider.cpp">
+    <ClCompile Include="app\src\Colliders\Circle\CircleCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\src\constants.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\Colliders\Dot.cpp">
+    <ClCompile Include="app\src\Colliders\Circle\Dot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\src\Helpers\LTexture.cpp">
@@ -30,7 +30,7 @@
     <ClCompile Include="app\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\Colliders\Mouse.cpp">
+    <ClCompile Include="app\src\Colliders\Circle\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="app\src\Helpers\time.cpp">
@@ -45,9 +45,12 @@
     <ClCompile Include="app\src\Helpers\Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="app\src\Colliders\Collider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app\incl\collider.h">
+    <ClInclude Include="app\incl\CircleCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="app\incl\constants.h">
@@ -351,6 +354,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dependencies\SDL2-2.32.2\include\SDL_vulkan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\Collider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\Shape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\Circle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="app\incl\Rectangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

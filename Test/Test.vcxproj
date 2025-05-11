@@ -146,30 +146,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app\src\Colliders\collider.cpp" />
+    <ClCompile Include="app\src\Colliders\Circle\CircleCollider.cpp" />
     <ClCompile Include="app\src\constants.cpp" />
-    <ClCompile Include="app\src\Colliders\Dot.cpp" />
+    <ClCompile Include="app\src\Colliders\Circle\Dot.cpp" />
     <ClCompile Include="app\src\engine.cpp" />
     <ClCompile Include="app\src\Helpers\LTexture.cpp" />
     <ClCompile Include="app\src\main.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ShowIncludes>
     </ClCompile>
-    <ClCompile Include="app\src\Colliders\Mouse.cpp" />
+    <ClCompile Include="app\src\Colliders\Circle\Mouse.cpp" />
     <ClCompile Include="app\src\Helpers\time.cpp" />
     <ClCompile Include="app\src\Helpers\ParticleManager.cpp" />
     <ClCompile Include="app\src\Helpers\Helper.cpp" />
+    <ClCompile Include="app\src\Colliders\Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app\incl\collider.h" />
+    <ClInclude Include="app\incl\CircleCollider.h" />
     <ClInclude Include="app\incl\constants.h" />
     <ClInclude Include="app\incl\Dot.h" />
     <ClInclude Include="app\incl\engine.h" />
     <ClInclude Include="app\incl\helper_structs.h" />
     <ClInclude Include="app\incl\LTexture.h" />
     <ClInclude Include="app\incl\Mouse.h" />
+    <ClInclude Include="app\incl\Rectangle.h" />
     <ClInclude Include="app\incl\time.h" />
     <ClInclude Include="app\incl\ParticleManager.h" />
     <ClInclude Include="app\incl\Helper.h" />
+    <ClInclude Include="app\incl\Collider.h" />
+    <ClInclude Include="app\incl\Circle.h" />
     <ClInclude Include="dependencies\SDL2-2.32.2\include\begin_code.h" />
     <ClInclude Include="dependencies\SDL2-2.32.2\include\close_code.h" />
     <ClInclude Include="dependencies\SDL2-2.32.2\include\SDL.h" />
@@ -262,6 +266,7 @@
     <ClInclude Include="dependencies\SDL2-2.32.2\include\SDL_video.h" />
     <ClInclude Include="dependencies\SDL2-2.32.2\include\SDL_vulkan.h" />
     <ClInclude Include="dependencies\SDL2_image-2.8.8\include\SDL_image.h" />
+    <ClInclude Include="app\incl\Shape.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\dot.bmp" />

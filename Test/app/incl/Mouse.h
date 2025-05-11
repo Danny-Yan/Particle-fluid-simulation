@@ -2,10 +2,10 @@
 #define MOUSE_H
 
 #include <cstdio>
-#include "collider.h"
+#include "CircleCollider.h"
 
 //Mouse structure
-class Mouse : public virtual Collider
+class Mouse : public virtual CircleCollider
 {
     public:
         //Initializes the variables
