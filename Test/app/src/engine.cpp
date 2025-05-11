@@ -241,7 +241,11 @@ void engine::pollEvent()
 
 void engine::clearScreen() {
     //Clear screen
-    SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(gRenderer, 
+                           BACKGROUND_COLOR[0], 
+                           BACKGROUND_COLOR[1], 
+                           BACKGROUND_COLOR[2],
+                           0xFF);
     SDL_RenderClear(gRenderer);
 }
 
@@ -356,8 +360,8 @@ void engine::runSimRenderFrame(int timeInterval)
 {
 	std::vector<Dot>& dots = particleManager.getDots();
     ////Move all dots
-    float xTotal = 0;
-    float yTotal = 0;
+    //float xTotal = 0;
+    //float yTotal = 0;
     for (Dot& dot : dots)
     {
         dot.move(timeInterval);
@@ -366,12 +370,12 @@ void engine::runSimRenderFrame(int timeInterval)
         gDotTexture.setColorForSpeedHSL(speed);
 
         // RENDERING
-		xTotal += dot.getVelX();
-        yTotal += dot.getVelY();
+		//xTotal += dot.getVelX();
+  //      yTotal += dot.getVelY();
         dot.render(gRenderer, gDotTexture);
     }
 
-	printf("total change %f %f\n", xTotal, yTotal);
+	//printf("total change %f %f\n", xTotal, yTotal);
 }
 void engine::runFluidMouseDensityFrame()
 {

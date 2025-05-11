@@ -27,9 +27,9 @@ class LTexture
         void setColorForSpeed(int speed);
         void setColorForSpeedHSL(float speed);
 
-        //Set color modulation
+        //Set color modulation RGB
         void setColor(Uint8 red, Uint8 green, Uint8 blue);
-        //Set color modulation
+        //Set color modulation HSL
         void setColorHSL(float h, float s, float l);
 
         // //Set blending
@@ -57,8 +57,8 @@ class LTexture
         int mHeight;
 
 		// Color Linearisation
-        Uint8 colourLinearisationRGB(int speed, int color_max_speed, int color_min, int color_max);
-        std::array<Uint8, 3> colourLinearisationHSL(float speed, float color_max_speed, float hMin, float hMax);
+        float colorSpeedLinearisation(float speed, float color_max_speed, float color_min, float color_max);
+        std::array<Uint8, 3> colourLinearisationHSL(float speed);
 
 		// Color Processors from speed
         std::array<Uint8, 3> colourProcessorRGBtoRGB(int speed);

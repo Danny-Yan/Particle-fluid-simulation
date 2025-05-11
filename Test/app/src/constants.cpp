@@ -21,9 +21,9 @@ float TIMEINTERVAL = 1.0f; // Min 1 ms
 float PREDICTIVE_STEPS = 0.128f;
 
 //Dot constants
-const float RADIUS = 5.0f;               // ***
-const float SPACING = 5.0f;               // ***
-const float SCALE = 0.4f;
+const float RADIUS = 5.0f;               // RADIUS OF DOT COLLIDER
+const float SPACING = 5.0f;              // INITAL SPACING
+const float SCALE = 0.8f;				 // SCALES ONLY DOT GRAPHIC
 const int PARTICLE_NUM = 7000; // does not work for < 200
 
 const float RADIUS_SQUARED = RADIUS * RADIUS;
@@ -53,12 +53,31 @@ const float DENSITY_LOWER = 0.0001f;
 const float DENSITY_DESIRED = 0.00095f; // 0.0005f;
 const float DENSITY_UPPER = 0.001f;
 
-
 // Colour constants
+// Background color
+//const float BACKGROUND_COLOR[3] = { 35, 101, 255 }; // cyan
+//const float BACKGROUND_COLOR[3] = { 0, 16, 157 }; // dark blue
+//const float BACKGROUND_COLOR[3] = { 255, 255, 255 }; // white
+const float BACKGROUND_COLOR[3] = { 0, 0, 0 }; // black
+
 const float COLOR_MAX_SPEED = 20;
 const float COLOR_MIN[3] = {0, 249, 241};
 const float COLOR_MAX[3] = {238, 86, 86};
 
 // Hsl Constants
-const float COLOR_H_MIN = 215;
-const float COLOR_H_MAX = 1;
+
+// Blue to red
+//const float COLOR_H_MIN[3] = { 215, 1, 0.5 };
+//const float COLOR_H_MAX[3] = { 1, 1, 0.5 };
+
+// Light Blue to white
+//const float COLOR_H_MIN[3] = { 200, 1, 0.5 };
+//const float COLOR_H_MAX[3] = { 200, 1, 1 };
+
+// Pink to white
+//const float COLOR_H_MIN[3] = { 338, 1, 0.54 };
+//const float COLOR_H_MAX[3] = { 338, 1, 1 };
+
+// Pink to blue
+const float COLOR_H_MIN[3] = { 347, 1, 0.7 };
+const float COLOR_H_MAX[3] = { 150, 1, 0.4 };

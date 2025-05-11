@@ -38,11 +38,12 @@ extern const float DENSITY_LOWER;
 extern const float DENSITY_DESIRED;
 extern const float DENSITY_UPPER;
 
+extern const float BACKGROUND_COLOR[3];
 extern const float COLOR_MAX_SPEED;
 extern const float COLOR_MIN[3];
 extern const float COLOR_MAX[3];
 
-extern const float COLOR_H_MIN;
-extern const float COLOR_H_MAX;
+extern const float COLOR_H_MIN[3];
+extern const float COLOR_H_MAX[3];
 
 #endif
