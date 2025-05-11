@@ -48,9 +48,6 @@
     <ClCompile Include="app\src\Colliders\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app\src\Helpers\Rendered.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\CircleCollider.h">

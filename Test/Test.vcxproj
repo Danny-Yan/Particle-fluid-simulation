@@ -159,7 +159,6 @@
     <ClCompile Include="app\src\Helpers\ParticleManager.cpp" />
     <ClCompile Include="app\src\Helpers\Helper.cpp" />
     <ClCompile Include="app\src\Colliders\Collider.cpp" />
-    <ClCompile Include="app\src\Helpers\Rendered.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\CircleCollider.h" />
