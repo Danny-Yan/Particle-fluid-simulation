@@ -1,20 +1,17 @@
-#ifndef DOT_H
-#define DOT_H
+#pragma once
 
-#define SDL_MAIN_HANDLED
-#include <SDL.h>
 #include <cstdio>
 #include <cmath>
 #include <algorithm>
 #include "Helper.h"
-#include "LTexture.h"
 #include "constants.h"
 #include "helper_structs.h"
 #include "CircleCollider.h"
 #include "Mouse.h"
+#include "Rendered.h"
 
 //The dot that will move around on the screen
-class Dot : public CircleCollider
+class Dot : public CircleCollider, public Rendered
 {
     public:
         //Initializes the variables -- make x, y virtual variables
@@ -50,7 +47,7 @@ class Dot : public CircleCollider
         void addmVelY( float velY );
 
         //Shows the dot on the screen
-        void render( SDL_Renderer *gRenderer, LTexture& gDotTexture);
+        void render( SDL_Renderer *gRenderer, LTexture& gDotTexture) override;
 
         static int globalID;
     private:
@@ -73,6 +70,3 @@ class Dot : public CircleCollider
         Collision cLVector;
         Collision checkDotCollision( Dot& b );
 };
-
-
-#endif

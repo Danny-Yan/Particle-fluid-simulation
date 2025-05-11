@@ -159,6 +159,7 @@
     <ClCompile Include="app\src\Helpers\ParticleManager.cpp" />
     <ClCompile Include="app\src\Helpers\Helper.cpp" />
     <ClCompile Include="app\src\Colliders\Collider.cpp" />
+    <ClCompile Include="app\src\Helpers\Rendered.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app\incl\CircleCollider.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="dependencies\SDL2-2.32.2\include\SDL_vulkan.h" />
     <ClInclude Include="dependencies\SDL2_image-2.8.8\include\SDL_image.h" />
     <ClInclude Include="app\incl\Shape.h" />
+    <ClInclude Include="app\incl\Rendered.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\dot.bmp" />
