@@ -35,7 +35,7 @@ const float RESISTANCE = 0.1f;      // *** UNSTABLE AT r = 1
 // MOUSE
 const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS * 4;
 const float MOUSE_RADIUS_SQUARED = MOUSE_FORCE_RADIUS * MOUSE_FORCE_RADIUS;
-const float MOUSE_FORCE = 3.0f;
+const float MOUSE_FORCE = 5.0f;
 
 // CONTACT
 // CONVERT TO CONTACT FORCE

@@ -319,7 +319,7 @@ Collision Dot::checkCircleForce( CircleCollider &dotB )
     float distance_Squared = Helper::distanceSquared( a.x, a.y, b.x, b.y );
 
     //If the distance between the centers of the circles is less than the sum of their radii
-    if( distance_Squared <= ( totalRadiusSquared ) )
+    if( distance_Squared <= ( totalRadiusSquared ) && distance_Squared != 0 )
     {
         // printf("AX %d\n", a.x);
         // printf("AY %d\n", a.y);

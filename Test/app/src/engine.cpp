@@ -326,11 +326,9 @@ void engine::runFluidParticlesFrame()
                 // Calc pressure gradient (Loop and keep track of pressure gradient)
                 particleManager.calculatePressureGradient(pressureGradient, &dotB, &dot);
             }
-            //dot.applyDotCollison(dotB);
         });
 
         dot.check_wall_no_shift();
-        dot.check_wall_collision();
 
         if (abs(dot.getDensity()) > DENSITY_UPPER)
         {
@@ -345,13 +343,13 @@ void engine::runFluidMouseForceFrame()
     // Loop through area around mouse cursor and update
     particleManager.forParticlesAroundPoint(mouse.getmPosX(), mouse.getmPosY(), [&](Dot& dotB) {
         // Check if distance is less than radius
-        float distance_squared = Helper::distanceSquared(mouse.getmPosX(), mouse.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
+        //float distance_squared = Helper::distanceSquared(mouse.getmPosX(), mouse.getmPosY(), dotB.getmPosX(), dotB.getmPosY());
 
-        if (distance_squared < MOUSE_RADIUS_SQUARED) {
-            //printf("distance_squared: %f\n", distance_squared);
-            // Calc and apply mouse force
-            dotB.check_mouse_force(&mouse);
-        }
+        //if (distance_squared < MOUSE_RADIUS_SQUARED) {
+        //    //printf("distance_squared: %f\n", distance_squared);
+        //    // Calc and apply mouse force
+        dotB.check_mouse_force(&mouse);
+        //}
     });
 }
 void engine::runSimRenderFrame(int timeInterval)
