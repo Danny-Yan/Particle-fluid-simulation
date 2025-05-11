@@ -11,7 +11,7 @@
 #include "Rendered.h"
 
 //The dot that will move around on the screen
-class Dot : public CircleCollider, public Rendered
+class Dot : public CircleCollider, public virtual Rendered
 {
     public:
         //Initializes the variables -- make x, y virtual variables
@@ -21,7 +21,7 @@ class Dot : public CircleCollider, public Rendered
         void movePrediction( float deltaTime, float constantDelta );
         void move( float deltaTime );
 
-        //Check collision with another dot
+        //Check collision with another dot  ----------- REFACTOR OUT EVENTUALLY
         void check_vector_force( Dot &dot );
         void check_wall_collision();
         void check_wall_no_shift();
@@ -30,6 +30,7 @@ class Dot : public CircleCollider, public Rendered
         void applyDotCollisons(std::vector<Dot*>& dots);
         void check_mouse_force( Mouse *mouse );
         Collision checkCircleForce( CircleCollider& b );
+        // -----------------------------------------------------------------
 
         //Getters
         float getmVelX() const;
