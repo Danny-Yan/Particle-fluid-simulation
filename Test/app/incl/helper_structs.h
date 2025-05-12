@@ -1,5 +1,5 @@
-#ifndef HELPER_STRUCTS_H
-#define HELPER_STRUCTS_H
+#pragma once
+
 #include <vector>
 
 class Dot;
@@ -28,5 +28,3 @@ struct Collision
     std::vector<float> sa;
     bool didCollide = false;
 };
-
-#endif

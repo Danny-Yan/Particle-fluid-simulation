@@ -2,13 +2,7 @@
 #include "../../images/transparent_dot.xpm"
 
 
-engine::engine()
-{
-    wall.x = 500;
-    wall.y = 400;
-    wall.w = 0;
-    wall.h = 0;
-}
+engine::engine(){}
 
 bool engine::initSDL()
 {
@@ -197,14 +191,14 @@ void engine::pollEvent()
             // MOUSE CLICK
         case SDL_MOUSEBUTTONDOWN:
             switch (e.button.button) {
-            case SDL_BUTTON_LEFT:
-                Helper::mouseLeftPress(e.button, &mouse);
-                break;
-            case SDL_BUTTON_RIGHT:
-                Helper::mouseRightPress(e.button, &mouse);
-                break;
+                case SDL_BUTTON_LEFT:
+                    Helper::mouseLeftPress(e.button, &mouse);
+                    break;
+                case SDL_BUTTON_RIGHT:
+                    Helper::mouseRightPress(e.button, &mouse);
+                    break;
 
-            }
+                }
             break;
 
         case SDL_MOUSEBUTTONUP:
@@ -333,6 +327,7 @@ void engine::runFluidParticlesFrame()
         });
 
         dot.check_wall_no_shift();
+		//particleManager.checkIfCollide(dot, wall); -------------- DOES NOT WORK
 
         if (abs(dot.getDensity()) > DENSITY_UPPER)
         {

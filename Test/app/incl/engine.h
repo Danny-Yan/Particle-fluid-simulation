@@ -1,22 +1,22 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#pragma once
 
-#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_image.h>
 #include <cstdio>
+#include <cstdlib>
 #include <vector>
 #include <functional>
 
 #include "Dot.h"
 #include "constants.h"
 #include "LTexture.h"
-#include "time.h"
+#include "LTimer.h"
 #include "Mouse.h"
 #include "Helper.h"
 #include "helper_structs.h"
+#include "Rectangle.h"
 #include "ParticleManager.h"
-#include <cstdlib>
+
 
 class engine
 {
@@ -46,15 +46,16 @@ private:
 	ParticleManager particleManager = ParticleManager(PARTICLE_NUM);
 
 	//Set the wall
-	SDL_Rect wall;
+	Rectangle wall = Rectangle(400, 500, 0, 0);
+
+	// Mouse
+	Mouse mouse = Mouse(FORCE_RADIUS, MOUSE_FORCE_RADIUS);
 
 	//Timer
 	Uint64 Ticks = 0;
 	Uint64 deltaTime = 0;
 	Uint64 interval = 0;
 	LTimer timer;
-
-	Mouse mouse = Mouse(FORCE_RADIUS, MOUSE_FORCE_RADIUS);
 
 	// Colours
 	Uint8 r = 0;
@@ -97,6 +98,3 @@ private:
 	//Collision
 	void runBallCollisionFrame();
 };
-
-#endif
-

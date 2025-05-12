@@ -1,5 +1,4 @@
-#ifndef CONSTANTS_H
-#define CONSTANTS_H
+#pragma once
 
 //Defined global constants
 extern const int PARTICLE_START_X;
@@ -45,5 +44,3 @@ extern const float COLOR_MAX[3];
 
 extern const float COLOR_H_MIN[3];
 extern const float COLOR_H_MAX[3];
-
-#endif

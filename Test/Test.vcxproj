@@ -155,7 +155,7 @@
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ShowIncludes>
     </ClCompile>
     <ClCompile Include="app\src\Colliders\Circle\Mouse.cpp" />
-    <ClCompile Include="app\src\Helpers\time.cpp" />
+    <ClCompile Include="app\src\Helpers\LTimer.cpp" />
     <ClCompile Include="app\src\Helpers\ParticleManager.cpp" />
     <ClCompile Include="app\src\Helpers\Helper.cpp" />
     <ClCompile Include="app\src\Colliders\Collider.cpp" />
@@ -169,7 +169,7 @@
     <ClInclude Include="app\incl\LTexture.h" />
     <ClInclude Include="app\incl\Mouse.h" />
     <ClInclude Include="app\incl\Rectangle.h" />
-    <ClInclude Include="app\incl\time.h" />
+    <ClInclude Include="app\incl\LTimer.h" />
     <ClInclude Include="app\incl\ParticleManager.h" />
     <ClInclude Include="app\incl\Helper.h" />
     <ClInclude Include="app\incl\Collider.h" />

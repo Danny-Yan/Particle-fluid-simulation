@@ -1,4 +1,4 @@
-#include "../../incl/time.h"
+#include "../../incl/LTimer.h"
 
 typedef std::chrono::high_resolution_clock Clock;
 LTimer::LTimer() {

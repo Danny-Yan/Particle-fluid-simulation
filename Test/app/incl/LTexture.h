@@ -1,8 +1,5 @@
-#ifndef LTEXTURE_H
-#define LTEXTURE_H
+#pragma once
 
-
-#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_image.h>
 #include <cstdio>
@@ -67,5 +64,3 @@ class LTexture
         std::array<Uint8, 3> hslToRgb(float h, float s, float l);
         float hueToRgb(float p, float q, float t);
 };
-
-#endif

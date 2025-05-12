@@ -171,7 +171,7 @@ float ParticleManager::densityToPressure(float density)
 }
 
 // For each loop around particles
-void ParticleManager::forParticles(Dot& dotA, const std::function<void(Dot&)>& func)
+void ParticleManager::forParticles(const Dot& dotA, const std::function<void(Dot&)>& func)
 {
     //Computing 3x3 spacial hash 
     std::vector<int> spacial_hashes_full = compute_full_spatial_area((int)dotA.getsPosX(), (int)dotA.getsPosY());
@@ -309,16 +309,16 @@ int ParticleManager::getParticleCount() const
 }
 
 // idk how to fix so that overloads are shared with parent here
-void ParticleManager::checkIfCollide(Circle& a, const auto& b){
+void ParticleManager::checkIfCollide(Dot& dot, const auto& b){
     try
     {
+        const Circle& a = dot.getColliders();
         Collision collider = this->checkCollision(a, b);
         if (collider.didCollide)
         {
-            // Handle collision
-             //a.applyDotCollison(b);
         }
 	}
+    // Catch overload exception
 	catch (const std::exception& e)
 	{
         std::cerr << "Error: " << e.what() << "\n";
@@ -327,7 +327,7 @@ void ParticleManager::checkIfCollide(Circle& a, const auto& b){
 }
 
 //Check collision between two circles
-Collision ParticleManager::checkCollision(Circle& a, Circle& b)
+Collision ParticleManager::checkCollision(const Circle& a, const Circle& b)
 {
     Collision collision;
     //Calculate total radius squared
@@ -346,7 +346,7 @@ Collision ParticleManager::checkCollision(Circle& a, Circle& b)
 }
 
 //Check collision between circle and rectangle
-Collision ParticleManager::checkCollision(Circle& a, SDL_Rect& b)
+Collision ParticleManager::checkCollision(const Circle& a, const Rectangle& b)
 {
     //Closest point on collision box
     int cX, cY;

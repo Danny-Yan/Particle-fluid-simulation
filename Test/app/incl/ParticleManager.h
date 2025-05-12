@@ -1,8 +1,6 @@
 #pragma once
-#define _USE_MATH_DEFINES
 #include <cmath>
 
-#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <cstdio>
 #include <iostream>
@@ -12,6 +10,7 @@
 #include <array> 
 #include <functional>
 #include "Helper.h"
+#include "Rectangle.h"
 #include "Dot.h"
 
 class ParticleManager
@@ -26,7 +25,7 @@ public:
 	void calculatePressureGradient(std::vector<float>& pressureGradient, CircleCollider* dotB, CircleCollider* dotA);
 	void calculatePressureGradient(std::vector<float>& pressureGradient, float magnitude, Dot* dotB, Dot* dotA);
 
-	void forParticles(Dot& dotA, const std::function<void(Dot&)>& func);
+	void forParticles(const Dot& dotA, const std::function<void(Dot&)>& func);
 	void forParticlesAroundPoint(int x, int y, const std::function<void(Dot&)>& func);
 
 	std::vector<Dot>& getDots();
@@ -37,7 +36,7 @@ public:
 	void createParticles();
 	void createParticles(const std::function<void()>& func);
 
-	void checkIfCollide(Circle& a, const auto& b);
+	void checkIfCollide(Dot& dot, const auto& b);
 private:
 
 	int particleCount = PARTICLE_NUM;
@@ -59,8 +58,8 @@ private:
 	float calcDensity(Dot& dotB, float x, float y);
 	float calcDensity(float magnitude);
 
-	Collision checkCollision(Circle& a, Circle& b);
-	Collision checkCollision(Circle& a, SDL_Rect& b);
+	Collision checkCollision(const Circle& a, const Circle& b);
+	Collision checkCollision(const Circle& a, const Rectangle& b);
 
 	std::vector<Dot> dots;
 	std::vector<Entry> particleHashEntries = std::vector<Entry>(particleCount);

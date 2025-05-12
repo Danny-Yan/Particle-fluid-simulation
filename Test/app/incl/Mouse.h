@@ -1,5 +1,4 @@
-#ifndef MOUSE_H
-#define MOUSE_H
+#pragma once
 
 #include <cstdio>
 #include "CircleCollider.h"
@@ -21,6 +20,3 @@ class Mouse : public virtual CircleCollider
         int velX;
         int velY;
 };
-
-
-#endif

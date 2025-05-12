@@ -23,7 +23,7 @@ float PREDICTIVE_STEPS = 0.128f;
 //Dot constants
 const float RADIUS = 5.0f;               // RADIUS OF DOT COLLIDER
 const float SPACING = 5.0f;              // INITAL SPACING
-const float SCALE = 0.8f;				 // SCALES ONLY DOT GRAPHIC
+const float SCALE = 0.4f;				 // SCALES ONLY DOT GRAPHIC
 const int PARTICLE_NUM = 7000; // does not work for < 200
 
 const float RADIUS_SQUARED = RADIUS * RADIUS;
@@ -67,8 +67,8 @@ const float COLOR_MAX[3] = {238, 86, 86};
 // Hsl Constants
 
 // Blue to red
-//const float COLOR_H_MIN[3] = { 215, 1, 0.5 };
-//const float COLOR_H_MAX[3] = { 1, 1, 0.5 };
+const float COLOR_H_MIN[3] = { 215, 1, 0.5 };
+const float COLOR_H_MAX[3] = { 1, 1, 0.5 };
 
 // Light Blue to white
 //const float COLOR_H_MIN[3] = { 200, 1, 0.5 };
@@ -79,5 +79,5 @@ const float COLOR_MAX[3] = {238, 86, 86};
 //const float COLOR_H_MAX[3] = { 338, 1, 1 };
 
 // Pink to blue
-const float COLOR_H_MIN[3] = { 347, 1, 0.7 };
-const float COLOR_H_MAX[3] = { 150, 1, 0.4 };
+//const float COLOR_H_MIN[3] = { 347, 1, 0.7 };
+//const float COLOR_H_MAX[3] = { 110, 1, 0.4 };
