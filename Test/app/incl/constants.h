@@ -25,6 +25,7 @@ extern const float SPACING;
 extern const float MOUSE_FORCE;
 extern const int MOUSE_FORCE_RADIUS;
 extern const float MOUSE_RADIUS_SQUARED;
+extern const float MOUSE_DENSITY;
 
 extern const float FORCE_RADIUS;
 extern const float FORCE_RADIUS_SQUARED;

@@ -331,8 +331,8 @@ Collision ParticleManager::checkCollision(const Circle& a, const Circle& b)
 {
     Collision collision;
     //Calculate total radius squared
-    int totalRadiusSquared = a.r + b.r;
-    totalRadiusSquared = totalRadiusSquared * totalRadiusSquared;
+    int totalRadius = a.r + b.r;
+    int totalRadiusSquared = totalRadius * totalRadius;
 
     //If the distance between the centers of the circles is less than the sum of their radii
     if (Helper::distanceSquared(a.x, a.y, b.x, b.y) < (totalRadiusSquared))

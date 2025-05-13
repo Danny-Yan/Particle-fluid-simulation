@@ -318,42 +318,45 @@ Collision Dot::checkCircleForce( CircleCollider &dotB )
     float totalRadiusSquared = totalRadius * totalRadius;
     float distance_Squared = Helper::distanceSquared( a.x, a.y, b.x, b.y );
 
+    if (distance_Squared > totalRadiusSquared || distance_Squared == 0){return collision;}
+
     //If the distance between the centers of the circles is less than the sum of their radii
-    if( distance_Squared <= ( totalRadiusSquared ) && distance_Squared != 0 )
-    {
-        // printf("AX %d\n", a.x);
-        // printf("AY %d\n", a.y);
-        // printf("BX %d\n", b.x);
-        // printf("BY %d\n", b.y);
 
-        // printf("TOTAL RADIUS SQUARED %f\n", totalRadiusSquared);
-        // printf("DISTANCE SQUARED %f\n", distance_Squared);
-        //Calculate the impulse vector
-        float magnitude = sqrt(distance_Squared);
-        float normalX = (a.x - b.x) / magnitude;
-        float normalY = (a.y - b.y) / magnitude;
 
-        // float force_factor = std::max(0.0f, std::min( BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT, -BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT));
+    // printf("AX %d\n", a.x);
+    // printf("AY %d\n", a.y);
+    // printf("BX %d\n", b.x);
+    // printf("BY %d\n", b.y);
 
-        float force_factor = std::max(0.0f, totalRadius - magnitude) / totalRadius;
+    // printf("TOTAL RADIUS SQUARED %f\n", totalRadiusSquared);
+    // printf("DISTANCE SQUARED %f\n", distance_Squared);
+    //Calculate the impulse vector
+    float magnitude = sqrt(distance_Squared);
+    float normalX = (a.x - b.x) / magnitude;
+    float normalY = (a.y - b.y) / magnitude;
 
-        // float relVecX = dotAp.getVelX() - dotB.getVelX();
-        // float relVecY = dotAp.getVelY() - dotB.getVelY();
 
-        // float dotProd = normalX * relVecX + normalY * relVecY;
-        // float shared_density = sharedDensity( dotAp.getDensity(), dotB.getDensity());
+    // float force_factor = std::max(0.0f, std::min( BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT, -BARRIER_HEIGHT / BARRIER_WIDTH * magnitude + BARRIER_HEIGHT));
 
-        float impulseX = normalX * force_factor;
-        float impulseY = normalY * force_factor;
+    float force_factor = std::max(0.0f, totalRadius - magnitude) / totalRadius;
 
-        //The circles have collided
-        collision.v.push_back(-impulseX);
-        collision.v.push_back(-impulseY);
-        collision.didCollide = true;
-    }
+    // float relVecX = dotAp.getVelX() - dotB.getVelX();
+    // float relVecY = dotAp.getVelY() - dotB.getVelY();
 
-    //If not
+    // float dotProd = normalX * relVecX + normalY * relVecY;
+    // float shared_density = sharedDensity( dotAp.getDensity(), dotB.getDensity());
+
+    float impulseX = normalX * force_factor * force_factor * force_factor;
+    float impulseY = normalY * force_factor * force_factor * force_factor;
+
+
+    //The circles have collided
+    collision.v.push_back(-impulseX);
+    collision.v.push_back(-impulseY);
+    collision.didCollide = true;
+
     return collision;
+    
 }
 
 //GETS/SETS

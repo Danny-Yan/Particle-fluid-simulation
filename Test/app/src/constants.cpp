@@ -33,9 +33,11 @@ const float accel = 0;               // Hella buggy
 const float RESISTANCE = 0.1f;      // *** UNSTABLE AT r = 1
 
 // MOUSE
-const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS * 4;
+const int MOUSE_FORCE_RADIUS = (int)FORCE_RADIUS * 2;
 const float MOUSE_RADIUS_SQUARED = MOUSE_FORCE_RADIUS * MOUSE_FORCE_RADIUS;
-const float MOUSE_FORCE = 5.0f;
+const float MOUSE_FORCE = 16.0f;
+
+const float MOUSE_DENSITY = 20.0f; // 0.0005f;
 
 // CONTACT
 // CONVERT TO CONTACT FORCE

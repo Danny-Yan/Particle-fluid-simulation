@@ -5,6 +5,8 @@ void Helper::mouseLeftPress(SDL_MouseButtonEvent& b, Mouse* mP) {
     Mouse& mouse = *mP;
     mouse.setIsPressed(true);
     mouse.setForceMultiplier(MOUSE_FORCE);
+
+	mouse.setDensity(MOUSE_DENSITY);
 }
 
 // Right click
@@ -12,6 +14,8 @@ void Helper::mouseRightPress(SDL_MouseButtonEvent& b, Mouse* mP) {
     Mouse& mouse = *mP;
     mouse.setIsPressed(true);
     mouse.setForceMultiplier(-1 * MOUSE_FORCE);
+
+    mouse.setDensity(MOUSE_DENSITY);
 }
 
 // Left click
@@ -19,6 +23,8 @@ void Helper::mouseUnPress(SDL_MouseButtonEvent& b, Mouse* mP) {
     Mouse& mouse = *mP;
     mouse.setIsPressed(false);
     mouse.setForceMultiplier(0);
+
+	mouse.setDensity(0);
 }
 
 // Collision checkCollision( Circle& a, Mouse b )
