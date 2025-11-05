@@ -15,15 +15,15 @@ CC = g++
 COMPILER_FLAGS = -w -O2
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -pthread
-
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
+CPP_VERSION = -std=c++20
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = app/outputs/particle_sim
 
 #This is the target that compiles our executable
 all : $(OBJS) 
 	$(BUILD_DIR)
-	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) ${CPP_VERSION} -o $(OBJ_NAME)
 
 .PHONY: clean
 clean:
