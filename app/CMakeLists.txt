@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(app LANGUAGES CXX)
+project(app)
 
 include_directories(incl)
 set(LIBRARY_SOURCES
