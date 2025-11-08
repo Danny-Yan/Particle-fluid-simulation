@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 
-#include <SDL2/SDL.h>
+#include "SDL3/SDL.h"
 #include <cstdio>
 #include <iostream>
 #include <vector>

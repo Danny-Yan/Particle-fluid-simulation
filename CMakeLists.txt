@@ -8,10 +8,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 set( CMAKE_CXX_STANDARD 20 CACHE STRING "" FORCE )
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "" FORCE )
 
-include_directories(app)
+# include_directories(app)
 add_executable(main main.cpp)
 set_target_properties(main PROPERTIES OUTPUT_NAME ${CMAKE_PROJECT_NAME})
 
 add_subdirectory(app)
 add_subdirectory(external)
-target_link_libraries(main PRIVATE src external)
+target_link_libraries(main PRIVATE app external)
