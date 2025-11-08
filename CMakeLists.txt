@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 cmake_policy(SET CMP0075 NEW)
 cmake_policy(SET CMP0091 NEW)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lSDL2 -lSDL2_image -lSDL2_ttf -O2")
+
+project(particle-simulation)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 set( CMAKE_CXX_STANDARD 20 CACHE STRING "" FORCE )
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "" FORCE )
-project(Particle-fluid-simulation)
 
 include_directories(app)
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(main main.cpp)
+set_target_properties(main PROPERTIES OUTPUT_NAME ${CMAKE_PROJECT_NAME})
 
-if (NOT TARGET app)
-    add_subdirectory(app)
-endif()
+add_subdirectory(app)
 add_subdirectory(external)
-
-target_link_libraries(${PROJECT_NAME} app)
+target_link_libraries(main PRIVATE src external)
