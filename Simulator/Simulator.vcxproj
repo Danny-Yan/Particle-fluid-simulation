@@ -24,7 +24,7 @@
     <ProjectGuid>{f33381af-c7fe-470a-9a65-2d51906e1770}</ProjectGuid>
     <RootNamespace>Test</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Particle Sim</ProjectName>
+    <ProjectName>Simulator</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -134,7 +134,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Test\dependencies\SDL2_image-2.8.8\include;$(SolutionDir)Test\dependencies\SDL2-2.32.2\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Simulator\dependencies\SDL2_image-2.8.8\include;$(SolutionDir)Simulator\dependencies\SDL2-2.32.2\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,7 +142,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)Test\dependencies\SDL2-2.32.2\lib\x64; $(SolutionDir)Test\dependencies\SDL2_image-2.8.8\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Simulator\dependencies\SDL2-2.32.2\lib\x64; $(SolutionDir)Simulator\dependencies\SDL2_image-2.8.8\lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
