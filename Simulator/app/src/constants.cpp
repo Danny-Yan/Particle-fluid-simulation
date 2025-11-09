@@ -2,7 +2,7 @@
 
 //Force constants
 const float FORCE_RADIUS = 40.0f;           // ***
-const float FORCE = 40;                    // ***
+const float FORCE = 100;                    // ***
 
 const float FORCE_RADIUS_SQUARED = FORCE_RADIUS * FORCE_RADIUS;
 
@@ -18,7 +18,7 @@ int SPATIAL_HEIGHT = SCREEN_HEIGHT / GRID_HEIGHT;
 
 // Simulation Constants
 float TIMEINTERVAL = 1.0f; // Min 1 ms
-float PREDICTIVE_STEPS = 0.128f;
+float PREDICTIVE_STEPS = 0.5f;
 
 //Dot constants
 const float RADIUS = 5.0f;               // RADIUS OF DOT COLLIDER
@@ -53,7 +53,7 @@ const float MOUSE_DENSITY = 20.0f; // 0.0005f;
 //Density Constants -- DONT TOUCH
 const float DENSITY_LOWER = 0.0001f;
 const float DENSITY_DESIRED = 0.00095f; // 0.0005f;
-const float DENSITY_UPPER = 0.001f;
+const float DENSITY_UPPER = 0.0005f;
 
 // Colour constants
 // Background color
