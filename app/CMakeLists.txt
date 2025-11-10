@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(app)
 
-include_directories(incl)
+# include_directories(incl)
 set(LIBRARY_SOURCES
     src/engine.cpp
     src/constants.cpp
@@ -15,3 +15,5 @@ set(LIBRARY_SOURCES
     src/Colliders/Circle/Mouse.cpp
 )
 add_library(${PROJECT_NAME} ${LIBRARY_SOURCES})
+target_include_directories(${PROJECT_NAME} PRIVATE incl)
+target_link_libraries(${PROJECT_NAME} PRIVATE external)
