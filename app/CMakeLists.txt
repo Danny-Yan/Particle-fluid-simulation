@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.16)
 project(app)
 
 # include_directories(incl)
 set(LIBRARY_SOURCES
+    incl/engine.h
     src/engine.cpp
     src/constants.cpp
     src/Helpers/Helper.cpp
