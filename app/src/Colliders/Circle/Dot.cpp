@@ -418,5 +418,5 @@ int Dot::getID()  const
 void Dot::render( SDL_Renderer* gRenderer, LTexture& gDotTexture)
 {
     //Show the dot
-    gDotTexture.render( gRenderer, PosX - mCollider.r, PosY - mCollider.r, SCALE);
+    gDotTexture.render( gRenderer, PosX - (float) mCollider.r, PosY - (float) mCollider.r, SCALE);
 }

@@ -1,8 +1,10 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-#include "SDL2_image/SDL_image.h"
+#include "SDL3/SDL.h"
+#include "SDL3/SDL_main.h"
+#include "SDL3_image/SDL_image.h"
 #include <cstdio>
+#include <cmath>
 #include <cstdlib>
 #include <vector>
 #include <functional>
@@ -93,7 +95,7 @@ private:
 	void runFluidParticlesFrame();
 	void runFluidMouseForceFrame();
 	void runFluidMouseDensityFrame();
-	void runSimRenderFrame(int timeInterval);
+	void runSimRenderFrame(float timeInterval);
 
 	//Collision
 	void runBallCollisionFrame();

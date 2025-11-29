@@ -1,7 +1,8 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-#include "SDL2_image/SDL_image.h"
+#include "SDL3/SDL.h"
+#include "SDL3_image/SDL_image.h"
+#include <cmath>
 #include <cstdio>
 #include <string>
 #include <array>
@@ -39,7 +40,7 @@ class LTexture
         void free();
 
         //Renders texture at given point
-        void render( SDL_Renderer* gRenderer, int x, int y, float scale);
+        void render( SDL_Renderer* gRenderer, float x, float y, float scale);
 
         //Gets image dimensions
         int getWidth();

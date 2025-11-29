@@ -18,7 +18,7 @@ bool engine::initSDL()
     }
 
     //Create window
-    gwindow = SDL_CreateWindow("Fluid Simulation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    gwindow = SDL_CreateWindow("Fluid Simulation", SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_MOUSE_FOCUS || SDL_WINDOW_OPENGL || SDL_WINDOW_INPUT_FOCUS || SDL_WINDOW_VULKAN);
     if (gwindow == NULL)
     {
         printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -27,7 +27,8 @@ bool engine::initSDL()
     }
 
     //Create renderer for window
-    gRenderer = SDL_CreateRenderer(gwindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    gRenderer = SDL_CreateRenderer(gwindow, NULL);
+    SDL_SetRenderVSync(gRenderer, 1);
     if (gRenderer == NULL)
     {
         printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
@@ -37,14 +38,14 @@ bool engine::initSDL()
         //Initialize renderer color
         SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-    //Initialize PNG loading
-    int imgFlags = IMG_INIT_PNG;
-    if (!(IMG_Init(imgFlags) & imgFlags))
-    {
-        printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-        success = false;
-        return success;
-    }
+    // //Initialize PNG loading
+    // int imgFlags = IMG_INIT_PNG;
+    // if (!(IMG_Init(imgFlags) & imgFlags))
+    // {
+    //     printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+    //     success = false;
+    //     return success;
+    // }
 
     return success;
 }
@@ -53,13 +54,6 @@ bool engine::loadMedia()
 {
     //Loading success flag
     bool success = true;
-
-    ////Load Foo' texture
-    //if (!gDotTexture.loadFromFile(gRenderer, "images/transparent_dot.png"))
-    //{
-    //    printf("Failed to load dot' texture image!\n");
-    //    success = false;
-    //}
 
     //Load Foo' texture
     if (!gDotTexture.loadFromXPM(gRenderer, const_cast<char**>(transparent_dot_xpm)))
@@ -83,7 +77,7 @@ void engine::close()
     gRenderer = NULL;
 
     //Quit SDL subsystems
-    IMG_Quit();
+    // IMG_Quit();
     SDL_Quit();
 }
 bool engine::start() {
@@ -175,21 +169,21 @@ void engine::pollEvent()
     {
         switch (e.type) {
             // QUIT
-        case SDL_QUIT:
+        case SDL_EVENT_QUIT:
             quit = true;
             break;
 
             // MOUSE MOVE
-        case SDL_MOUSEMOTION:
-            int mouseX, mouseY;
+        case SDL_EVENT_MOUSE_MOTION:
+            float mouseX, mouseY;
             SDL_GetMouseState(&mouseX, &mouseY);
-			mouse.setmPosX((float)mouseX);
-			mouse.setmPosY((float)mouseY);
+			mouse.setmPosX(mouseX);
+			mouse.setmPosY(mouseY);
             mouse.move();
             break;
 
             // MOUSE CLICK
-        case SDL_MOUSEBUTTONDOWN:
+        case SDL_EVENT_MOUSE_BUTTON_DOWN:
             switch (e.button.button) {
                 case SDL_BUTTON_LEFT:
                     Helper::mouseLeftPress(e.button, &mouse);
@@ -201,16 +195,16 @@ void engine::pollEvent()
                 }
             break;
 
-        case SDL_MOUSEBUTTONUP:
+        case SDL_EVENT_MOUSE_BUTTON_UP:
             Helper::mouseUnPress(e.button, &mouse);
             break;
 
             // KEYBOARD
-        case SDL_KEYDOWN:
-            switch (e.key.keysym.sym) {
+        case SDL_EVENT_KEY_DOWN:
+            switch (e.key.key) {
 
                 // Start/stop
-            case SDLK_s:
+            case SDLK_S:
                 switch (timer.isRunning()) {
 				    case true:
 					    timer.stop();
@@ -222,11 +216,11 @@ void engine::pollEvent()
                 break;
 
                 // Pause/Unpause
-            case SDLK_p:
+            case SDLK_P:
                 break;
 
                 // Ticked
-            case SDLK_t:
+            case SDLK_T:
                 break;
             }
         }
@@ -328,11 +322,13 @@ void engine::runFluidParticlesFrame()
 
         dot.check_wall_no_shift();
 		//particleManager.checkIfCollide(dot, wall); -------------- DOES NOT WORK
-
-        if (abs(dot.getDensity()) > DENSITY_UPPER)
+        // printf("Pressure Gradient: %f %f\n", pressureGradient[0], pressureGradient[1]);
+        // printf("Dot ID %d Density %f\n", dot.getID(), dot.getDensity());
+        if (std::abs(dot.getDensity()) > DENSITY_UPPER)
         {
             dot.addmVelX(pressureGradient[0] / dot.getDensity());
             dot.addmVelY(pressureGradient[1] / dot.getDensity());
+            // printf("Dot ID %d Speed %f %f\n", dot.getID(), dot.getmVelX(), dot.getmVelY());
         }
     }
 }
@@ -371,7 +367,7 @@ void engine::runFluidMouseForceFrame()
         /*particleManager.checkIfCollide(dotB, &mouse);*/
     });
 }
-void engine::runSimRenderFrame(int timeInterval)
+void engine::runSimRenderFrame(float timeInterval)
 {
 	std::vector<Dot>& dots = particleManager.getDots();
     ////Move all dots
