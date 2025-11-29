@@ -1,6 +1,6 @@
 project(app)
 
-# include_directories(incl)
+# Include source files
 set(LIBRARY_SOURCES
     incl/engine.h
     src/engine.cpp
@@ -14,6 +14,8 @@ set(LIBRARY_SOURCES
     src/Colliders/Circle/Dot.cpp
     src/Colliders/Circle/Mouse.cpp
 )
+
+# Link incl and external directories
 add_library(${PROJECT_NAME} ${LIBRARY_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE incl)
 target_link_libraries(${PROJECT_NAME} PRIVATE external)
