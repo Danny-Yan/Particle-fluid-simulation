@@ -1,9 +1,8 @@
 # Fluid particle simulator
----
-A simple particle based fluid simulation written in SDL3 and C++
+A simple particle based fluid simulation written in SDL3 and C++  
 
-Inspired by Sebastian Lague's Particle Simulation Coding Adventure 
-https://www.youtube.com/watch?v=rSKMYc1CQHE
+Inspired by Sebastian Lague's Particle Simulation Coding Adventure  
+https://www.youtube.com/watch?v=rSKMYc1CQHE  
 
 ### To run
 ```
